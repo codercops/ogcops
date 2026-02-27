@@ -34,7 +34,7 @@ OGCOPS is different:
 ## Quick Start
 
 ```bash
-git clone https://github.com/codercops/ogcops.git
+git clone -b dev https://github.com/codercops/ogcops.git
 cd ogcops
 npm install
 npm run dev
@@ -113,6 +113,16 @@ The build output in `dist/` can be deployed to any Node.js hosting platform.
 ## Contributing
 
 Contributions are welcome — templates, bug fixes, features, docs, and more. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and guidelines.
+
+> **Important:** Always fork and branch from `dev` (the default branch). The `production` branch is for releases only. PRs targeting `production` directly will be closed.
+
+```bash
+# Fork the repo on GitHub, then:
+git clone https://github.com/<your-username>/ogcops.git
+cd ogcops
+git checkout dev
+git checkout -b your-feature-branch
+```
 
 - [Open an issue](https://github.com/codercops/ogcops/issues) — bug reports and feature requests
 - [Start a discussion](https://github.com/codercops/ogcops/discussions) — questions, ideas, show & tell

@@ -35,7 +35,7 @@ The following are **out of scope:**
 
 | Version | Supported |
 |---------|-----------|
-| Latest (main branch) | Yes |
+| Latest (production branch) | Yes |
 | Older releases | No |
 
 ## Recognition
