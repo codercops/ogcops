@@ -1,0 +1,172 @@
+---
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/create', label: 'Create' },
+  { href: '/preview', label: 'Preview' },
+  { href: '/templates', label: 'Templates' },
+  { href: '/api-docs', label: 'API' },
+];
+---
+
+<header class="header">
+  <nav class="header-nav container">
+    <a href="/" class="header-logo">
+      <span class="logo-text">OG</span><span class="logo-accent">COPS</span>
+    </a>
+
+    <div class="header-links">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={['nav-link', { active: currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) }]}
+        >
+          {item.label}
+        </a>
+      ))}
+      <a href="https://github.com/codercops/ogcops" target="_blank" rel="noopener" class="nav-link nav-github">
+        GitHub
+      </a>
+    </div>
+
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-inner">
+    {navItems.map((item) => (
+      <a href={item.href} class="mobile-menu-link">{item.label}</a>
+    ))}
+    <a href="https://github.com/codercops/ogcops" target="_blank" rel="noopener" class="mobile-menu-link">GitHub</a>
+  </div>
+</div>
+
+<script is:inline>
+  // Mobile menu
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn?.addEventListener('click', () => {
+    menuBtn.classList.toggle('open');
+    mobileMenu?.classList.toggle('open');
+  });
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    background: rgba(var(--bg), 0.8);
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    height: var(--nav-height);
+    gap: var(--space-xl);
+  }
+
+  .header-logo {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .logo-text { color: var(--text); }
+  .logo-accent { color: var(--accent-primary); }
+
+  .header-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-left: auto;
+  }
+
+  .nav-link {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color var(--transition);
+    white-space: nowrap;
+  }
+
+  .nav-link:hover, .nav-link.active {
+    color: var(--text);
+  }
+
+  .nav-github {
+    padding: var(--space-xs) var(--space-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: var(--text-xs);
+  }
+
+  .nav-github:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-surface);
+  }
+
+  .mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .mobile-menu-btn span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--text);
+    transition: transform var(--transition), opacity var(--transition);
+  }
+
+  .mobile-menu-btn.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+  .mobile-menu-btn.open span:nth-child(2) { opacity: 0; }
+  .mobile-menu-btn.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: var(--nav-height) 0 0 0;
+    background: var(--bg);
+    z-index: 99;
+    padding: var(--space-xl);
+    transform: translateY(-100%);
+    transition: transform var(--transition);
+  }
+
+  .mobile-menu.open { transform: translateY(0); }
+
+  .mobile-menu-link {
+    display: block;
+    padding: var(--space-md) 0;
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (max-width: 768px) {
+    .header-links { display: none; }
+    .mobile-menu-btn { display: flex; }
+    .mobile-menu { display: block; }
+  }
+</style>

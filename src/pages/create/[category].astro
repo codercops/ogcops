@@ -1,0 +1,20 @@
+---
+import ToolLayout from '@/layouts/ToolLayout.astro';
+import { EditorApp } from '@/components/editor/EditorApp';
+import { ALL_CATEGORIES, CATEGORY_META } from '@/templates/types';
+import type { TemplateCategory } from '@/templates/types';
+import '@/styles/editor.css';
+
+const { category } = Astro.params;
+
+if (!category || !ALL_CATEGORIES.includes(category as TemplateCategory)) {
+  return Astro.redirect('/create');
+}
+
+const cat = category as TemplateCategory;
+const meta = CATEGORY_META[cat];
+---
+
+<ToolLayout title={`Create ${meta.label} OG Image`} description={`Design ${meta.label.toLowerCase()} OG images with beautiful templates.`}>
+  <EditorApp client:load initialCategory={cat} />
+</ToolLayout>

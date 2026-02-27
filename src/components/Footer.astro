@@ -1,0 +1,102 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo"><span class="logo-text">OG</span><span class="logo-accent">COPS</span></span>
+      <span class="footer-tagline">Free OG Image Generator</span>
+    </div>
+    <div class="footer-links">
+      <a href="/create">Create</a>
+      <a href="/preview">Preview</a>
+      <a href="/templates">Templates</a>
+      <a href="/api-docs">API</a>
+      <a href="https://github.com/codercops/ogcops" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="footer-meta">
+      <span class="footer-mit">MIT License</span>
+      <span class="footer-copy">&copy; {year} <a href="https://codercops.com" target="_blank" rel="noopener">CODERCOPS</a></span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: var(--space-2xl) 0;
+    margin-top: auto;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .footer-logo {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .logo-text { color: var(--text); }
+  .logo-accent { color: var(--accent-primary); }
+
+  .footer-tagline {
+    font-size: var(--text-sm);
+    color: var(--text-subtle);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: var(--space-lg);
+  }
+
+  .footer-links a {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    transition: color var(--transition);
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-size: var(--text-sm);
+    color: var(--text-subtle);
+  }
+
+  .footer-mit {
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+  }
+
+  .footer-copy a {
+    color: var(--text-muted);
+    transition: color var(--transition);
+  }
+
+  .footer-copy a:hover { color: var(--accent-primary); }
+
+  @media (max-width: 768px) {
+    .footer-inner {
+      flex-direction: column;
+      text-align: center;
+    }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>

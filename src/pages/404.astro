@@ -1,0 +1,53 @@
+---
+import Layout from '@/layouts/Layout.astro';
+
+export const prerender = true;
+---
+
+<Layout title="404 — Page Not Found" noindex>
+  <section class="error-page">
+    <div class="container">
+      <span class="error-code">404</span>
+      <h1>Page Not Found</h1>
+      <p>The page you're looking for doesn't exist or has been moved.</p>
+      <div class="error-ctas">
+        <a href="/" class="btn btn-primary">Go Home</a>
+        <a href="/create" class="btn btn-outline">Create OG Image</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+  }
+
+  .error-code {
+    display: block;
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--border-strong);
+    line-height: 1;
+    margin-bottom: var(--space-lg);
+  }
+
+  .error-page h1 {
+    margin-bottom: var(--space-md);
+  }
+
+  .error-page p {
+    color: var(--text-muted);
+    margin: 0 auto var(--space-xl);
+  }
+
+  .error-ctas {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+  }
+</style>

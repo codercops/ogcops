@@ -1,0 +1,9 @@
+---
+import ToolLayout from '@/layouts/ToolLayout.astro';
+import { EditorApp } from '@/components/editor/EditorApp';
+import '@/styles/editor.css';
+---
+
+<ToolLayout title="Create OG Image" description="Design beautiful OG images with 120+ templates. Free, no login required.">
+  <EditorApp client:load />
+</ToolLayout>

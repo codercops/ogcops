@@ -1,0 +1,330 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { CATEGORY_META, ALL_CATEGORIES } from '@/templates/types';
+import { getTemplateCount, getCategoryCounts } from '@/templates/registry';
+
+const templateCount = getTemplateCount();
+const categoryCounts = getCategoryCounts();
+---
+
+<Layout title="OGCOPS" description="Free OG image generator with 120+ templates, 8 platform previews, and a free REST API. No login, no watermarks, open source.">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-content" data-animate="slide-up">
+        <span class="section-label">Free & Open Source</span>
+        <h1>Free OG Image<br />Generator</h1>
+        <p class="hero-subtitle">
+          {templateCount}+ templates. 8 platform previews. Free API. No login required.
+        </p>
+        <div class="hero-ctas">
+          <a href="/create" class="btn btn-primary btn-lg">Create OG Image</a>
+          <a href="/preview" class="btn btn-outline btn-lg">Check Your URL</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Grid -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header" data-animate="fade">
+        <span class="section-label">Templates</span>
+        <h2>12 Categories, {templateCount}+ Templates</h2>
+        <p class="section-subtitle">Beautiful, professional OG images for every use case.</p>
+      </div>
+      <div class="grid grid-4 category-grid">
+        {ALL_CATEGORIES.map((cat, i) => {
+          const meta = CATEGORY_META[cat];
+          const count = categoryCounts[cat] || 0;
+          return (
+            <a href={`/create/${cat}`} class="card card-category" data-animate="slide-up" data-animate-delay={String(i % 4 + 1)}>
+              <span class="cat-icon">{meta.icon}</span>
+              <h3 class="cat-name">{meta.label}</h3>
+              <span class="cat-count">{count} templates</span>
+              <p class="cat-desc">{meta.description}</p>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Highlights -->
+  <section class="section">
+    <div class="container">
+      <div class="dashed-grid dashed-grid-2x2" data-animate="scale">
+        <div class="dashed-grid-item">
+          <span class="feature-number">{templateCount}+</span>
+          <h3>Templates</h3>
+          <p>Professional designs across 12 categories. Blog, SaaS, GitHub, events, and more.</p>
+        </div>
+        <div class="dashed-grid-item">
+          <span class="feature-number">8</span>
+          <h3>Platform Previews</h3>
+          <p>See how your link looks on Twitter, Facebook, LinkedIn, Discord, Slack, Reddit, WhatsApp, and Google.</p>
+        </div>
+        <div class="dashed-grid-item">
+          <span class="feature-number">Free</span>
+          <h3>REST API</h3>
+          <p>Generate OG images via URL. CORS-enabled. No API key required. Cache-friendly.</p>
+        </div>
+        <div class="dashed-grid-item">
+          <span class="feature-number">MIT</span>
+          <h3>Open Source</h3>
+          <p>Fork it. Self-host it. Contribute templates. Built by developers, for developers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header" data-animate="fade">
+        <span class="section-label">How It Works</span>
+        <h2>Three Simple Steps</h2>
+      </div>
+      <div class="grid grid-3 steps-grid" data-animate="slide-up">
+        <div class="step-card">
+          <span class="step-number">1</span>
+          <h3>Pick a Template</h3>
+          <p>Browse {templateCount}+ templates across 12 categories. Filter and search to find the perfect design.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">2</span>
+          <h3>Customize</h3>
+          <p>Change text, colors, and branding. Instant preview updates — no waiting for server renders.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">3</span>
+          <h3>Export</h3>
+          <p>Download PNG, copy the API URL, or grab ready-to-paste meta tags. Done in seconds.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- API Teaser -->
+  <section class="section">
+    <div class="container">
+      <div class="api-teaser" data-animate="slide-up">
+        <div class="api-teaser-code">
+          <div class="api-code-header">
+            <span class="api-code-dot"></span>
+            <span class="api-code-dot"></span>
+            <span class="api-code-dot"></span>
+          </div>
+          <pre class="api-code-body"><code>curl "https://og.codercops.com/api/og?\
+  template=blog-minimal-dark&\
+  title=Hello%20World&\
+  author=OGCOPS"</code></pre>
+        </div>
+        <div class="api-teaser-info">
+          <span class="section-label">Free API</span>
+          <h2>Generate via URL</h2>
+          <p>Use our REST API to generate OG images programmatically. No API key, no rate limits, CORS-enabled.</p>
+          <a href="/api-docs" class="btn btn-outline">View API Docs</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Open Source Banner -->
+  <section class="section">
+    <div class="container">
+      <div class="oss-banner" data-animate="fade">
+        <span class="section-label">Open Source</span>
+        <h2>Built in Public</h2>
+        <p class="section-subtitle">OGCOPS is MIT licensed. Star us on GitHub, contribute templates, or self-host.</p>
+        <div class="oss-ctas">
+          <a href="https://github.com/codercops/ogcops" target="_blank" rel="noopener" class="btn btn-secondary">
+            Star on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  /* Hero */
+  .hero {
+    padding: var(--space-5xl) 0;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: var(--text-6xl);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-subtitle {
+    font-size: var(--text-xl);
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto var(--space-xl);
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Category Cards */
+  .card-category {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .cat-icon {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-xs);
+  }
+
+  .cat-name {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+
+  .cat-count {
+    font-size: var(--text-xs);
+    color: var(--accent-primary);
+    font-weight: 500;
+  }
+
+  .cat-desc {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Feature Numbers */
+  .feature-number {
+    display: block;
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--accent-primary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .dashed-grid-item h3 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .dashed-grid-item p {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  /* Steps */
+  .step-card {
+    text-align: center;
+    padding: var(--space-xl);
+  }
+
+  .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: var(--space-md);
+  }
+
+  .step-card h3 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .step-card p {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0 auto;
+  }
+
+  /* API Teaser */
+  .api-teaser {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2xl);
+    align-items: center;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
+  }
+
+  .api-code-header {
+    display: flex;
+    gap: 6px;
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .api-code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border-strong);
+  }
+
+  .api-teaser-code {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .api-code-body {
+    padding: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 0;
+  }
+
+  .api-teaser-info h2 {
+    margin: var(--space-sm) 0 var(--space-md);
+  }
+
+  .api-teaser-info p {
+    margin-bottom: var(--space-lg);
+  }
+
+  /* OSS Banner */
+  .oss-banner {
+    text-align: center;
+    padding: var(--space-3xl) 0;
+  }
+
+  .oss-banner h2 {
+    margin: var(--space-sm) 0 var(--space-md);
+  }
+
+  .oss-ctas {
+    margin-top: var(--space-xl);
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: var(--text-4xl); }
+    .api-teaser { grid-template-columns: 1fr; }
+    .hero-ctas { flex-direction: column; align-items: center; }
+  }
+</style>

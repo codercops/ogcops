@@ -1,0 +1,212 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import '@/styles/api-docs.css';
+---
+
+<Layout title="API Documentation" description="Free REST API to generate OG images, check meta tags, and list templates. No API key required.">
+  <div class="api-docs">
+    <!-- Sidebar -->
+    <aside class="api-sidebar">
+      <nav class="api-sidebar-nav">
+        <a href="#overview" class="api-sidebar-link active">Overview</a>
+        <a href="#generate" class="api-sidebar-link">Generate Image</a>
+        <a href="#preview" class="api-sidebar-link">Preview URL</a>
+        <a href="#templates" class="api-sidebar-link">List Templates</a>
+        <a href="#thumbnail" class="api-sidebar-link">Thumbnails</a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <div class="api-content">
+      <h1>API Documentation</h1>
+      <p class="api-intro">
+        Generate OG images, check URL meta tags, and list templates with our free REST API.
+        No API key required. CORS-enabled for browser use.
+      </p>
+
+      <!-- Generate Image -->
+      <div class="endpoint-card" id="generate">
+        <div class="endpoint-header">
+          <span class="endpoint-method">GET</span>
+          <span class="endpoint-path">/api/og</span>
+        </div>
+        <p class="endpoint-desc">Generate an OG image as PNG. Returns image/png with Cache-Control headers.</p>
+
+        <h4>Parameters</h4>
+        <table class="param-table">
+          <thead>
+            <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">template</td>
+              <td class="param-type">string</td>
+              <td>No</td>
+              <td class="param-desc">Template ID (default: blog-minimal-dark)</td>
+            </tr>
+            <tr>
+              <td class="param-name">title</td>
+              <td class="param-type">string</td>
+              <td><span class="param-required">Yes</span></td>
+              <td class="param-desc">Main title text</td>
+            </tr>
+            <tr>
+              <td class="param-name">description</td>
+              <td class="param-type">string</td>
+              <td>No</td>
+              <td class="param-desc">Subtitle or description</td>
+            </tr>
+            <tr>
+              <td class="param-name">author</td>
+              <td class="param-type">string</td>
+              <td>No</td>
+              <td class="param-desc">Author name</td>
+            </tr>
+            <tr>
+              <td class="param-name">bgColor</td>
+              <td class="param-type">string</td>
+              <td>No</td>
+              <td class="param-desc">Background color (hex, e.g. #0a0a0a)</td>
+            </tr>
+            <tr>
+              <td class="param-name">accentColor</td>
+              <td class="param-type">string</td>
+              <td>No</td>
+              <td class="param-desc">Accent color (hex)</td>
+            </tr>
+            <tr>
+              <td class="param-name">width</td>
+              <td class="param-type">number</td>
+              <td>No</td>
+              <td class="param-desc">Image width (200-2400, default: 1200)</td>
+            </tr>
+            <tr>
+              <td class="param-name">height</td>
+              <td class="param-type">number</td>
+              <td>No</td>
+              <td class="param-desc">Image height (200-2400, default: 630)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Examples</h4>
+        <div class="code-block">
+          <div class="code-block-header"><span>curl</span></div>
+          <pre class="code-block-body"><code>curl "https://og.codercops.com/api/og?title=Hello+World&template=blog-minimal-dark" \
+  --output og-image.png</code></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-block-header"><span>JavaScript</span></div>
+          <pre class="code-block-body"><code>{`const params = new URLSearchParams({
+  template: 'blog-minimal-dark',
+  title: 'Hello World',
+  author: 'OGCOPS',
+});
+
+const imageUrl = \`https://og.codercops.com/api/og?\${params}\`;
+
+// Use as meta tag:
+// <meta property="og:image" content={\`\${imageUrl}\`} />`}</code></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-block-header"><span>Python</span></div>
+          <pre class="code-block-body"><code>{`import requests
+
+response = requests.get("https://og.codercops.com/api/og", params={
+    "template": "blog-minimal-dark",
+    "title": "Hello World",
+    "author": "OGCOPS",
+})
+
+with open("og-image.png", "wb") as f:
+    f.write(response.content)`}</code></pre>
+        </div>
+      </div>
+
+      <!-- Preview URL -->
+      <div class="endpoint-card" id="preview">
+        <div class="endpoint-header">
+          <span class="endpoint-method">GET</span>
+          <span class="endpoint-path">/api/preview</span>
+        </div>
+        <p class="endpoint-desc">Fetch and analyze meta tags from a URL. Returns JSON with meta tags, analysis score, and per-platform preview data for 8 platforms.</p>
+
+        <h4>Parameters</h4>
+        <table class="param-table">
+          <thead>
+            <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">url</td>
+              <td class="param-type">string</td>
+              <td><span class="param-required">Yes</span></td>
+              <td class="param-desc">URL to check (must be a valid URL)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Response</h4>
+        <div class="code-block">
+          <div class="code-block-header"><span>JSON Response</span></div>
+          <pre class="code-block-body"><code>{`{
+  "url": "https://example.com",
+  "meta": {
+    "title": "Example",
+    "ogTitle": "Example - Site",
+    "ogImage": "https://example.com/og.png",
+    ...
+  },
+  "analysis": {
+    "score": 85,
+    "grade": "B",
+    "issues": [...],
+    "summary": "Good setup with minor improvements possible."
+  },
+  "platforms": [
+    {
+      "platform": "twitter",
+      "name": "Twitter / X",
+      "imageUrl": "...",
+      "title": "...",
+      "description": "...",
+      ...
+    },
+    ...
+  ]
+}`}</code></pre>
+        </div>
+      </div>
+
+      <!-- List Templates -->
+      <div class="endpoint-card" id="templates">
+        <div class="endpoint-header">
+          <span class="endpoint-method">GET</span>
+          <span class="endpoint-path">/api/templates</span>
+        </div>
+        <p class="endpoint-desc">List all available templates with their fields, defaults, and thumbnail URLs.</p>
+
+        <div class="code-block">
+          <div class="code-block-header"><span>curl</span></div>
+          <pre class="code-block-body"><code>curl "https://og.codercops.com/api/templates"</code></pre>
+        </div>
+      </div>
+
+      <!-- Thumbnail -->
+      <div class="endpoint-card" id="thumbnail">
+        <div class="endpoint-header">
+          <span class="endpoint-method">GET</span>
+          <span class="endpoint-path">/api/templates/&#123;id&#125;/thumbnail.png</span>
+        </div>
+        <p class="endpoint-desc">Get a 600x315 thumbnail preview of a template with its default values. Cached for 7 days.</p>
+
+        <div class="code-block">
+          <div class="code-block-header"><span>Example</span></div>
+          <pre class="code-block-body"><code>https://og.codercops.com/api/templates/blog-minimal-dark/thumbnail.png</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
