@@ -8,7 +8,7 @@
 
 **Live:** [og.codercops.com](https://og.codercops.com)
 
-![OGCOPS](https://og.codercops.com/api/og?title=OGCOPS&template=blog-minimal-dark&description=Free+OG+Image+Generator+%E2%80%A2+109+Templates+%E2%80%A2+8+Platform+Previews+%E2%80%A2+Free+API&author=og.codercops.com)
+![OGCOPS](https://og.codercops.com/api/og?template=github-readme-hero&title=OGCOPS&description=Free%2C+open-source+OG+image+generator.+109+templates.+8+platform+previews.+Free+API.&tagline=No+login+%E2%80%A2+No+watermarks+%E2%80%A2+No+limits&badges=MIT+License&accentColor=%23E07A5F)
 
 ## Why OGCOPS?
 
@@ -112,24 +112,20 @@ The build output in `dist/` can be deployed to any Node.js hosting platform.
 
 ## Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
+Contributions are welcome — templates, bug fixes, features, docs, and more. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and guidelines.
 
-Ways to contribute:
-
-- Add new OG image templates
-- Fix bugs or improve existing features
-- Improve documentation
-- Add platform previews
-- Report issues
-
-## Community
-
-- [GitHub Issues](https://github.com/codercops/ogcops/issues) — bug reports and feature requests
-- [GitHub Discussions](https://github.com/codercops/ogcops/discussions) — questions, ideas, and show & tell
+- [Open an issue](https://github.com/codercops/ogcops/issues) — bug reports and feature requests
+- [Start a discussion](https://github.com/codercops/ogcops/discussions) — questions, ideas, show & tell
 
 ## License
 
 [MIT](LICENSE)
+
+## Contributors
+
+<a href="https://github.com/codercops/ogcops/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=codercops/ogcops" />
+</a>
 
 ## Acknowledgments
 
