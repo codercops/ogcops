@@ -1,0 +1,83 @@
+<!-- Global toast container + showToast() function -->
+<div id="toast-container" class="toast-container"></div>
+
+<script is:inline>
+  window.showToast = function(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3000;
+    var container = document.getElementById('toast-container');
+    if (!container) return;
+
+    var toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    toast.textContent = message;
+    container.appendChild(toast);
+
+    // Trigger entrance animation
+    requestAnimationFrame(function() {
+      toast.classList.add('toast-visible');
+    });
+
+    setTimeout(function() {
+      toast.classList.remove('toast-visible');
+      toast.addEventListener('transitionend', function() {
+        toast.remove();
+      });
+    }, duration);
+  };
+</script>
+
+<style>
+  .toast-container {
+    position: fixed;
+    bottom: var(--space-xl, 24px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm, 8px);
+    pointer-events: none;
+  }
+
+  .toast-container :global(.toast) {
+    padding: 10px 20px;
+    background: var(--text, #1a1a1a);
+    color: var(--bg, #fff);
+    font-size: var(--text-sm, 14px);
+    font-weight: 500;
+    border-radius: var(--radius-full, 999px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: auto;
+    white-space: nowrap;
+  }
+
+  .toast-container :global(.toast-visible) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .toast-container :global(.toast-success) {
+    background: #16a34a;
+    color: #fff;
+  }
+
+  .toast-container :global(.toast-error) {
+    background: #dc2626;
+    color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toast-container :global(.toast) {
+      transition: opacity 0.1s ease;
+      transform: none;
+    }
+    .toast-container :global(.toast-visible) {
+      transform: none;
+    }
+  }
+</style>

@@ -1,6 +1,10 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Toast from '../components/Toast.astro';
+import StarBanner from '../components/StarBanner.astro';
+import BackToTop from '../components/BackToTop.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -38,8 +42,7 @@ const fullTitle = title === 'OGCOPS' ? title : `${title} | ${siteName}`;
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#0C0A09" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#FAFAFA" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -63,6 +66,9 @@ const fullTitle = title === 'OGCOPS' ? title : `${title} | ${siteName}`;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- View Transitions -->
+    <ClientRouter />
 
     <!-- Google Analytics (same property as main site) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GLYL9J6QYX"></script>
@@ -100,11 +106,14 @@ const fullTitle = title === 'OGCOPS' ? title : `${title} | ${siteName}`;
     <slot name="head" />
   </head>
   <body>
-    <Header />
-    <main>
+    <Header transition:persist />
+    <main transition:animate="fade">
       <slot />
     </main>
     <Footer />
+    <Toast />
+    <StarBanner />
+    <BackToTop />
   </body>
 </html>
 

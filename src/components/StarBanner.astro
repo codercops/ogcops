@@ -1,0 +1,205 @@
+<!-- Star-repo banner: shows after 10s on first visit, bottom-right card -->
+<div id="star-banner" class="star-banner" aria-hidden="true">
+  <div class="star-banner-content">
+    <div class="star-banner-header">
+      <svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" class="star-banner-icon"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+      <span class="star-banner-title">Enjoying OGCOPS?</span>
+    </div>
+    <p class="star-banner-text">Star us on GitHub to help others discover this tool</p>
+    <div class="star-banner-actions">
+      <a href="https://github.com/codercops/ogcops" target="_blank" rel="noopener" class="star-banner-btn star-banner-primary" id="star-banner-star">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"></path></svg>
+        Star on GitHub
+      </a>
+      <button type="button" class="star-banner-btn star-banner-ghost" id="star-banner-dismiss">Maybe later</button>
+    </div>
+  </div>
+  <button type="button" class="star-banner-close" id="star-banner-close" aria-label="Close">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
+  </button>
+</div>
+
+<script is:inline>
+(function() {
+  var STORAGE_KEY = 'ogcops-star-banner';
+
+  function shouldShow() {
+    try {
+      var data = localStorage.getItem(STORAGE_KEY);
+      if (!data) return true;
+      var parsed = JSON.parse(data);
+      if (parsed.permanent) return false;
+      // 7-day expiry for "maybe later"
+      if (parsed.until && Date.now() < parsed.until) return false;
+      return true;
+    } catch { return true; }
+  }
+
+  function dismissPermanent() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ permanent: true })); } catch {}
+  }
+
+  function dismissTemporary() {
+    var sevenDays = 7 * 24 * 60 * 60 * 1000;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ until: Date.now() + sevenDays })); } catch {}
+  }
+
+  function hideBanner() {
+    var banner = document.getElementById('star-banner');
+    if (banner) {
+      banner.classList.remove('star-banner-visible');
+      banner.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  if (!shouldShow()) return;
+
+  setTimeout(function() {
+    var banner = document.getElementById('star-banner');
+    if (!banner) return;
+
+    banner.classList.add('star-banner-visible');
+    banner.setAttribute('aria-hidden', 'false');
+
+    document.getElementById('star-banner-star')?.addEventListener('click', function() {
+      dismissPermanent();
+      hideBanner();
+    });
+
+    document.getElementById('star-banner-dismiss')?.addEventListener('click', function() {
+      dismissTemporary();
+      hideBanner();
+    });
+
+    document.getElementById('star-banner-close')?.addEventListener('click', function() {
+      dismissTemporary();
+      hideBanner();
+    });
+  }, 10000);
+})();
+</script>
+
+<style>
+  .star-banner {
+    position: fixed;
+    bottom: var(--space-xl, 24px);
+    right: var(--space-xl, 24px);
+    z-index: 9000;
+    width: 300px;
+    background: var(--bg-elevated, #fff);
+    border: 1px solid var(--border, #e5e5e5);
+    border-radius: var(--radius-lg, 12px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    padding: var(--space-lg, 16px);
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .star-banner-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .star-banner-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: var(--text-muted, #999);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--radius-sm, 4px);
+    transition: color var(--transition, 0.15s ease);
+  }
+
+  .star-banner-close:hover {
+    color: var(--text, #333);
+  }
+
+  .star-banner-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm, 8px);
+    margin-bottom: var(--space-xs, 4px);
+  }
+
+  .star-banner-icon {
+    color: var(--text, #333);
+  }
+
+  .star-banner-title {
+    font-size: var(--text-base, 16px);
+    font-weight: 600;
+    color: var(--text, #333);
+  }
+
+  .star-banner-text {
+    font-size: var(--text-sm, 14px);
+    color: var(--text-muted, #666);
+    line-height: 1.5;
+    margin-bottom: var(--space-md, 12px);
+  }
+
+  .star-banner-actions {
+    display: flex;
+    gap: var(--space-sm, 8px);
+  }
+
+  .star-banner-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: var(--text-sm, 14px);
+    font-weight: 500;
+    border-radius: var(--radius, 8px);
+    cursor: pointer;
+    transition: all var(--transition, 0.15s ease);
+    text-decoration: none;
+    border: none;
+  }
+
+  .star-banner-primary {
+    background: var(--accent-primary, #E07A5F);
+    color: #fff;
+  }
+
+  .star-banner-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .star-banner-ghost {
+    background: none;
+    color: var(--text-muted, #666);
+    padding: 8px 12px;
+  }
+
+  .star-banner-ghost:hover {
+    color: var(--text, #333);
+    background: var(--bg-surface, #f5f5f5);
+  }
+
+  @media (max-width: 480px) {
+    .star-banner {
+      left: var(--space-md, 12px);
+      right: var(--space-md, 12px);
+      width: auto;
+      bottom: var(--space-md, 12px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .star-banner {
+      transition: opacity 0.1s ease;
+      transform: none;
+    }
+    .star-banner-visible {
+      transform: none;
+    }
+  }
+</style>

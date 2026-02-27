@@ -18,8 +18,8 @@ export function TemplateThumbnail({ id, name, isActive, onClick }: TemplateThumb
           src={`/api/templates/${id}/thumbnail.png`}
           alt={name}
           loading="lazy"
-          width={280}
-          height={147}
+          width={600}
+          height={315}
         />
       </div>
       <span className="template-thumb-name">{name}</span>
