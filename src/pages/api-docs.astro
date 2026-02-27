@@ -8,11 +8,26 @@ import '@/styles/api-docs.css';
     <!-- Sidebar -->
     <aside class="api-sidebar">
       <nav class="api-sidebar-nav">
-        <a href="#overview" class="api-sidebar-link active">Overview</a>
-        <a href="#generate" class="api-sidebar-link">Generate Image</a>
-        <a href="#preview" class="api-sidebar-link">Preview URL</a>
-        <a href="#templates" class="api-sidebar-link">List Templates</a>
-        <a href="#thumbnail" class="api-sidebar-link">Thumbnails</a>
+        <a href="#overview" class="api-sidebar-link active">
+          <svg class="api-sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          Overview
+        </a>
+        <a href="#generate" class="api-sidebar-link">
+          <svg class="api-sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          Generate Image
+        </a>
+        <a href="#preview" class="api-sidebar-link">
+          <svg class="api-sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          Preview URL
+        </a>
+        <a href="#templates" class="api-sidebar-link">
+          <svg class="api-sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+          List Templates
+        </a>
+        <a href="#thumbnail" class="api-sidebar-link">
+          <svg class="api-sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          Thumbnails
+        </a>
       </nav>
     </aside>
 
@@ -29,6 +44,7 @@ import '@/styles/api-docs.css';
         <div class="endpoint-header">
           <span class="endpoint-method">GET</span>
           <span class="endpoint-path">/api/og</span>
+          <a href="#generate" class="section-anchor" aria-label="Link to this section">#</a>
         </div>
         <p class="endpoint-desc">Generate an OG image as PNG. Returns image/png with Cache-Control headers.</p>
 
@@ -91,13 +107,21 @@ import '@/styles/api-docs.css';
 
         <h4>Examples</h4>
         <div class="code-block">
-          <div class="code-block-header"><span>curl</span></div>
+          <div class="code-block-header">
+            <div class="code-block-dots"><span class="code-block-dot"></span><span class="code-block-dot"></span><span class="code-block-dot"></span></div>
+            <span>curl</span>
+            <button class="code-block-copy" data-copy type="button">Copy</button>
+          </div>
           <pre class="code-block-body"><code>curl "https://og.codercops.com/api/og?title=Hello+World&template=blog-minimal-dark" \
   --output og-image.png</code></pre>
         </div>
 
         <div class="code-block">
-          <div class="code-block-header"><span>JavaScript</span></div>
+          <div class="code-block-header">
+            <div class="code-block-dots"><span class="code-block-dot"></span><span class="code-block-dot"></span><span class="code-block-dot"></span></div>
+            <span>JavaScript</span>
+            <button class="code-block-copy" data-copy type="button">Copy</button>
+          </div>
           <pre class="code-block-body"><code>{`const params = new URLSearchParams({
   template: 'blog-minimal-dark',
   title: 'Hello World',
@@ -111,7 +135,11 @@ const imageUrl = \`https://og.codercops.com/api/og?\${params}\`;
         </div>
 
         <div class="code-block">
-          <div class="code-block-header"><span>Python</span></div>
+          <div class="code-block-header">
+            <div class="code-block-dots"><span class="code-block-dot"></span><span class="code-block-dot"></span><span class="code-block-dot"></span></div>
+            <span>Python</span>
+            <button class="code-block-copy" data-copy type="button">Copy</button>
+          </div>
           <pre class="code-block-body"><code>{`import requests
 
 response = requests.get("https://og.codercops.com/api/og", params={
@@ -130,6 +158,7 @@ with open("og-image.png", "wb") as f:
         <div class="endpoint-header">
           <span class="endpoint-method">GET</span>
           <span class="endpoint-path">/api/preview</span>
+          <a href="#preview" class="section-anchor" aria-label="Link to this section">#</a>
         </div>
         <p class="endpoint-desc">Fetch and analyze meta tags from a URL. Returns JSON with meta tags, analysis score, and per-platform preview data for 8 platforms.</p>
 
@@ -149,9 +178,13 @@ with open("og-image.png", "wb") as f:
         </table>
 
         <h4>Response</h4>
-        <div class="code-block">
-          <div class="code-block-header"><span>JSON Response</span></div>
-          <pre class="code-block-body"><code>{`{
+        <div class="code-block code-block-collapsible">
+          <div class="code-block-header">
+            <div class="code-block-dots"><span class="code-block-dot"></span><span class="code-block-dot"></span><span class="code-block-dot"></span></div>
+            <span>JSON Response</span>
+            <button class="code-block-copy" data-copy type="button">Copy</button>
+          </div>
+          <pre class="code-block-body" id="preview-response"><code>{`{
   "url": "https://example.com",
   "meta": {
     "title": "Example",
@@ -185,11 +218,16 @@ with open("og-image.png", "wb") as f:
         <div class="endpoint-header">
           <span class="endpoint-method">GET</span>
           <span class="endpoint-path">/api/templates</span>
+          <a href="#templates" class="section-anchor" aria-label="Link to this section">#</a>
         </div>
         <p class="endpoint-desc">List all available templates with their fields, defaults, and thumbnail URLs.</p>
 
         <div class="code-block">
-          <div class="code-block-header"><span>curl</span></div>
+          <div class="code-block-header">
+            <div class="code-block-dots"><span class="code-block-dot"></span><span class="code-block-dot"></span><span class="code-block-dot"></span></div>
+            <span>curl</span>
+            <button class="code-block-copy" data-copy type="button">Copy</button>
+          </div>
           <pre class="code-block-body"><code>curl "https://og.codercops.com/api/templates"</code></pre>
         </div>
       </div>
@@ -199,14 +237,58 @@ with open("og-image.png", "wb") as f:
         <div class="endpoint-header">
           <span class="endpoint-method">GET</span>
           <span class="endpoint-path">/api/templates/&#123;id&#125;/thumbnail.png</span>
+          <a href="#thumbnail" class="section-anchor" aria-label="Link to this section">#</a>
         </div>
         <p class="endpoint-desc">Get a 600x315 thumbnail preview of a template with its default values. Cached for 7 days.</p>
 
         <div class="code-block">
-          <div class="code-block-header"><span>Example</span></div>
+          <div class="code-block-header">
+            <div class="code-block-dots"><span class="code-block-dot"></span><span class="code-block-dot"></span><span class="code-block-dot"></span></div>
+            <span>Example</span>
+            <button class="code-block-copy" data-copy type="button">Copy</button>
+          </div>
           <pre class="code-block-body"><code>https://og.codercops.com/api/templates/blog-minimal-dark/thumbnail.png</code></pre>
         </div>
       </div>
     </div>
   </div>
 </Layout>
+
+<script is:inline>
+  // Copy buttons for code blocks
+  document.querySelectorAll('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const codeBlock = this.closest('.code-block');
+      const code = codeBlock?.querySelector('code')?.textContent || '';
+      navigator.clipboard.writeText(code).then(() => {
+        this.textContent = 'Copied!';
+        window.showToast?.('Copied to clipboard!', 'success');
+        setTimeout(() => { this.textContent = 'Copy'; }, 2000);
+      });
+    });
+  });
+
+  // Sidebar active state on scroll
+  const sidebarLinks = document.querySelectorAll('.api-sidebar-link');
+  const sections = document.querySelectorAll('.endpoint-card[id]');
+
+  function updateSidebar() {
+    let current = '';
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= 120) current = section.id;
+    });
+    if (!current && sections.length) current = 'overview';
+
+    sidebarLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === '#' + current || (!current && href === '#overview')) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateSidebar, { passive: true });
+</script>

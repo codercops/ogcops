@@ -6,13 +6,33 @@ export const prerender = true;
 
 <Layout title="404 — Page Not Found" noindex>
   <section class="error-page">
-    <div class="container">
-      <span class="error-code">404</span>
+    <div class="error-bg-shapes">
+      <div class="error-shape error-shape-1"></div>
+      <div class="error-shape error-shape-2"></div>
+      <div class="error-shape error-shape-3"></div>
+    </div>
+    <div class="container error-content">
+      <!-- SVG Illustration -->
+      <div class="error-illustration">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="20" width="100" height="75" rx="8" stroke="var(--border-strong)" stroke-width="2" fill="var(--bg-surface)"/>
+          <rect x="10" y="20" width="100" height="20" rx="8" fill="var(--bg-subtle)" stroke="var(--border-strong)" stroke-width="2"/>
+          <circle cx="26" cy="30" r="4" fill="#FF5F57"/>
+          <circle cx="38" cy="30" r="4" fill="#FEBC2E"/>
+          <circle cx="50" cy="30" r="4" fill="#28C840"/>
+          <path d="M45 65 L55 75 M55 65 L45 75" stroke="var(--accent-primary)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M65 65 L75 75 M75 65 L65 75" stroke="var(--accent-primary)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M42 85 C48 82, 52 82, 55 83 C58 84, 62 84, 65 83 C68 82, 72 82, 78 85" stroke="var(--border-strong)" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+
+      <span class="error-code text-gradient">404</span>
       <h1>Page Not Found</h1>
       <p>The page you're looking for doesn't exist or has been moved.</p>
       <div class="error-ctas">
-        <a href="/" class="btn btn-primary">Go Home</a>
-        <a href="/create" class="btn btn-outline">Create OG Image</a>
+        <a href="/" class="btn btn-primary btn-lg">Go Home</a>
+        <a href="/templates" class="btn btn-outline btn-lg">Browse Templates</a>
+        <a href="/api-docs" class="btn btn-ghost">Try the API</a>
       </div>
     </div>
   </section>
@@ -20,34 +40,98 @@ export const prerender = true;
 
 <style>
   .error-page {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 60vh;
+    min-height: 70vh;
     text-align: center;
+    overflow: hidden;
+  }
+
+  .error-bg-shapes {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .error-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+
+  .error-shape-1 {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, var(--accent-primary-subtle) 0%, transparent 70%);
+    top: 10%;
+    right: 15%;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .error-shape-2 {
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(224, 122, 95, 0.08) 0%, transparent 70%);
+    bottom: 20%;
+    left: 10%;
+    animation: float 8s ease-in-out infinite reverse;
+  }
+
+  .error-shape-3 {
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, var(--accent-primary-subtle) 0%, transparent 70%);
+    top: 50%;
+    left: 60%;
+    animation: float 7s ease-in-out infinite;
+  }
+
+  .error-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .error-illustration {
+    margin-bottom: var(--space-xl);
+  }
+
+  .error-illustration svg {
+    margin: 0 auto;
   }
 
   .error-code {
     display: block;
-    font-size: 8rem;
-    font-weight: 700;
-    color: var(--border-strong);
+    font-size: 6rem;
+    font-weight: 800;
     line-height: 1;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
+    letter-spacing: -0.04em;
   }
 
   .error-page h1 {
+    font-size: var(--text-3xl);
     margin-bottom: var(--space-md);
   }
 
   .error-page p {
     color: var(--text-muted);
+    font-size: var(--text-lg);
     margin: 0 auto var(--space-xl);
+    max-width: 400px;
   }
 
   .error-ctas {
     display: flex;
     gap: var(--space-md);
     justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .error-shape { animation: none; }
   }
 </style>

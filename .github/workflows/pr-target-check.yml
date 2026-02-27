@@ -1,0 +1,22 @@
+name: PR Target Check
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Only allow PRs from dev to main
+        if: github.head_ref != 'dev'
+        run: |
+          echo "::error::PRs targeting 'main' are only allowed from the 'dev' branch."
+          echo "Please target 'dev' instead, or merge your branch into 'dev' first."
+          echo ""
+          echo "  Source: ${{ github.head_ref }}"
+          echo "  Target: ${{ github.base_ref }}"
+          exit 1
+      - name: PR source branch is valid
+        if: github.head_ref == 'dev'
+        run: echo "PR from 'dev' to 'main' — allowed."

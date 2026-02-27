@@ -20,7 +20,8 @@ export const GET: APIRoute = async ({ params }) => {
     let png = thumbnailCache.get(id!);
     if (!png) {
       const element = template.render(template.defaults);
-      png = await renderToPng(element, { width: 600, height: 315 });
+      // Render at full 1200x630 so satori lays out correctly, then scale down via resvg
+      png = await renderToPng(element, { width: 1200, height: 630, scaleDown: 600 });
       thumbnailCache.set(id!, png);
     }
 

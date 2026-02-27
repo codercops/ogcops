@@ -11,22 +11,27 @@ const categoryCounts = getCategoryCounts();
 
   <!-- Hero -->
   <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-pattern"></div>
     <div class="container hero-inner">
       <div class="hero-content" data-animate="slide-up">
         <span class="section-label">Free & Open Source</span>
-        <h1>Free OG Image<br />Generator</h1>
+        <h1><span class="text-gradient">Free</span> OG Image<br />Generator</h1>
         <p class="hero-subtitle">
           {templateCount}+ templates. 8 platform previews. Free API. No login required.
         </p>
         <div class="hero-ctas">
-          <a href="/create" class="btn btn-primary btn-lg">Create OG Image</a>
+          <a href="/create" class="btn btn-primary btn-lg">
+            Create OG Image
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
           <a href="/preview" class="btn btn-outline btn-lg">Check Your URL</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Category Grid -->
+  <!-- Category Grid — Bento Layout -->
   <section class="section">
     <div class="container">
       <div class="section-header" data-animate="fade">
@@ -34,16 +39,17 @@ const categoryCounts = getCategoryCounts();
         <h2>12 Categories, {templateCount}+ Templates</h2>
         <p class="section-subtitle">Beautiful, professional OG images for every use case.</p>
       </div>
-      <div class="grid grid-4 category-grid">
+      <div class="bento-grid">
         {ALL_CATEGORIES.map((cat, i) => {
           const meta = CATEGORY_META[cat];
           const count = categoryCounts[cat] || 0;
           return (
-            <a href={`/create/${cat}`} class="card card-category" data-animate="slide-up" data-animate-delay={String(i % 4 + 1)}>
-              <span class="cat-icon">{meta.icon}</span>
-              <h3 class="cat-name">{meta.label}</h3>
-              <span class="cat-count">{count} templates</span>
-              <p class="cat-desc">{meta.description}</p>
+            <a href={`/create/${cat}`} class="bento-card" data-animate="slide-up" data-animate-delay={String(i % 4 + 1)}>
+              <div class="bento-card-accent"></div>
+              <span class="bento-icon">{meta.icon}</span>
+              <h3 class="bento-name">{meta.label}</h3>
+              <span class="badge badge-coral">{count} templates</span>
+              <p class="bento-desc">{meta.description}</p>
             </a>
           );
         })}
@@ -54,23 +60,39 @@ const categoryCounts = getCategoryCounts();
   <!-- Feature Highlights -->
   <section class="section">
     <div class="container">
-      <div class="dashed-grid dashed-grid-2x2" data-animate="scale">
-        <div class="dashed-grid-item">
+      <div class="section-header" data-animate="fade">
+        <span class="section-label">Why OGCOPS</span>
+        <h2>Everything You Need</h2>
+      </div>
+      <div class="features-grid" data-animate="scale">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          </div>
           <span class="feature-number">{templateCount}+</span>
           <h3>Templates</h3>
           <p>Professional designs across 12 categories. Blog, SaaS, GitHub, events, and more.</p>
         </div>
-        <div class="dashed-grid-item">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+          </div>
           <span class="feature-number">8</span>
           <h3>Platform Previews</h3>
           <p>See how your link looks on Twitter, Facebook, LinkedIn, Discord, Slack, Reddit, WhatsApp, and Google.</p>
         </div>
-        <div class="dashed-grid-item">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+          </div>
           <span class="feature-number">Free</span>
           <h3>REST API</h3>
           <p>Generate OG images via URL. CORS-enabled. No API key required. Cache-friendly.</p>
         </div>
-        <div class="dashed-grid-item">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          </div>
           <span class="feature-number">MIT</span>
           <h3>Open Source</h3>
           <p>Fork it. Self-host it. Contribute templates. Built by developers, for developers.</p>
@@ -79,28 +101,45 @@ const categoryCounts = getCategoryCounts();
     </div>
   </section>
 
-  <!-- How It Works -->
+  <!-- How It Works — Timeline -->
   <section class="section">
     <div class="container">
       <div class="section-header" data-animate="fade">
         <span class="section-label">How It Works</span>
         <h2>Three Simple Steps</h2>
       </div>
-      <div class="grid grid-3 steps-grid" data-animate="slide-up">
-        <div class="step-card">
-          <span class="step-number">1</span>
-          <h3>Pick a Template</h3>
-          <p>Browse {templateCount}+ templates across 12 categories. Filter and search to find the perfect design.</p>
+      <div class="timeline">
+        <div class="timeline-line"></div>
+        <div class="timeline-step" data-animate="slide-up" data-animate-delay="1">
+          <div class="timeline-number">1</div>
+          <div class="timeline-content">
+            <h3>Pick a Template</h3>
+            <p>Browse {templateCount}+ templates across 12 categories. Filter and search to find the perfect design.</p>
+          </div>
         </div>
-        <div class="step-card">
-          <span class="step-number">2</span>
-          <h3>Customize</h3>
-          <p>Change text, colors, and branding. Instant preview updates — no waiting for server renders.</p>
+        <div class="timeline-step" data-animate="slide-up" data-animate-delay="2">
+          <div class="timeline-number">2</div>
+          <div class="timeline-content">
+            <h3>Customize</h3>
+            <p>Change text, colors, and branding. Instant preview updates — no waiting for server renders.</p>
+          </div>
         </div>
-        <div class="step-card">
-          <span class="step-number">3</span>
-          <h3>Export</h3>
-          <p>Download PNG, copy the API URL, or grab ready-to-paste meta tags. Done in seconds.</p>
+        <div class="timeline-step" data-animate="slide-up" data-animate-delay="3">
+          <div class="timeline-number">3</div>
+          <div class="timeline-content">
+            <div class="timeline-content-inner">
+              <h3>Export</h3>
+              <p>Download PNG, copy the API URL, or grab ready-to-paste meta tags. Done in seconds.</p>
+            </div>
+            <div class="timeline-terminal">
+              <div class="timeline-terminal-header">
+                <span class="timeline-terminal-dot"></span>
+                <span class="timeline-terminal-dot"></span>
+                <span class="timeline-terminal-dot"></span>
+              </div>
+              <code class="timeline-terminal-body">curl og.codercops.com/api/og?title=Hello</code>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -110,13 +149,17 @@ const categoryCounts = getCategoryCounts();
   <section class="section">
     <div class="container">
       <div class="api-teaser" data-animate="slide-up">
-        <div class="api-teaser-code">
-          <div class="api-code-header">
-            <span class="api-code-dot"></span>
-            <span class="api-code-dot"></span>
-            <span class="api-code-dot"></span>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-title">Terminal</span>
+            <div class="terminal-actions">
+              <button class="terminal-copy-btn" id="api-copy-btn" type="button">Copy</button>
+            </div>
           </div>
-          <pre class="api-code-body"><code>curl "https://og.codercops.com/api/og?\
+          <pre class="terminal-body"><code id="api-code-content">curl "https://og.codercops.com/api/og?\
   template=blog-minimal-dark&\
   title=Hello%20World&\
   author=OGCOPS"</code></pre>
@@ -125,6 +168,20 @@ const categoryCounts = getCategoryCounts();
           <span class="section-label">Free API</span>
           <h2>Generate via URL</h2>
           <p>Use our REST API to generate OG images programmatically. No API key, no rate limits, CORS-enabled.</p>
+          <ul class="api-feature-list">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              No API key required
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              CORS-enabled for browsers
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Cache-friendly headers
+            </li>
+          </ul>
           <a href="/api-docs" class="btn btn-outline">View API Docs</a>
         </div>
       </div>
@@ -132,16 +189,22 @@ const categoryCounts = getCategoryCounts();
   </section>
 
   <!-- Open Source Banner -->
-  <section class="section">
+  <section class="section oss-section">
+    <div class="oss-bg"></div>
     <div class="container">
       <div class="oss-banner" data-animate="fade">
+        <div class="oss-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        </div>
         <span class="section-label">Open Source</span>
         <h2>Built in Public</h2>
         <p class="section-subtitle">OGCOPS is MIT licensed. Star us on GitHub, contribute templates, or self-host.</p>
         <div class="oss-ctas">
-          <a href="https://github.com/codercops/ogcops" target="_blank" rel="noopener" class="btn btn-secondary">
+          <a href="https://github.com/codercops/ogcops" target="_blank" rel="noopener" class="btn btn-secondary btn-lg">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
             Star on GitHub
           </a>
+          <a href="/templates" class="btn btn-outline btn-lg">Browse Templates</a>
         </div>
       </div>
     </div>
@@ -149,15 +212,55 @@ const categoryCounts = getCategoryCounts();
 
 </Layout>
 
+<script is:inline>
+  // Terminal copy button
+  document.getElementById('api-copy-btn')?.addEventListener('click', function() {
+    const code = document.getElementById('api-code-content')?.textContent || '';
+    navigator.clipboard.writeText(code).then(() => {
+      this.textContent = 'Copied!';
+      window.showToast?.('Copied to clipboard!', 'success');
+      setTimeout(() => { this.textContent = 'Copy'; }, 2000);
+    });
+  });
+</script>
+
 <style>
   /* Hero */
   .hero {
-    padding: var(--space-5xl) 0;
+    position: relative;
+    padding: var(--space-5xl) 0 var(--space-4xl);
     text-align: center;
+    overflow: hidden;
   }
 
+  .hero-glow {
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 500px;
+    background: radial-gradient(ellipse at center, rgba(224, 122, 95, 0.12) 0%, rgba(224, 122, 95, 0.04) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 20%, transparent 70%);
+  }
+
+  .hero-inner { position: relative; z-index: 1; }
+
   .hero h1 {
-    font-size: var(--text-6xl);
+    font-size: var(--text-7xl);
     line-height: 1.05;
     letter-spacing: -0.04em;
     margin-bottom: var(--space-lg);
@@ -168,6 +271,7 @@ const categoryCounts = getCategoryCounts();
     color: var(--text-muted);
     max-width: 500px;
     margin: 0 auto var(--space-xl);
+    line-height: 1.6;
   }
 
   .hero-ctas {
@@ -177,84 +281,217 @@ const categoryCounts = getCategoryCounts();
     flex-wrap: wrap;
   }
 
-  /* Category Cards */
-  .card-category {
-    text-decoration: none;
+  /* Bento Grid */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .bento-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
+    padding: var(--space-xl);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    text-decoration: none;
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
   }
 
-  .cat-icon {
-    font-size: var(--text-2xl);
+  .bento-card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-primary-muted), transparent);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .bento-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(224, 122, 95, 0.2);
+  }
+
+  .bento-card:hover .bento-card-accent {
+    opacity: 1;
+  }
+
+  .bento-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    font-size: var(--text-xl);
+    background: var(--accent-primary-subtle);
+    border-radius: var(--radius-lg);
     margin-bottom: var(--space-xs);
   }
 
-  .cat-name {
+  .bento-name {
     font-size: var(--text-lg);
     font-weight: 600;
   }
 
-  .cat-count {
-    font-size: var(--text-xs);
-    color: var(--accent-primary);
-    font-weight: 500;
-  }
-
-  .cat-desc {
+  .bento-desc {
     font-size: var(--text-sm);
     color: var(--text-muted);
     line-height: 1.5;
   }
 
-  /* Feature Numbers */
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .feature-card {
+    position: relative;
+    padding: var(--space-2xl);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+
+  .feature-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .feature-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--accent-primary-subtle);
+    border-radius: var(--radius-lg);
+    color: var(--accent-primary);
+    margin-bottom: var(--space-lg);
+  }
+
   .feature-number {
     display: block;
-    font-size: var(--text-3xl);
+    font-size: var(--text-5xl);
     font-weight: 700;
     color: var(--accent-primary);
     margin-bottom: var(--space-sm);
+    letter-spacing: -0.03em;
+    line-height: 1;
   }
 
-  .dashed-grid-item h3 {
+  .feature-card h3 {
     font-size: var(--text-lg);
     margin-bottom: var(--space-sm);
   }
 
-  .dashed-grid-item p {
+  .feature-card p {
     font-size: var(--text-sm);
     color: var(--text-muted);
+    line-height: 1.6;
   }
 
-  /* Steps */
-  .step-card {
-    text-align: center;
-    padding: var(--space-xl);
+  /* Timeline */
+  .timeline {
+    position: relative;
+    max-width: 640px;
+    margin: 0 auto;
   }
 
-  .step-number {
-    display: inline-flex;
+  .timeline-line {
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent-primary), var(--border));
+  }
+
+  .timeline-step {
+    position: relative;
+    display: flex;
+    gap: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+  }
+
+  .timeline-step:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline-number {
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--border);
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-coral);
+    color: #fff;
     border-radius: 50%;
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: var(--space-md);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    z-index: 1;
+    box-shadow: var(--shadow-md), var(--shadow-glow);
   }
 
-  .step-card h3 {
-    font-size: var(--text-lg);
+  .timeline-content {
+    padding-top: var(--space-sm);
+  }
+
+  .timeline-content h3 {
+    font-size: var(--text-xl);
     margin-bottom: var(--space-sm);
   }
 
-  .step-card p {
+  .timeline-content p {
     font-size: var(--text-sm);
     color: var(--text-muted);
-    margin: 0 auto;
+    margin: 0;
+  }
+
+  .timeline-terminal {
+    margin-top: var(--space-md);
+    background: #1a1a1a;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .timeline-terminal-header {
+    display: flex;
+    gap: 5px;
+    padding: 8px 12px;
+    background: #252525;
+  }
+
+  .timeline-terminal-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .timeline-terminal-dot:nth-child(1) { background: #FF5F57; }
+  .timeline-terminal-dot:nth-child(2) { background: #FEBC2E; }
+  .timeline-terminal-dot:nth-child(3) { background: #28C840; }
+
+  .timeline-terminal-body {
+    display: block;
+    padding: 10px 14px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: #98C379;
+    line-height: 1.5;
   }
 
   /* API Teaser */
@@ -263,41 +500,6 @@ const categoryCounts = getCategoryCounts();
     grid-template-columns: 1fr 1fr;
     gap: var(--space-2xl);
     align-items: center;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: var(--space-2xl);
-  }
-
-  .api-code-header {
-    display: flex;
-    gap: 6px;
-    padding: var(--space-md);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .api-code-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--border-strong);
-  }
-
-  .api-teaser-code {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-  }
-
-  .api-code-body {
-    padding: var(--space-lg);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    color: var(--text-secondary);
-    line-height: 1.6;
-    overflow-x: auto;
-    margin: 0;
   }
 
   .api-teaser-info h2 {
@@ -308,10 +510,57 @@ const categoryCounts = getCategoryCounts();
     margin-bottom: var(--space-lg);
   }
 
-  /* OSS Banner */
+  .api-feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+  }
+
+  .api-feature-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* OSS Section */
+  .oss-section {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .oss-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(224, 122, 95, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
   .oss-banner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     padding: var(--space-3xl) 0;
+    z-index: 1;
+  }
+
+  .oss-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    color: var(--text);
+    margin-bottom: var(--space-lg);
+    box-shadow: var(--shadow-md);
   }
 
   .oss-banner h2 {
@@ -319,12 +568,25 @@ const categoryCounts = getCategoryCounts();
   }
 
   .oss-ctas {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
     margin-top: var(--space-xl);
+  }
+
+  @media (max-width: 1024px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (max-width: 768px) {
     .hero h1 { font-size: var(--text-4xl); }
+    .hero-glow { width: 400px; height: 300px; }
     .api-teaser { grid-template-columns: 1fr; }
     .hero-ctas { flex-direction: column; align-items: center; }
+    .bento-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .timeline-line { left: 20px; }
+    .timeline-number { width: 42px; height: 42px; font-size: var(--text-base); }
+    .oss-ctas { flex-direction: column; align-items: center; }
   }
 </style>
