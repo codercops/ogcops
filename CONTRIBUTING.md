@@ -113,7 +113,7 @@ npm run build        # Full production build
 1. Fork the repo and create a branch: `git checkout -b feat/my-feature`
 2. Make your changes
 3. Ensure `npm run check` and `npm run test` pass
-4. Push and open a PR against `main`
+4. Push and open a PR against `dev`
 5. Fill out the [PR template](.github/PULL_REQUEST_TEMPLATE.md) — screenshots are required for visual changes
 6. Wait for review
 
