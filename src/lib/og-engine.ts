@@ -48,6 +48,8 @@ export interface RenderOptions {
   width?: number;
   height?: number;
   format?: 'png' | 'svg';
+  /** If set, scales the final PNG to this width (maintaining aspect ratio). */
+  scaleDown?: number;
 }
 
 /**
@@ -75,7 +77,7 @@ export async function renderToPng(
   element: SatoriElement,
   options: RenderOptions = {}
 ): Promise<ArrayBuffer> {
-  const { width = 1200, height = 630 } = options;
+  const { width = 1200, height = 630, scaleDown } = options;
 
   await ensureWasmInitialized();
 
@@ -83,8 +85,9 @@ export async function renderToPng(
 
   // Serialize access to Resvg — the WASM module is single-threaded
   return withRenderLock(async () => {
+    const outputWidth = scaleDown ?? width;
     const resvg = new Resvg(svg, {
-      fitTo: { mode: 'width', value: width },
+      fitTo: { mode: 'width', value: outputWidth },
     });
     const pngData = resvg.render();
     const pngBytes = pngData.asPng();
