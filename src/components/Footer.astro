@@ -194,7 +194,7 @@ const year = new Date().getFullYear();
   function loadVisitors() {
     // One increment per session
     if (!sessionStorage.getItem('ogcops-counted')) {
-      fetch('/api/visitors', { method: 'POST' })
+      fetch('/api/visitors', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
         .then(function(r) { return r.json(); })
         .then(function(data) {
           sessionStorage.setItem('ogcops-counted', '1');
