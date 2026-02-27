@@ -3,7 +3,7 @@ import { renderToPng } from '@/lib/og-engine';
 import { getTemplate } from '@/templates/registry';
 
 // In-memory cache for thumbnails (defaults don't change at runtime)
-const thumbnailCache = new Map<string, Buffer>();
+const thumbnailCache = new Map<string, ArrayBuffer>();
 
 export const GET: APIRoute = async ({ params }) => {
   const { id } = params;

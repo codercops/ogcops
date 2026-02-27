@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { PlatformPreview } from '@/lib/platform-specs';
-import type { PlatformId } from '@/lib/platform-specs';
 import { MOCKUP_RENDERERS, PLATFORM_ORDER, getPlatformWidth, type ViewportSize } from '@/components/shared/PlatformMockups';
 import { ViewportSwitcher } from '@/components/shared/ViewportSwitcher';
 

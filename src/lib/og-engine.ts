@@ -74,7 +74,7 @@ export async function renderToSvg(
 export async function renderToPng(
   element: SatoriElement,
   options: RenderOptions = {}
-): Promise<Buffer> {
+): Promise<ArrayBuffer> {
   const { width = 1200, height = 630 } = options;
 
   await ensureWasmInitialized();
@@ -88,8 +88,8 @@ export async function renderToPng(
     });
     const pngData = resvg.render();
     const pngBytes = pngData.asPng();
-    // Copy the bytes before pngData is freed
-    return Buffer.from(pngBytes);
+    // Return as ArrayBuffer (BodyInit-compatible)
+    return pngBytes.buffer.slice(pngBytes.byteOffset, pngBytes.byteOffset + pngBytes.byteLength) as ArrayBuffer;
   });
 }
 
@@ -100,7 +100,7 @@ export async function generateOGImage(
   render: (params: Record<string, any>) => SatoriElement,
   params: Record<string, any>,
   options: RenderOptions = {}
-): Promise<Buffer> {
+): Promise<ArrayBuffer> {
   const element = render(params);
   return renderToPng(element, options);
 }

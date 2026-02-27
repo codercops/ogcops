@@ -43,10 +43,10 @@ export const GET: APIRoute = async ({ request }) => {
 
   try {
     // Merge template defaults with provided params
-    const mergedParams = { ...template.defaults };
+    const mergedParams: Record<string, string | number | boolean> = { ...template.defaults };
     for (const [key, value] of Object.entries(params)) {
-      if (value !== undefined && value !== '') {
-        mergedParams[key] = value;
+      if (value != null && value !== '') {
+        mergedParams[key] = value as string | number | boolean;
       }
     }
 
@@ -68,7 +68,7 @@ export const GET: APIRoute = async ({ request }) => {
       headers: {
         ...headers,
         'Content-Type': 'image/png',
-        'Content-Length': String(png.length),
+        'Content-Length': String(png.byteLength),
       },
     });
   } catch (err) {
