@@ -22,7 +22,7 @@ npm run check        # Type-check (astro check + tsc)
 - **CORS-open API** for developer use
 
 ## Key Directories
-- `src/templates/` — 120 templates across 12 categories. Each template is a `.ts` file exporting a `TemplateDefinition`.
+- `src/templates/` — 109 templates across 12 categories. Each template is a `.ts` file exporting a `TemplateDefinition`.
 - `src/lib/` — Core engine (og-engine.ts, font-loader.ts, meta-fetcher.ts, meta-analyzer.ts)
 - `src/components/editor/` — React components for the OG image editor
 - `src/components/preview/` — React components for the social media preview checker
@@ -34,8 +34,30 @@ npm run check        # Type-check (astro check + tsc)
 - Fonts bundled as `.woff` in `public/fonts/`.
 - Templates follow `TemplateDefinition` interface in `src/templates/types.ts`.
 
+## Reference Files
+- Template interface: `src/templates/types.ts`
+- Reference template: `src/templates/blog/minimal-dark.ts`
+- Shared utilities: `src/templates/utils.ts` (truncate, autoFontSize, commonFields)
+- OG engine: `src/lib/og-engine.ts`
+- API validation schemas: `src/lib/api-validation.ts`
+- Template registry: `src/templates/registry.ts`
+
 ## Template Contribution
 1. Create `src/templates/{category}/{id}.ts`
 2. Export a `TemplateDefinition`
 3. Register in `src/templates/{category}/index.ts`
 4. Run `npm run test` to verify
+
+## Gotchas / Constraints
+- Satori does **not** support CSS grid — only flexbox
+- Every `div` must have `display: 'flex'` explicitly in its style
+- No CSS classes in satori JSX — inline styles only
+- Font files must be listed in `astro.config.mjs` `includeFiles` array for Vercel deployment
+- WASM imports need `optimizeDeps.exclude` in the Vite config
+- `renderToPng` returns `ArrayBuffer` (not `Buffer`) for `BodyInit` compatibility
+
+## Do NOT
+- Add Tailwind CSS — the project uses CSS custom properties only
+- Add a database — state lives in URL params, no persistence by design
+- Add new fonts without updating `astro.config.mjs` `includeFiles`
+- Use CSS classes in satori render functions — inline styles only

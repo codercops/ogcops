@@ -18,10 +18,18 @@ Steps to reproduce the behavior:
 **Expected behavior**
 What you expected to happen.
 
+**Actual behavior**
+What actually happened instead.
+
 **Screenshots**
 If applicable, add screenshots.
 
 **Environment**
 - Browser: [e.g. Chrome 120]
 - OS: [e.g. macOS 14]
+- Node version (if running locally): [e.g. 22.x]
+- npm version (if running locally): [e.g. 10.x]
 - URL (if API): [the full API URL you used]
+
+**Additional context**
+Any other information that might help diagnose the issue.

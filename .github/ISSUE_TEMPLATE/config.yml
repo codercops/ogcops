@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: API Documentation
+    url: https://og.codercops.com/api-docs
+    about: Check the API docs before reporting API issues
