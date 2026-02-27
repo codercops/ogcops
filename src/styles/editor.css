@@ -21,15 +21,17 @@
 }
 
 .editor-logo {
-  font-size: var(--text-lg);
-  font-weight: 700;
-  letter-spacing: -0.03em;
   text-decoration: none;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
-.logo-text { color: var(--text); }
-.logo-accent { color: var(--accent-primary); }
+.editor-logo-img {
+  display: block;
+  height: 22px;
+  width: auto;
+}
 
 .editor-topbar-template {
   display: flex;

@@ -13,7 +13,8 @@ const navItems = [
 <header class="header">
   <nav class="header-nav container">
     <a href="/" class="header-logo">
-      <span class="logo-text">OG</span><span class="logo-accent">COPS</span>
+      <img src="/logo.svg" alt="OGCOPS" class="logo-img" width="120" height="30" />
+      <span class="logo-fallback" aria-hidden="true"><span class="logo-text">OG</span><span class="logo-accent">COPS</span></span>
     </a>
 
     <div class="header-links">
@@ -75,12 +76,19 @@ const navItems = [
   }
 
   .header-logo {
-    font-size: var(--text-xl);
-    font-weight: 700;
-    letter-spacing: -0.03em;
     text-decoration: none;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
   }
+
+  .logo-img {
+    display: block;
+    height: 26px;
+    width: auto;
+  }
+
+  .logo-fallback { display: none; }
 
   .logo-text { color: var(--text); }
   .logo-accent { color: var(--accent-primary); }

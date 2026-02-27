@@ -74,8 +74,7 @@ export function EditorApp({ initialCategory }: EditorAppProps) {
       {/* Top Bar */}
       <div className="editor-topbar">
         <a href="/" className="editor-logo">
-          <span className="logo-text">OG</span>
-          <span className="logo-accent">COPS</span>
+          <img src="/logo.svg" alt="OGCOPS" className="editor-logo-img" width="100" height="25" />
         </a>
         <div className="editor-topbar-template">
           <span className="editor-topbar-label">Template:</span>

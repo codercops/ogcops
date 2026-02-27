@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "check": "astro check && tsc --noEmit",
-    "lint": "astro check"
+    "lint": "astro check",
+    "generate:favicons": "node scripts/generate-favicons.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^4.2.0",
@@ -29,6 +30,7 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "typescript": "^5.7.0",

@@ -5,7 +5,9 @@ const year = new Date().getFullYear();
 <footer class="footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <span class="footer-logo"><span class="logo-text">OG</span><span class="logo-accent">COPS</span></span>
+      <span class="footer-logo">
+        <img src="/logo.svg" alt="OGCOPS" class="footer-logo-img" width="100" height="25" />
+      </span>
       <span class="footer-tagline">Free OG Image Generator</span>
     </div>
     <div class="footer-links">
@@ -44,13 +46,15 @@ const year = new Date().getFullYear();
   }
 
   .footer-logo {
-    font-size: var(--text-lg);
-    font-weight: 700;
-    letter-spacing: -0.03em;
+    display: flex;
+    align-items: center;
   }
 
-  .logo-text { color: var(--text); }
-  .logo-accent { color: var(--accent-primary); }
+  .footer-logo-img {
+    display: block;
+    height: 22px;
+    width: auto;
+  }
 
   .footer-tagline {
     font-size: var(--text-sm);
