@@ -117,13 +117,15 @@ export function ExportBar({ apiUrl, downloadUrl, params, templateId }: ExportBar
           className="export-btn export-btn-ghost"
           onClick={() => copyToClipboard(apiUrl, 'url')}
         >
-          {copied === 'url' ? 'Copied!' : 'Copy URL'}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+          {copied === 'url' ? 'Copied!' : 'Copy Image URL'}
         </button>
         <button
           type="button"
           className="export-btn export-btn-ghost"
           onClick={() => copyToClipboard(metaTags, 'meta')}
         >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
           {copied === 'meta' ? 'Copied!' : 'Copy Meta Tags'}
         </button>
       </div>

@@ -31,6 +31,17 @@ export function EditorApp({ initialCategory }: EditorAppProps) {
 
   const { svg, loading, error, render } = useSatoriRenderer();
   const [mobileTab, setMobileTab] = useState<'templates' | 'customize' | 'export'>('customize');
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth <= 768 : false
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    setIsMobile(mq.matches);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   // Find current template definition (use registry lookup to ensure render function is present)
   const currentTemplate = useMemo(
@@ -59,8 +70,11 @@ export function EditorApp({ initialCategory }: EditorAppProps) {
   const handleTemplateSelect = useCallback(
     (template: TemplateDefinition) => {
       setTemplate(template);
+      if (isMobile) {
+        setMobileTab('customize');
+      }
     },
-    [setTemplate]
+    [setTemplate, isMobile]
   );
 
   const handleReset = useCallback(() => {
@@ -114,11 +128,20 @@ export function EditorApp({ initialCategory }: EditorAppProps) {
           />
         </div>
 
-        {/* Right: Customize */}
+        {/* Right: Customize / Export */}
         <div className={`editor-right ${mobileTab === 'customize' || mobileTab === 'export' ? 'mobile-show' : 'mobile-hide'}`}>
           {mobileTab === 'export' ? (
             <div className="editor-export-mobile">
+              <div className="editor-export-preview">
+                <Canvas svg={svg} loading={loading} error={error} />
+              </div>
               <ExportBar apiUrl={apiUrl} downloadUrl={downloadUrl} params={state.params} templateId={state.templateId} />
+              <PlatformPreviewStrip
+                svg={svg}
+                title={String(state.params.title || '')}
+                description={String(state.params.description || '')}
+                siteName={String(state.params.siteName || '')}
+              />
             </div>
           ) : (
             <CustomizePanel
