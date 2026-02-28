@@ -2,7 +2,9 @@
 .editor-layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   background: var(--bg);
 }
@@ -41,6 +43,7 @@
   font-size: var(--text-sm);
   color: var(--text-muted);
   margin-right: auto;
+  min-width: 0;
 }
 
 .editor-topbar-sep {
@@ -51,6 +54,9 @@
 .editor-topbar-name {
   font-weight: 500;
   color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ===== Mobile Tabs ===== */
@@ -66,7 +72,7 @@
 
 .mobile-tab {
   flex: 1;
-  padding: var(--space-md);
+  padding: var(--space-md) var(--space-sm);
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--text-muted);
@@ -75,7 +81,8 @@
   border-bottom: 2px solid transparent;
   cursor: pointer;
   transition: color var(--transition), border-color var(--transition);
-  min-height: 44px;
+  min-height: 48px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-tab.active {
@@ -341,6 +348,9 @@
   border: none;
   cursor: pointer;
   transition: color var(--transition);
+  padding: var(--space-sm) var(--space-md);
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .customize-reset:hover { color: var(--accent-primary); }
@@ -602,6 +612,7 @@
   overflow-x: auto;
   padding-bottom: var(--space-sm);
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .platform-strip-scroll::-webkit-scrollbar { display: none; }
@@ -772,8 +783,11 @@
 
 .editor-export-mobile .export-btn {
   width: 100%;
-  padding: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
   font-size: var(--text-sm);
+  min-height: 48px;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ===== Responsive ===== */
@@ -786,20 +800,130 @@
   .editor-topbar .export-bar { display: none; }
   .editor-mobile-tabs-wrapper { display: block; }
 
-  .editor-panels { flex-direction: column; }
-  .editor-left,
-  .editor-right {
-    width: 100%;
-    border-left: none;
-    border-right: none;
+  .editor-panels {
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .editor-left { height: 100%; }
-  .editor-center { height: 100%; padding: var(--space-md); }
-  .editor-right { height: 100%; }
+  .editor-left {
+    width: 100%;
+    min-height: 100%;
+    border-left: none;
+    border-right: none;
+    flex-shrink: 0;
+  }
+
+  .editor-center {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    flex: none;
+    padding: var(--space-md);
+    overflow: visible;
+  }
+
+  .editor-right {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    border-left: none;
+    border-right: none;
+    flex: none;
+    overflow: visible;
+  }
+
+  /* Single scroll column: canvas (fixed height) + strip + form */
+  .editor-center .canvas-wrapper {
+    min-height: 240px;
+    max-height: 42vh;
+    flex-shrink: 0;
+  }
+
+  .editor-center .platform-strip {
+    flex-shrink: 0;
+  }
+
+  .editor-right .customize-panel,
+  .editor-export-mobile {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
 
   .mobile-hide { display: none !important; }
   .mobile-show { display: flex !important; }
 
-  .template-grid { grid-template-columns: repeat(2, 1fr); }
+  .template-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-xs);
+    padding: var(--space-sm);
+  }
+
+  .template-thumb {
+    min-height: 0;
+  }
+
+  .platform-strip-header {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .platform-strip-scroll {
+    margin-left: calc(-1 * var(--space-md));
+    margin-right: calc(-1 * var(--space-md));
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+
+  .template-search {
+    font-size: 16px;
+    min-height: 44px;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .editor-color-swatch {
+    width: 44px;
+    height: 44px;
+  }
+
+  .editor-slider::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Small phones: larger touch targets, tighter spacing */
+@media (max-width: 480px) {
+  .editor-topbar {
+    padding: 0 var(--space-sm);
+    min-height: 48px;
+  }
+
+  .editor-center {
+    padding: var(--space-sm);
+  }
+
+  .editor-center .canvas-wrapper {
+    min-height: 200px;
+    max-height: 38vh;
+  }
+
+  .customize-fields {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .editor-field-input {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+
+  .editor-export-mobile {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .template-cat-pill {
+    min-height: 40px;
+    padding: 8px 14px;
+  }
 }

@@ -59,6 +59,10 @@ export function EditorApp({ initialCategory }: EditorAppProps) {
   const handleTemplateSelect = useCallback(
     (template: TemplateDefinition) => {
       setTemplate(template);
+      // On mobile, switch to Customize tab so user sees the canvas and form
+      if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+        setMobileTab('customize');
+      }
     },
     [setTemplate]
   );

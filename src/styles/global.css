@@ -628,7 +628,7 @@ p {
 }
 
 @media (max-width: 768px) {
-  :root { --space-5xl: 4rem; --space-4xl: 3rem; --space-3xl: 2.5rem; }
+  :root { --space-5xl: 4rem; --space-4xl: 3rem; --space-3xl: 2.5rem; --nav-height: 56px; }
   h1 { font-size: var(--text-3xl); }
   h2 { font-size: var(--text-2xl); }
   .section { padding: var(--space-4xl) 0; }
@@ -640,6 +640,7 @@ p {
 }
 
 @media (max-width: 480px) {
+  :root { --nav-height: 52px; }
   .container { padding: 0 var(--space-md); }
 }
 
