@@ -14,7 +14,7 @@ const categoryCounts = getCategoryCounts();
     <div class="hero-glow"></div>
     <div class="hero-pattern"></div>
     <div class="container hero-inner">
-      <div class="hero-content" data-animate="slide-up">
+      <div class="hero-text" data-animate="slide-up">
         <span class="section-label">Free & Open Source</span>
         <h1><span class="text-gradient">Free</span> OG Image<br />Generator</h1>
         <p class="hero-subtitle">
@@ -26,6 +26,56 @@ const categoryCounts = getCategoryCounts();
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
           <a href="/preview" class="btn btn-outline btn-lg">Check Your URL</a>
+        </div>
+        <div class="hero-support">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent-primary)" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span>Support this project</span>
+          <a href="https://buymeacoffee.com/codercops" target="_blank" rel="noopener" class="hero-support-link">Buy Me a Coffee</a>
+          <span class="hero-support-dot">&middot;</span>
+          <a href="https://www.paypal.com/paypalme/codercops" target="_blank" rel="noopener" class="hero-support-link">PayPal</a>
+        </div>
+      </div>
+      <div class="hero-visual" data-animate="slide-up" data-animate-delay="2">
+        <div class="og-card-stack">
+          <!-- Card 1 — back (dark template) -->
+          <div class="og-card og-card-1">
+            <div class="og-card-img og-card-img-dark">
+              <span class="og-card-accent-line"></span>
+              <span class="og-card-tag">BLOG</span>
+              <span class="og-card-title-lg">How to Build<br/>a REST API</span>
+            </div>
+            <div class="og-card-meta">
+              <span class="og-card-favicon og-card-favicon-dark"></span>
+              <span>dev.to &middot; 5 min read</span>
+            </div>
+          </div>
+          <!-- Card 2 — middle (coral gradient) -->
+          <div class="og-card og-card-2">
+            <div class="og-card-img og-card-img-coral">
+              <span class="og-card-tag-light">LAUNCH</span>
+              <span class="og-card-title-lg og-card-title-white">Introducing<br/>OGCOPS 2.0</span>
+              <span class="og-card-subtitle-light">Free &middot; Open Source &middot; No Login</span>
+            </div>
+            <div class="og-card-meta">
+              <span class="og-card-favicon og-card-favicon-coral"></span>
+              <span>og.codercops.com</span>
+            </div>
+          </div>
+          <!-- Card 3 — front (light/clean) -->
+          <div class="og-card og-card-3">
+            <div class="og-card-img og-card-img-light">
+              <span class="og-card-tag-dark">PORTFOLIO</span>
+              <span class="og-card-title-lg og-card-title-dark">Sarah Chen<br/>Software Engineer</span>
+            </div>
+            <div class="og-card-meta">
+              <span class="og-card-favicon og-card-favicon-blue"></span>
+              <span>github.com/sarahchen</span>
+            </div>
+          </div>
+          <!-- Floating platform pills -->
+          <span class="platform-pill pill-twitter">Twitter</span>
+          <span class="platform-pill pill-linkedin">LinkedIn</span>
+          <span class="platform-pill pill-discord">Discord</span>
         </div>
       </div>
     </div>
@@ -205,11 +255,11 @@ const categoryCounts = getCategoryCounts();
             Star on GitHub
           </a>
           <a href="/templates" class="btn btn-outline btn-lg">Browse Templates</a>
-          <a href="https://buymeacoffee.com/codercops" class="btn btn-ghost btn-lg" target="_blank" rel="noopener">
+          <a href="https://buymeacoffee.com/codercops" class="btn btn-bmc btn-lg" target="_blank" rel="noopener">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>
             Buy Me a Coffee
           </a>
-          <a href="https://www.paypal.com/paypalme/codercops" class="btn btn-ghost btn-lg" target="_blank" rel="noopener">
+          <a href="https://www.paypal.com/paypalme/codercops" class="btn btn-paypal btn-lg" target="_blank" rel="noopener">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
             PayPal
           </a>
@@ -233,18 +283,17 @@ const categoryCounts = getCategoryCounts();
 </script>
 
 <style>
-  /* Hero */
+  /* Hero — split layout */
   .hero {
     position: relative;
     padding: var(--space-5xl) 0 var(--space-4xl);
-    text-align: center;
     overflow: hidden;
   }
 
   .hero-glow {
     position: absolute;
     top: -120px;
-    left: 50%;
+    left: 30%;
     transform: translateX(-50%);
     width: 800px;
     height: 500px;
@@ -265,7 +314,18 @@ const categoryCounts = getCategoryCounts();
     -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 20%, transparent 70%);
   }
 
-  .hero-inner { position: relative; z-index: 1; }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xl);
+  }
+
+  .hero-text {
+    flex: 1;
+    min-width: 0;
+  }
 
   .hero h1 {
     font-size: var(--text-7xl);
@@ -278,15 +338,242 @@ const categoryCounts = getCategoryCounts();
     font-size: var(--text-xl);
     color: var(--text-muted);
     max-width: 500px;
-    margin: 0 auto var(--space-xl);
+    margin: 0 0 var(--space-xl);
     line-height: 1.6;
   }
 
   .hero-ctas {
     display: flex;
     gap: var(--space-md);
-    justify-content: center;
     flex-wrap: wrap;
+  }
+
+  /* Support line below CTAs */
+  .hero-support {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xl);
+    font-size: var(--text-sm);
+    color: var(--text-subtle);
+  }
+
+  .hero-support span {
+    color: var(--text-subtle);
+  }
+
+  .hero-support-link {
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+
+  .hero-support-link:hover {
+    color: var(--accent-primary);
+  }
+
+  .hero-support-dot {
+    color: var(--border-strong);
+  }
+
+  /* Hero visual — card stack */
+  .hero-visual {
+    display: none;
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    height: 420px;
+  }
+
+  .og-card-stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .og-card {
+    position: absolute;
+    width: 320px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    transition: transform var(--transition-slow), box-shadow var(--transition-slow);
+    border: 1px solid var(--border);
+  }
+
+  .og-card:hover {
+    box-shadow: var(--shadow-xl);
+  }
+
+  .og-card-1 {
+    top: 30px;
+    left: 0;
+    transform: rotate(-6deg);
+    z-index: 1;
+  }
+  .og-card-1:hover { transform: rotate(-6deg) translateY(-4px); }
+
+  .og-card-2 {
+    top: 10px;
+    left: 80px;
+    transform: rotate(3deg);
+    z-index: 2;
+  }
+  .og-card-2:hover { transform: rotate(3deg) translateY(-4px); }
+
+  .og-card-3 {
+    top: 60px;
+    left: 140px;
+    transform: rotate(-1deg);
+    z-index: 3;
+  }
+  .og-card-3:hover { transform: rotate(-1deg) translateY(-4px); }
+
+  /* OG card image area (1200:630 ratio ~ 1.9:1) */
+  .og-card-img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1200 / 630;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    overflow: hidden;
+  }
+
+  .og-card-img-dark {
+    background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+  }
+
+  .og-card-img-coral {
+    background: var(--gradient-coral);
+  }
+
+  .og-card-img-light {
+    background: linear-gradient(145deg, #f8f8f8, #ffffff);
+  }
+
+  .og-card-accent-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-coral);
+  }
+
+  .og-card-tag,
+  .og-card-tag-light,
+  .og-card-tag-dark {
+    display: inline-block;
+    width: fit-content;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .og-card-tag {
+    background: var(--accent-primary);
+    color: #fff;
+  }
+  .og-card-tag-light {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .og-card-tag-dark {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-muted);
+  }
+
+  .og-card-title-lg {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #fff;
+  }
+
+  .og-card-title-white {
+    color: #fff;
+  }
+
+  .og-card-title-dark {
+    color: var(--text);
+  }
+
+  .og-card-subtitle-light {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 6px;
+  }
+
+  .og-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg-elevated);
+    border-top: 1px solid var(--border-muted);
+  }
+
+  .og-card-favicon {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .og-card-favicon-dark { background: #333; }
+  .og-card-favicon-coral { background: var(--accent-primary); }
+  .og-card-favicon-blue { background: #0969da; }
+
+  /* Floating platform pills */
+  .platform-pill {
+    position: absolute;
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    color: #fff;
+    box-shadow: var(--shadow-md);
+    z-index: 4;
+    pointer-events: none;
+    animation: pill-float 4s ease-in-out infinite;
+  }
+
+  .pill-twitter {
+    top: 0;
+    right: 20px;
+    background: #1DA1F2;
+    animation-delay: 0s;
+  }
+  .pill-linkedin {
+    bottom: 40px;
+    left: 10px;
+    background: #0A66C2;
+    animation-delay: 1.3s;
+  }
+  .pill-discord {
+    bottom: 10px;
+    right: 60px;
+    background: #5865F2;
+    animation-delay: 2.6s;
+  }
+
+  @keyframes pill-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-visual {
+      display: block;
+    }
   }
 
   /* Bento Grid */
@@ -580,6 +867,32 @@ const categoryCounts = getCategoryCounts();
     gap: var(--space-md);
     justify-content: center;
     margin-top: var(--space-xl);
+    flex-wrap: wrap;
+  }
+
+  /* Branded support buttons */
+  .btn-bmc {
+    background: #FFDD00;
+    color: #000;
+    border: 1px solid #FFDD00;
+    font-weight: 600;
+  }
+  .btn-bmc:hover {
+    background: #e6c800;
+    border-color: #e6c800;
+    box-shadow: 0 4px 16px rgba(255, 221, 0, 0.3);
+  }
+
+  .btn-paypal {
+    background: #0070BA;
+    color: #fff;
+    border: 1px solid #0070BA;
+    font-weight: 600;
+  }
+  .btn-paypal:hover {
+    background: #005ea6;
+    border-color: #005ea6;
+    box-shadow: 0 4px 16px rgba(0, 112, 186, 0.3);
   }
 
   @media (max-width: 1024px) {
@@ -587,10 +900,13 @@ const categoryCounts = getCategoryCounts();
   }
 
   @media (max-width: 768px) {
+    .hero { text-align: center; }
     .hero h1 { font-size: var(--text-4xl); }
-    .hero-glow { width: 400px; height: 300px; }
+    .hero-glow { width: 400px; height: 300px; left: 50%; }
+    .hero-subtitle { margin-left: auto; margin-right: auto; }
+    .hero-ctas { justify-content: center; flex-direction: column; align-items: center; }
+    .hero-support { justify-content: center; flex-wrap: wrap; }
     .api-teaser { grid-template-columns: 1fr; }
-    .hero-ctas { flex-direction: column; align-items: center; }
     .bento-grid { grid-template-columns: 1fr; }
     .features-grid { grid-template-columns: 1fr; }
     .timeline-line { left: 20px; }
