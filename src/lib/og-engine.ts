@@ -83,7 +83,10 @@ export async function renderToPng(
 
   const svg = await renderToSvg(element, { width, height });
 
-  // Serialize access to Resvg — the WASM module is single-threaded
+  // Serialize access to Resvg — the WASM module is single-threaded.
+  // We must explicitly free WASM objects before leaving the lock,
+  // otherwise the GC finalizer can run during another render and
+  // trigger "recursive use of an object detected".
   return withRenderLock(async () => {
     const outputWidth = scaleDown ?? width;
     const resvg = new Resvg(svg, {
@@ -91,8 +94,11 @@ export async function renderToPng(
     });
     const pngData = resvg.render();
     const pngBytes = pngData.asPng();
-    // Return as ArrayBuffer (BodyInit-compatible)
-    return pngBytes.buffer.slice(pngBytes.byteOffset, pngBytes.byteOffset + pngBytes.byteLength) as ArrayBuffer;
+    // Copy bytes out before freeing WASM objects
+    const result = pngBytes.buffer.slice(pngBytes.byteOffset, pngBytes.byteOffset + pngBytes.byteLength) as ArrayBuffer;
+    pngData.free();
+    resvg.free();
+    return result;
   });
 }
 

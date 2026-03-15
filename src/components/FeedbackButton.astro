@@ -1,0 +1,58 @@
+<!-- Feedback button: fixed bottom-right, opens GitHub issues -->
+<a
+  href="https://github.com/codercops/ogcops/issues/new/choose"
+  target="_blank"
+  rel="noopener"
+  class="feedback-btn"
+  aria-label="Send feedback"
+  title="Send feedback"
+>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <span class="feedback-btn-label">Feedback</span>
+</a>
+
+<style>
+  .feedback-btn {
+    position: fixed;
+    bottom: var(--space-xl, 24px);
+    right: var(--space-xl, 24px);
+    z-index: 8000;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--bg-elevated, #fff);
+    border: 1px solid var(--border, #e5e5e5);
+    border-radius: var(--radius-full, 999px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: var(--text-muted, #666);
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .feedback-btn:hover {
+    color: var(--accent-primary, #e07a5f);
+    border-color: var(--accent-primary, #e07a5f);
+    box-shadow: 0 4px 12px rgba(224, 122, 95, 0.15);
+  }
+
+  .feedback-btn svg {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    .feedback-btn {
+      right: var(--space-md, 12px);
+      padding: 8px 12px;
+    }
+
+    .feedback-btn-label {
+      display: none;
+    }
+  }
+</style>

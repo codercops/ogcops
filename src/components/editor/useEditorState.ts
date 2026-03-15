@@ -64,6 +64,10 @@ export function useEditorState(initialTemplate: TemplateDefinition) {
     dispatch({ type: 'SET_PARAM', key, value });
   }, []);
 
+  const setParams = useCallback((params: Record<string, any>) => {
+    dispatch({ type: 'SET_PARAMS', params });
+  }, []);
+
   const resetDefaults = useCallback((defaults: Record<string, any>) => {
     dispatch({ type: 'RESET_DEFAULTS', defaults });
   }, []);
@@ -104,6 +108,7 @@ export function useEditorState(initialTemplate: TemplateDefinition) {
     state,
     setTemplate,
     setParam,
+    setParams,
     resetDefaults,
     setCategory,
     setSearch,

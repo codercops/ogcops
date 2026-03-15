@@ -3,6 +3,7 @@ import { URLInput } from './URLInput';
 import { PlatformGrid } from './PlatformGrid';
 import { MetaTagReport } from './MetaTagReport';
 import { FixItButton } from './FixItButton';
+import { AIAnalyzer } from './AIAnalyzer';
 
 export function PreviewApp() {
   const { url, setUrl, loading, error, data, checkUrl } = usePreviewState();
@@ -30,6 +31,7 @@ export function PreviewApp() {
       {data && (
         <div className="preview-results">
           <MetaTagReport analysis={data.analysis} meta={data.meta} />
+          <AIAnalyzer meta={data.meta} url={data.url} />
           <PlatformGrid platforms={data.platforms} />
           <FixItButton meta={data.meta} />
         </div>

@@ -29,12 +29,14 @@ npm run generate:favicons  # Generate favicon assets
 ## Key Directories
 - `src/templates/` — 120 templates across 12 categories. Each is a `.ts` file exporting a `TemplateDefinition`.
 - `src/lib/` — Core engine (og-engine.ts, font-loader.ts, meta-fetcher.ts, meta-analyzer.ts, api-validation.ts)
-- `src/components/editor/` — React components for the OG image editor
-- `src/components/preview/` — React components for the social media preview checker
+- `src/lib/ai/` — AI integration (types, providers, storage, validation, prompts, generate, autofill, recommender)
+- `src/components/editor/` — React components for the OG image editor (includes AI components)
+- `src/components/preview/` — React components for the social media preview checker (includes AIAnalyzer)
 - `src/pages/api/` — API endpoints
-- `src/styles/` — CSS files (global.css, editor.css, preview.css, api-docs.css)
+- `src/pages/api/ai/` — AI proxy endpoints (generate, validate, autofill)
+- `src/styles/` — CSS files (global.css, editor.css, preview.css, api-docs.css, ai.css)
 - `public/fonts/` — Bundled .woff fonts (Inter, Playfair Display, JetBrains Mono)
-- `tests/` — Vitest tests (api/, lib/, templates/)
+- `tests/` — Vitest tests (api/, ai/, lib/, templates/)
 
 ## Pages & API Endpoints
 
@@ -51,6 +53,11 @@ npm run generate:favicons  # Generate favicon assets
 - `GET /api/templates` — List all templates as JSON
 - `GET /api/templates/[id]/thumbnail.png` — Template thumbnail (1-week cache)
 
+**AI API (BYOK — user provides their own API key):**
+- `POST /api/ai/generate` — Proxy text generation to any supported provider
+- `POST /api/ai/validate` — Validate an AI provider API key
+- `POST /api/ai/autofill` — Analyze a URL and auto-fill template fields via AI
+
 ## Reference Files
 - Template interface: `src/templates/types.ts`
 - Reference template: `src/templates/blog/minimal-dark.ts`
@@ -58,6 +65,10 @@ npm run generate:favicons  # Generate favicon assets
 - OG engine: `src/lib/og-engine.ts`
 - API validation schemas: `src/lib/api-validation.ts`
 - Template registry: `src/templates/registry.ts`
+- AI types & provider configs: `src/lib/ai/types.ts`, `src/lib/ai/providers.ts`
+- AI validation schemas: `src/lib/ai/validation.ts`
+- AI prompt builders: `src/lib/ai/prompts.ts`
+- AI context & hook: `src/components/editor/AIContext.tsx`
 
 ## Template System
 
@@ -71,6 +82,30 @@ npm run generate:favicons  # Generate favicon assets
 
 **Template field types:** text, textarea, color, select, number, toggle, image.
 **Field groups:** Content, Style, Brand.
+
+## AI Integration (BYOK)
+
+OGCOPS supports AI-powered features using a Bring Your Own Key (BYOK) model. Users configure their own API keys in the browser; keys are stored in localStorage and passed through server-side proxy endpoints (never stored server-side).
+
+**Supported providers:** OpenAI, Anthropic, Google (Gemini), Groq, OpenRouter.
+**Three API formats:** OpenAI-compatible (OpenAI/Groq/OpenRouter), Anthropic, Google Gemini.
+
+**AI Features:**
+- **AI Copy Generator** — Generate title/subtitle/field suggestions inline in the editor
+- **Smart Autofill** — Paste a URL to auto-select a template and fill all fields
+- **AI Template Recommender** — Natural language template search in the template panel
+- **AI Meta Analyzer** — AI-powered analysis of meta tag quality in the preview checker
+
+**Key files:**
+- `src/lib/ai/` — All AI logic (types, providers, storage, validation, prompts, generate, autofill, recommender)
+- `src/components/editor/AIContext.tsx` — React context providing `generate()`, `isConfigured`, `openSettings`
+- `src/components/editor/AISettingsModal.tsx` — Provider/key/model configuration modal
+- `src/components/editor/AIGenerateButton.tsx` + `AISuggestionPicker.tsx` — Inline copy generation
+- `src/components/editor/AIAutofill.tsx` — Smart autofill from URL
+- `src/components/editor/AITemplateSearch.tsx` — AI template recommender
+- `src/components/preview/AIAnalyzer.tsx` — AI meta tag analysis
+- `src/styles/ai.css` — All AI component styles
+
 
 ## Conventions
 - CSS custom properties only (no Tailwind). Accent: `#E07A5F`.

@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import Toast from '../components/Toast.astro';
 import StarBanner from '../components/StarBanner.astro';
 import BackToTop from '../components/BackToTop.astro';
+import FeedbackButton from '../components/FeedbackButton.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -114,6 +115,7 @@ const fullTitle = title === 'OGCOPS' ? title : `${title} | ${siteName}`;
     <Toast />
     <StarBanner />
     <BackToTop />
+    <FeedbackButton />
   </body>
 </html>
 
