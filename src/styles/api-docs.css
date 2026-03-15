@@ -137,6 +137,11 @@
   line-height: 1.6;
 }
 
+.endpoint-method-post {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+}
+
 .endpoint-path {
   font-family: var(--font-mono);
   font-size: var(--text-sm);

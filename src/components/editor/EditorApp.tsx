@@ -10,12 +10,45 @@ import { CustomizePanel } from './CustomizePanel';
 import { ExportBar } from './ExportBar';
 import { PlatformPreviewStrip } from './PlatformPreviewStrip';
 import { MobileEditorTabs } from './MobileEditorTabs';
+import { AIProvider, useAI } from './AIContext';
+import { AISettingsModal } from './AISettingsModal';
+import { AIAutofill } from './AIAutofill';
 
 interface EditorAppProps {
   initialCategory?: TemplateCategory;
 }
 
 export function EditorApp({ initialCategory }: EditorAppProps) {
+  return (
+    <AIProvider>
+      <EditorAppInner initialCategory={initialCategory} />
+    </AIProvider>
+  );
+}
+
+function AITopbarButton() {
+  const { isConfigured, openSettings } = useAI();
+  return (
+    <button
+      type="button"
+      className={`ai-topbar-btn ${isConfigured ? 'configured' : ''}`}
+      onClick={openSettings}
+      title={isConfigured ? 'AI Settings' : 'Set up AI'}
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z" />
+      </svg>
+      {isConfigured ? 'AI' : 'Set up AI'}
+    </button>
+  );
+}
+
+function AISettingsWrapper() {
+  const { settingsOpen, closeSettings } = useAI();
+  return <AISettingsModal open={settingsOpen} onClose={closeSettings} />;
+}
+
+function EditorAppInner({ initialCategory }: EditorAppProps) {
   // Import templates directly — functions can't cross the Astro→React serialization boundary
   const templates = useMemo(() => getAllTemplates(), []);
 
@@ -26,7 +59,7 @@ export function EditorApp({ initialCategory }: EditorAppProps) {
     return templates[0];
   }, [templates, initialCategory]);
 
-  const { state, setTemplate, setParam, resetDefaults, setCategory, setSearch, apiUrl, downloadUrl } =
+  const { state, setTemplate, setParam, setParams, resetDefaults, setCategory, setSearch, apiUrl, downloadUrl } =
     useEditorState(defaultTemplate);
 
   const { svg, loading, error, render } = useSatoriRenderer();
@@ -83,6 +116,29 @@ export function EditorApp({ initialCategory }: EditorAppProps) {
     }
   }, [currentTemplate, resetDefaults]);
 
+  const handleAutofill = useCallback(
+    (result: { templateId: string; fields: Record<string, string>; colors?: Record<string, string> }) => {
+      // Switch template
+      const template = getTemplate(result.templateId);
+      if (template) {
+        setTemplate(template);
+        // Apply autofilled fields after template switch
+        setTimeout(() => {
+          const merged = { ...result.fields };
+          if (result.colors) Object.assign(merged, result.colors);
+          setParams(merged);
+        }, 0);
+      } else {
+        // If template not found, just apply fields to current template
+        const merged = { ...result.fields };
+        if (result.colors) Object.assign(merged, result.colors);
+        setParams(merged);
+      }
+      if (isMobile) setMobileTab('customize');
+    },
+    [setTemplate, setParams, isMobile]
+  );
+
   return (
     <div className="editor-layout">
       {/* Top Bar */}
@@ -94,6 +150,7 @@ export function EditorApp({ initialCategory }: EditorAppProps) {
           <span className="editor-topbar-label">Template:</span>
           <span className="editor-topbar-name">{currentTemplate.name}</span>
         </div>
+        <AITopbarButton />
         <ExportBar apiUrl={apiUrl} downloadUrl={downloadUrl} params={state.params} templateId={state.templateId} />
       </div>
 
@@ -144,15 +201,22 @@ export function EditorApp({ initialCategory }: EditorAppProps) {
               />
             </div>
           ) : (
+            <>
             <CustomizePanel
               fields={currentTemplate.fields}
               params={state.params}
               onParamChange={setParam}
               onReset={handleReset}
+              category={currentTemplate.category}
+              autofill={<AIAutofill onAutofill={handleAutofill} />}
             />
+            </>
           )}
         </div>
       </div>
+
+      {/* AI Settings Modal */}
+      <AISettingsWrapper />
     </div>
   );
 }

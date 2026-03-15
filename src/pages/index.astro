@@ -37,39 +37,52 @@ const categoryCounts = getCategoryCounts();
       </div>
       <div class="hero-visual" data-animate="slide-up" data-animate-delay="2">
         <div class="og-card-stack">
-          <!-- Card 1 — back (dark template) -->
+          <!-- Card 1 — back (blog template) -->
           <div class="og-card og-card-1">
-            <div class="og-card-img og-card-img-dark">
-              <span class="og-card-accent-line"></span>
-              <span class="og-card-tag">BLOG</span>
-              <span class="og-card-title-lg">How to Build<br/>a REST API</span>
-            </div>
+            <img
+              src="/api/templates/blog-minimal-dark/thumbnail.png"
+              alt="Blog Minimal Dark template"
+              class="og-card-img-real"
+              loading="eager"
+              width="600"
+              height="315"
+            />
             <div class="og-card-meta">
               <span class="og-card-favicon og-card-favicon-dark"></span>
-              <span>dev.to &middot; 5 min read</span>
+              <span class="og-card-meta-text">blog-minimal-dark</span>
+              <span class="og-card-meta-badge">Blog</span>
             </div>
           </div>
-          <!-- Card 2 — middle (coral gradient) -->
+          <!-- Card 2 — middle (product template) -->
           <div class="og-card og-card-2">
-            <div class="og-card-img og-card-img-coral">
-              <span class="og-card-tag-light">LAUNCH</span>
-              <span class="og-card-title-lg og-card-title-white">Introducing<br/>OGCOPS 2.0</span>
-              <span class="og-card-subtitle-light">Free &middot; Open Source &middot; No Login</span>
-            </div>
+            <img
+              src="/api/templates/product-gradient-wave/thumbnail.png"
+              alt="Product Gradient Wave template"
+              class="og-card-img-real"
+              loading="eager"
+              width="600"
+              height="315"
+            />
             <div class="og-card-meta">
               <span class="og-card-favicon og-card-favicon-coral"></span>
-              <span>og.codercops.com</span>
+              <span class="og-card-meta-text">product-gradient-wave</span>
+              <span class="og-card-meta-badge">Product</span>
             </div>
           </div>
-          <!-- Card 3 — front (light/clean) -->
+          <!-- Card 3 — front (event template) -->
           <div class="og-card og-card-3">
-            <div class="og-card-img og-card-img-light">
-              <span class="og-card-tag-dark">PORTFOLIO</span>
-              <span class="og-card-title-lg og-card-title-dark">Sarah Chen<br/>Software Engineer</span>
-            </div>
+            <img
+              src="/api/templates/event-hackathon/thumbnail.png"
+              alt="Event Hackathon template"
+              class="og-card-img-real"
+              loading="eager"
+              width="600"
+              height="315"
+            />
             <div class="og-card-meta">
               <span class="og-card-favicon og-card-favicon-blue"></span>
-              <span>github.com/sarahchen</span>
+              <span class="og-card-meta-text">event-hackathon</span>
+              <span class="og-card-meta-badge">Event</span>
             </div>
           </div>
           <!-- Floating platform pills -->
@@ -398,12 +411,14 @@ const categoryCounts = getCategoryCounts();
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-lg);
-    transition: transform var(--transition-slow), box-shadow var(--transition-slow);
-    border: 1px solid var(--border);
+    transition: transform var(--transition-slow), box-shadow var(--transition-slow), border-color var(--transition-slow);
+    border: 1.5px solid var(--border);
+    background: var(--bg-elevated);
   }
 
   .og-card:hover {
     box-shadow: var(--shadow-xl);
+    border-color: var(--accent-primary);
   }
 
   .og-card-1 {
@@ -430,85 +445,14 @@ const categoryCounts = getCategoryCounts();
   }
   .og-card-3:hover { transform: rotate(-1deg) translateY(-4px); }
 
-  /* OG card image area (1200:630 ratio ~ 1.9:1) */
-  .og-card-img {
-    position: relative;
+  /* OG card — real template thumbnail */
+  .og-card-img-real {
+    display: block;
     width: 100%;
+    height: auto;
     aspect-ratio: 1200 / 630;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 20px;
-    overflow: hidden;
-  }
-
-  .og-card-img-dark {
-    background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-  }
-
-  .og-card-img-coral {
-    background: var(--gradient-coral);
-  }
-
-  .og-card-img-light {
-    background: linear-gradient(145deg, #f8f8f8, #ffffff);
-  }
-
-  .og-card-accent-line {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--gradient-coral);
-  }
-
-  .og-card-tag,
-  .og-card-tag-light,
-  .og-card-tag-dark {
-    display: inline-block;
-    width: fit-content;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-  }
-
-  .og-card-tag {
-    background: var(--accent-primary);
-    color: #fff;
-  }
-  .og-card-tag-light {
-    background: rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.9);
-  }
-  .og-card-tag-dark {
-    background: rgba(0, 0, 0, 0.08);
-    color: var(--text-muted);
-  }
-
-  .og-card-title-lg {
-    font-family: var(--font-sans);
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.2;
-    color: #fff;
-  }
-
-  .og-card-title-white {
-    color: #fff;
-  }
-
-  .og-card-title-dark {
-    color: var(--text);
-  }
-
-  .og-card-subtitle-light {
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.7);
-    margin-top: 6px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border-muted);
   }
 
   .og-card-meta {
@@ -519,7 +463,28 @@ const categoryCounts = getCategoryCounts();
     font-size: 11px;
     color: var(--text-muted);
     background: var(--bg-elevated);
-    border-top: 1px solid var(--border-muted);
+  }
+
+  .og-card-meta-text {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-subtle);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .og-card-meta-badge {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 7px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-primary-subtle);
+    color: var(--accent-primary);
+    flex-shrink: 0;
   }
 
   .og-card-favicon {
