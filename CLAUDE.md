@@ -106,6 +106,7 @@ OGCOPS supports AI-powered features using a Bring Your Own Key (BYOK) model. Use
 - `src/components/preview/AIAnalyzer.tsx` — AI meta tag analysis
 - `src/styles/ai.css` — All AI component styles
 
+
 ## Conventions
 - CSS custom properties only (no Tailwind). Accent: `#E07A5F`.
 - TypeScript strict mode. Path alias `@/*` → `src/*`.
