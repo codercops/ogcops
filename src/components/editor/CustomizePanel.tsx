@@ -1,19 +1,23 @@
-import type { TemplateField } from '@/templates/types';
+import { useMemo, type ReactNode } from 'react';
+import type { TemplateField, TemplateCategory } from '@/templates/types';
 import { TextInput } from './TextInput';
 import { ColorPicker } from './ColorPicker';
 import { SliderControl } from './SliderControl';
 import { ToggleSwitch } from './ToggleSwitch';
 import { FontSelector } from './FontSelector';
 import { ImageUploader } from './ImageUploader';
+import { AIGenerateButton } from './AIGenerateButton';
 
 interface CustomizePanelProps {
   fields: TemplateField[];
   params: Record<string, any>;
   onParamChange: (key: string, value: any) => void;
   onReset: () => void;
+  category?: TemplateCategory;
+  autofill?: ReactNode;
 }
 
-export function CustomizePanel({ fields, params, onParamChange, onReset }: CustomizePanelProps) {
+export function CustomizePanel({ fields, params, onParamChange, onReset, category, autofill }: CustomizePanelProps) {
   // Group fields
   const groups: Record<string, TemplateField[]> = {};
   for (const field of fields) {
@@ -25,6 +29,15 @@ export function CustomizePanel({ fields, params, onParamChange, onReset }: Custo
   const groupOrder = ['Content', 'Style', 'Brand'];
   const sortedGroups = groupOrder.filter((g) => groups[g]).map((g) => [g, groups[g]] as const);
 
+  // Build string values map for AI context
+  const currentValues = useMemo(() => {
+    const vals: Record<string, string> = {};
+    for (const [k, v] of Object.entries(params)) {
+      if (typeof v === 'string' && v.trim()) vals[k] = v;
+    }
+    return vals;
+  }, [params]);
+
   return (
     <div className="customize-panel">
       <div className="customize-header">
@@ -33,11 +46,14 @@ export function CustomizePanel({ fields, params, onParamChange, onReset }: Custo
           Reset
         </button>
       </div>
+      {autofill}
       <div className="customize-fields">
         {sortedGroups.map(([groupName, groupFields]) => (
           <div key={groupName} className="customize-group">
             <h4 className="customize-group-title">{groupName}</h4>
-            {groupFields.map((field) => renderField(field, params[field.key] ?? field.defaultValue, onParamChange))}
+            {groupFields.map((field) =>
+              renderField(field, params[field.key] ?? field.defaultValue, onParamChange, category, currentValues)
+            )}
           </div>
         ))}
       </div>
@@ -45,7 +61,13 @@ export function CustomizePanel({ fields, params, onParamChange, onReset }: Custo
   );
 }
 
-function renderField(field: TemplateField, value: any, onChange: (key: string, value: any) => void) {
+function renderField(
+  field: TemplateField,
+  value: any,
+  onChange: (key: string, value: any) => void,
+  category?: TemplateCategory,
+  currentValues?: Record<string, string>
+) {
   switch (field.type) {
     case 'text':
       return (
@@ -56,6 +78,14 @@ function renderField(field: TemplateField, value: any, onChange: (key: string, v
           onChange={(v) => onChange(field.key, v)}
           placeholder={field.placeholder}
           required={field.required}
+          action={
+            <AIGenerateButton
+              fieldName={field.label}
+              category={category}
+              currentValues={currentValues}
+              onSelect={(v) => onChange(field.key, v)}
+            />
+          }
         />
       );
     case 'textarea':
@@ -68,6 +98,14 @@ function renderField(field: TemplateField, value: any, onChange: (key: string, v
           placeholder={field.placeholder}
           required={field.required}
           multiline
+          action={
+            <AIGenerateButton
+              fieldName={field.label}
+              category={category}
+              currentValues={currentValues}
+              onSelect={(v) => onChange(field.key, v)}
+            />
+          }
         />
       );
     case 'color':

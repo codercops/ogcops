@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import type { TemplateDefinition, TemplateCategory } from '@/templates/types';
 import { CATEGORY_META, ALL_CATEGORIES } from '@/templates/types';
 import { TemplateThumbnail } from './TemplateThumbnail';
+import { AITemplateSearch } from './AITemplateSearch';
 
 interface TemplatePanelProps {
   templates: TemplateDefinition[];
@@ -49,6 +50,7 @@ export function TemplatePanel({
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
         />
+        <AITemplateSearch templates={templates} onTemplateSelect={onTemplateSelect} />
       </div>
       <div className="template-categories">
         <button
