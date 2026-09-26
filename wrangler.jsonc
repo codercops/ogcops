@@ -25,7 +25,7 @@
     { "pattern": "www.og.codercops.com", "custom_domain": true }
   ],
   "workers_dev": false,
-  // PR branches get a Preview URL (behind Cloudflare Access).
-  "preview_urls": true,
-  "previews": {}
+  // No per-branch Preview URLs: develop and production are the only
+  // environments.
+  "preview_urls": false
 }
