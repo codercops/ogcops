@@ -1,7 +1,7 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 
 export default defineConfig({
   output: 'server',
@@ -14,19 +14,17 @@ export default defineConfig({
   ],
   prefetch: true,
   trailingSlash: 'never',
-  adapter: vercel({
-    includeFiles: [
-      './node_modules/@resvg/resvg-wasm/index_bg.wasm',
-      './public/fonts/Inter-Regular.woff',
-      './public/fonts/Inter-Medium.woff',
-      './public/fonts/Inter-SemiBold.woff',
-      './public/fonts/Inter-Bold.woff',
-      './public/fonts/PlayfairDisplay-Regular.woff',
-      './public/fonts/PlayfairDisplay-Bold.woff',
-      './public/fonts/JetBrainsMono-Regular.woff',
-      './public/fonts/JetBrainsMono-Bold.woff',
-    ],
-  }),
+  // Every route renders in the Cloudflare Worker. The resvg wasm and the fonts
+  // are bundled into it (see src/lib/og-engine.ts and src/lib/font-loader.ts).
+  adapter: cloudflare({ imageService: 'passthrough' }),
+  env: {
+    // Read per request with getSecret(): Worker secrets don't exist at build
+    // time, so import.meta.env would bake in `undefined`.
+    schema: {
+      UPSTASH_REDIS_REST_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      UPSTASH_REDIS_REST_TOKEN: envField.string({ context: 'server', access: 'secret', optional: true }),
+    },
+  },
   vite: {
     optimizeDeps: {
       exclude: ['@resvg/resvg-wasm'],
