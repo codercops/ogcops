@@ -16,9 +16,8 @@
     "enabled": true,
     "traces": { "enabled": true }
   },
-  // og.codercops.com is a route, not a custom domain, while its proxied CNAME
-  // still points at the frozen Vercel deployment: deleting the route sends
-  // traffic back there. www.og is a custom domain only so it gets a
+  // og.codercops.com is served through a route on a proxied placeholder DNS record
+  // (AAAA 100::). www.og.codercops.com is a custom domain only so it gets a
   // certificate; a zone redirect rule 301s it to og.codercops.com.
   "routes": [
     { "pattern": "og.codercops.com/*", "zone_name": "codercops.com" },
