@@ -1,20 +1,17 @@
 import satori from 'satori';
 import { Resvg, initWasm } from '@resvg/resvg-wasm';
-import { readFile } from 'node:fs/promises';
-import { createRequire } from 'node:module';
+// Precompiled at build time: Cloudflare Workers refuse to compile wasm from
+// raw bytes at runtime, so the module has to arrive already compiled.
+import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm?module';
 import { loadFonts, toSatoriFonts } from './font-loader';
 import type { SatoriElement, FontData } from '@/templates/types';
-
-const require = createRequire(import.meta.url);
 
 let wasmInitialized = false;
 
 async function ensureWasmInitialized() {
   if (!wasmInitialized) {
     try {
-      const wasmPath = require.resolve('@resvg/resvg-wasm/index_bg.wasm');
-      const wasmBuffer = await readFile(wasmPath);
-      await initWasm(wasmBuffer);
+      await initWasm(resvgWasm);
       wasmInitialized = true;
     } catch (e) {
       if (!(e instanceof Error && e.message.includes('Already initialized'))) {

@@ -7,18 +7,19 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "astro build && wrangler dev",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "check": "astro check && tsc --noEmit",
     "lint": "astro check",
-    "generate:favicons": "node scripts/generate-favicons.mjs"
+    "generate:favicons": "node scripts/generate-favicons.mjs",
+    "deploy": "astro build && wrangler deploy"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.13",
     "@astrojs/react": "^4.2.0",
     "@astrojs/sitemap": "^3.2.1",
-    "@astrojs/vercel": "^8.0.0",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/playfair-display": "^5.2.8",
@@ -35,6 +36,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "typescript": "^5.9.3",
-    "vitest": "^2.1.0"
+    "vitest": "^2.1.0",
+    "wrangler": "^4.141.0"
   }
 }
