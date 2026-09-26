@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## What is this?
-OGCOPS is a free, open-source OG image generator and social media preview checker. Built with Astro SSR + React Islands, deployed to Vercel at og.codercops.com. GitHub: github.com/codercops/ogcops. MIT licensed.
+OGCOPS is a free, open-source OG image generator and social media preview checker. Built with Astro SSR + React Islands, deployed to Cloudflare Workers at og.codercops.com. GitHub: github.com/codercops/ogcops. MIT licensed.
 
 ## Commands
 ```bash
@@ -126,7 +126,8 @@ OGCOPS supports AI-powered features using a Bring Your Own Key (BYOK) model. Use
 - Satori does **not** support CSS grid — only flexbox
 - Every `div` must have `display: 'flex'` explicitly in its style
 - No CSS classes in satori JSX — inline styles only
-- Font files must be listed in `astro.config.mjs` `includeFiles` array for Vercel deployment
+- Server-side fonts are bundled with `?inline` imports in `src/lib/font-loader.ts` (the Worker has no filesystem); a new font file needs an import there as well as the file in `public/fonts/`
+- The resvg wasm is imported with `?module` (Workers only run precompiled wasm)
 - WASM imports need `optimizeDeps.exclude` in the Vite config
 - `renderToPng` returns `ArrayBuffer` (not `Buffer`) for `BodyInit` compatibility
 - Canvas is always 1200x630px
