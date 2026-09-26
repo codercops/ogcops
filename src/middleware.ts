@@ -1,8 +1,7 @@
 import { defineMiddleware } from 'astro:middleware';
 
-// CORS for the public API. These rules used to live in vercel.json, which
-// applied them to every response on these paths, including preflights the
-// routes don't handle themselves. Route handlers can still set their own
+// CORS for the public API, applied to every response on these paths,
+// including preflights the routes don't handle themselves. Route handlers can still set their own
 // values; these only fill in what is missing.
 const CORS_RULES: [RegExp, Record<string, string>][] = [
   [
