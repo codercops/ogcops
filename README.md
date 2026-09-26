@@ -68,11 +68,11 @@ See [API documentation](https://og.codercops.com/api-docs) for full details, par
 
 ## Self-Hosting
 
-OGCOPS requires no environment variables for basic usage. Deploy it anywhere that runs Node.js.
+OGCOPS requires no environment variables for basic usage. It runs on Cloudflare Workers (the free plan works for light use; image rendering is CPU heavy, so busy instances want Workers Paid).
 
-### Deploy to Vercel (Recommended)
+### Deploy to Cloudflare (Recommended)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcodercops%2Fogcops)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/codercops/ogcops)
 
 ### Manual Deployment
 
@@ -80,10 +80,10 @@ OGCOPS requires no environment variables for basic usage. Deploy it anywhere tha
 git clone https://github.com/codercops/ogcops.git
 cd ogcops
 npm install
-npm run build
+npm run deploy      # astro build + wrangler deploy (log in with `npx wrangler login` first)
 ```
 
-The build output in `dist/` can be deployed to any Node.js hosting platform.
+The Worker config is in `wrangler.jsonc`. `npm run preview` builds and serves it locally with `wrangler dev`. The optional visitor counter reads `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` as Worker secrets (`npx wrangler secret put ...`).
 
 ## Template Categories
 
@@ -108,7 +108,7 @@ The build output in `dist/` can be deployed to any Node.js hosting platform.
 - [Satori](https://github.com/vercel/satori) + [@resvg/resvg-wasm](https://github.com/nicolo-ribaudo/resvg-js)
 - [Zod](https://zod.dev) for API validation
 - [Vitest](https://vitest.dev) for testing
-- Deployed to [Vercel](https://vercel.com)
+- Deployed to [Cloudflare Workers](https://workers.cloudflare.com)
 
 ## Contributing
 

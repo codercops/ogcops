@@ -158,5 +158,5 @@ git fetch upstream && git checkout dev && git pull upstream dev && git push orig
 
 - The `pr-target-check.yml` workflow enforces that only `dev` can PR into `production`.
 - CI runs on all PRs to both `dev` and `production` branches.
-- Vercel auto-deploys `production` after merge.
+- Cloudflare Workers Builds auto-deploys `production` after merge.
 - Use `--generate-notes` flag on `gh release create` to auto-generate changelog from commits.

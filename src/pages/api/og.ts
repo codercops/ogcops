@@ -3,8 +3,16 @@ import { ogQuerySchema, parseSearchParams } from '@/lib/api-validation';
 import { renderToPng } from '@/lib/og-engine';
 import { getTemplate } from '@/templates/registry';
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async ({ request, locals }) => {
   const url = new URL(request.url);
+
+  // The same URL always renders the same image, so repeats come from the edge
+  // cache instead of the renderer. The cache only exists on the custom domain
+  // (not in `astro dev` or on workers.dev).
+  const cache = (globalThis.caches as (CacheStorage & { default?: Cache }) | undefined)?.default;
+  const cacheKey = new Request(url.toString());
+  const cached = await cache?.match(cacheKey);
+  if (cached) return cached;
 
   // CORS headers
   const headers = {
@@ -63,7 +71,7 @@ export const GET: APIRoute = async ({ request }) => {
       height: params.height,
     });
 
-    return new Response(png, {
+    const response = new Response(png, {
       status: 200,
       headers: {
         ...headers,
@@ -71,6 +79,8 @@ export const GET: APIRoute = async ({ request }) => {
         'Content-Length': String(png.byteLength),
       },
     });
+    if (cache) locals.runtime?.ctx.waitUntil(cache.put(cacheKey, response.clone()));
+    return response;
   } catch (err) {
     console.error('OG generation error:', err);
     return new Response(

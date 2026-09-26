@@ -10,7 +10,9 @@ export async function getStarCount(): Promise<number | null> {
 
   try {
     const res = await fetch(`https://api.github.com/repos/${REPO}`, {
-      headers: { Accept: 'application/vnd.github.v3+json' },
+      // GitHub rejects API requests without a User-Agent, and Workers' fetch
+      // doesn't add one.
+      headers: { Accept: 'application/vnd.github.v3+json', 'User-Agent': 'ogcops (og.codercops.com)' },
     });
     if (!res.ok) return cached?.count ?? null;
 

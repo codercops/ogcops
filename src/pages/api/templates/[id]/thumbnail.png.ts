@@ -5,8 +5,16 @@ import { getTemplate } from '@/templates/registry';
 // In-memory cache for thumbnails (defaults don't change at runtime)
 const thumbnailCache = new Map<string, ArrayBuffer>();
 
-export const GET: APIRoute = async ({ params }) => {
+export const GET: APIRoute = async ({ params, url, locals }) => {
   const { id } = params;
+
+  // Thumbnails only change on deploy, so repeats come from the edge cache
+  // instead of the renderer. The cache only exists on the custom domain
+  // (not in `astro dev` or on workers.dev).
+  const cache = (globalThis.caches as (CacheStorage & { default?: Cache }) | undefined)?.default;
+  const cacheKey = new Request(url.toString());
+  const cached = await cache?.match(cacheKey);
+  if (cached) return cached;
 
   const template = getTemplate(id!);
   if (!template) {
@@ -25,7 +33,7 @@ export const GET: APIRoute = async ({ params }) => {
       thumbnailCache.set(id!, png);
     }
 
-    return new Response(png, {
+    const response = new Response(png, {
       status: 200,
       headers: {
         'Content-Type': 'image/png',
@@ -33,6 +41,8 @@ export const GET: APIRoute = async ({ params }) => {
         'Access-Control-Allow-Origin': '*',
       },
     });
+    if (cache) locals.runtime?.ctx.waitUntil(cache.put(cacheKey, response.clone()));
+    return response;
   } catch (err) {
     console.error(`Thumbnail generation error for ${id}:`, err);
     return new Response(JSON.stringify({ error: 'Failed to generate thumbnail' }), {
