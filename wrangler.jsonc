@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ogcops",
+  // Built by `astro build` with @astrojs/cloudflare. Every page and the image
+  // API render in the Worker; dist/ holds the client assets and fonts.
+  "main": "./dist/_worker.js/index.js",
+  "compatibility_date": "2026-09-24",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // trailingSlash is 'never' in astro.config.mjs.
+    "html_handling": "drop-trailing-slash"
+  },
+  "observability": {
+    "enabled": true,
+    "traces": { "enabled": true }
+  },
+  // workers.dev serves the site until the og.codercops.com cutover, when the
+  // custom domain routes are added.
+  "workers_dev": true,
+  // PR branches get a Preview URL (behind Cloudflare Access).
+  "preview_urls": true,
+  "previews": {}
+}
