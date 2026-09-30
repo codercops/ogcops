@@ -2,7 +2,7 @@
 name: Template Request
 about: Suggest a new OG image template
 title: "[Template] "
-labels: template-request
+labels: templates
 assignees: ''
 ---
 
