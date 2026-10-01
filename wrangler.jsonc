@@ -3,7 +3,7 @@
   "name": "ogcops",
   // Built by `astro build` with @astrojs/cloudflare. Every page and the image
   // API render in the Worker; dist/ holds the client assets and fonts.
-  "main": "./dist/_worker.js/index.js",
+  "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
