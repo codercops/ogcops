@@ -79,7 +79,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
         'Content-Length': String(png.byteLength),
       },
     });
-    if (cache) locals.runtime?.ctx.waitUntil(cache.put(cacheKey, response.clone()));
+    if (cache) locals.cfContext?.waitUntil(cache.put(cacheKey, response.clone()));
     return response;
   } catch (err) {
     console.error('OG generation error:', err);
