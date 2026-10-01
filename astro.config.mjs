@@ -13,6 +13,11 @@ export default defineConfig({
     }),
   ],
   prefetch: true,
+  // Astro 7 defaults to 'jsx' whitespace rules; keep the previous output.
+  compressHTML: true,
+  // No Astro sessions, so the Cloudflare adapter doesn't add or provision a
+  // SESSION KV namespace.
+  session: false,
   trailingSlash: 'never',
   // Every route renders in the Cloudflare Worker. The resvg wasm and the fonts
   // are bundled into it (see src/lib/og-engine.ts and src/lib/font-loader.ts).
