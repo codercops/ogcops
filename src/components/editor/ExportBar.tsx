@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { generateMetaTags } from '@/lib/meta-tag-generator';
 
 interface ExportBarProps {
   apiUrl: string;
@@ -88,17 +89,11 @@ export function ExportBar({ apiUrl, downloadUrl, params, templateId }: ExportBar
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleDownload, copyToClipboard]);
 
-  const metaTags = [
-    `<meta property="og:image" content="${apiUrl}" />`,
-    `<meta property="og:image:width" content="1200" />`,
-    `<meta property="og:image:height" content="630" />`,
-    params.title ? `<meta property="og:title" content="${params.title}" />` : '',
-    params.description ? `<meta property="og:description" content="${params.description}" />` : '',
-    `<meta name="twitter:card" content="summary_large_image" />`,
-    `<meta name="twitter:image" content="${apiUrl}" />`,
-  ]
-    .filter(Boolean)
-    .join('\n');
+  const metaTags = generateMetaTags({
+    title: params.title ? String(params.title) : '',
+    description: params.description ? String(params.description) : undefined,
+    imageUrl: apiUrl,
+  });
 
   return (
     <div className="export-bar">
