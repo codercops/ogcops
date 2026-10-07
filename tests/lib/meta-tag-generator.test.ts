@@ -41,4 +41,22 @@ describe('generateMetaTags', () => {
     expect(html).toContain('content="Desc &amp; more"');
     expect(html).toContain('twitter:description');
   });
+
+  it('omits og:title and twitter:title when title is missing or empty', () => {
+    const without = generateMetaTags({
+      imageUrl: 'https://example.com/og.png',
+    });
+    const empty = generateMetaTags({
+      title: '   ',
+      imageUrl: 'https://example.com/og.png',
+    });
+
+    for (const html of [without, empty]) {
+      expect(html).not.toContain('og:title');
+      expect(html).not.toContain('twitter:title');
+      expect(html).toContain('og:image');
+      expect(html).toContain('twitter:card');
+      expect(html).toContain('twitter:image');
+    }
+  });
 });

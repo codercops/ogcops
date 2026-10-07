@@ -90,7 +90,7 @@ export function ExportBar({ apiUrl, downloadUrl, params, templateId }: ExportBar
   }, [handleDownload, copyToClipboard]);
 
   const metaTags = generateMetaTags({
-    title: params.title ? String(params.title) : '',
+    title: params.title ? String(params.title) : undefined,
     description: params.description ? String(params.description) : undefined,
     imageUrl: apiUrl,
   });

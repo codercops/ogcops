@@ -12,18 +12,22 @@ export function escapeMetaContent(str: string): string {
 }
 
 export function generateMetaTags(params: {
-  title: string;
+  title?: string;
   description?: string;
   imageUrl: string;
   siteName?: string;
   url?: string;
 }): string {
-  const lines: string[] = [
-    `<meta property="og:title" content="${escapeMetaContent(params.title)}" />`,
-    `<meta property="og:image" content="${escapeMetaContent(params.imageUrl)}" />`,
-    `<meta property="og:image:width" content="1200" />`,
-    `<meta property="og:image:height" content="630" />`,
-  ];
+  const title = params.title?.trim() ?? '';
+  const lines: string[] = [];
+
+  if (title) {
+    lines.push(`<meta property="og:title" content="${escapeMetaContent(title)}" />`);
+  }
+
+  lines.push(`<meta property="og:image" content="${escapeMetaContent(params.imageUrl)}" />`);
+  lines.push(`<meta property="og:image:width" content="1200" />`);
+  lines.push(`<meta property="og:image:height" content="630" />`);
 
   if (params.description) {
     lines.push(
@@ -41,7 +45,9 @@ export function generateMetaTags(params: {
 
   lines.push('');
   lines.push(`<meta name="twitter:card" content="summary_large_image" />`);
-  lines.push(`<meta name="twitter:title" content="${escapeMetaContent(params.title)}" />`);
+  if (title) {
+    lines.push(`<meta name="twitter:title" content="${escapeMetaContent(title)}" />`);
+  }
   lines.push(`<meta name="twitter:image" content="${escapeMetaContent(params.imageUrl)}" />`);
   if (params.description) {
     lines.push(
@@ -51,4 +57,3 @@ export function generateMetaTags(params: {
 
   return lines.join('\n');
 }
-
