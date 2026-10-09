@@ -1,13 +1,14 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { getAllTemplates, getCategoryCounts } from '@/templates/registry';
+import { getAllTemplates, getCategoryCounts, getTemplateCount } from '@/templates/registry';
 import { CATEGORY_META, ALL_CATEGORIES } from '@/templates/types';
 
 const templates = getAllTemplates();
 const categoryCounts = getCategoryCounts();
+const templateCount = getTemplateCount();
 ---
 
-<Layout title="Template Gallery" description="Browse 120+ free OG image templates across 12 categories. Blog, SaaS, GitHub, events, podcasts, and more.">
+<Layout title="Template Gallery" description={`Browse ${templateCount}+ free OG image templates across 12 categories. Blog, SaaS, GitHub, events, podcasts, and more.`}>
   <section class="section">
     <div class="container">
       <div class="section-header">
