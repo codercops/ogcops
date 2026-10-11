@@ -3,6 +3,7 @@
 [![CI](https://github.com/codercops/ogcops/actions/workflows/ci.yml/badge.svg)](https://github.com/codercops/ogcops/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Discord](https://img.shields.io/badge/chat-Discord-5865F2.svg?logo=discord&logoColor=white)](https://discord.gg/mpGdJyjaRQ)
 
 > Free, open-source OG image generator. 109 templates, 8 platform previews, free API. No login, no watermarks.
 
@@ -125,6 +126,7 @@ git checkout -b your-feature-branch
 ```
 
 - [Open an issue](https://github.com/codercops/ogcops/issues) — bug reports and feature requests
+- [Join the Discord](https://discord.gg/mpGdJyjaRQ) to chat with other contributors
 - [Start a discussion](https://github.com/codercops/ogcops/discussions) — questions, ideas, show & tell
 
 ## License

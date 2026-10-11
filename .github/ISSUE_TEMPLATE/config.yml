@@ -3,3 +3,6 @@ contact_links:
   - name: API Documentation
     url: https://og.codercops.com/api-docs
     about: Check the API docs before reporting API issues
+  - name: Ask a question on Discord
+    url: https://discord.gg/mpGdJyjaRQ
+    about: Chat with the maintainers and other contributors. Issue claims still happen on GitHub.
