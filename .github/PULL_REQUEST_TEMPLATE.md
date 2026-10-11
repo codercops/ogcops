@@ -4,6 +4,14 @@
 
 Closes #
 
+## How I Tested This
+
+<!-- Required. What you ran or clicked through to check this works. -->
+
+## AI Assistance
+
+<!-- For contributor PRs. Write "none", or name the tool and what you used it for. See CONTRIBUTING.md. -->
+
 ## Type of Change
 
 - [ ] Bug fix
