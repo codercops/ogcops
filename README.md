@@ -106,7 +106,7 @@ The Worker config is in `wrangler.jsonc`. `npm run preview` builds and serves it
 ## Tech Stack
 
 - [Astro](https://astro.build) + [React](https://react.dev) Islands
-- [Satori](https://github.com/vercel/satori) + [@resvg/resvg-wasm](https://github.com/nicolo-ribaudo/resvg-js)
+- [Satori](https://github.com/vercel/satori) + [@resvg/resvg-wasm](https://github.com/thx/resvg-js)
 - [Zod](https://zod.dev) for API validation
 - [Vitest](https://vitest.dev) for testing
 - Deployed to [Cloudflare Workers](https://workers.cloudflare.com)
@@ -142,6 +142,6 @@ git checkout -b your-feature-branch
 ## Acknowledgments
 
 - [Satori](https://github.com/vercel/satori) by Vercel — SVG generation from JSX
-- [resvg-wasm](https://github.com/nicolo-ribaudo/resvg-js) — SVG to PNG conversion
+- [resvg-wasm](https://github.com/thx/resvg-js) — SVG to PNG conversion
 - [Astro](https://astro.build) — web framework
 - [React](https://react.dev) — UI components

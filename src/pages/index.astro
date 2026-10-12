@@ -200,7 +200,7 @@ const categoryCounts = getCategoryCounts();
                 <span class="timeline-terminal-dot"></span>
                 <span class="timeline-terminal-dot"></span>
               </div>
-              <code class="timeline-terminal-body">curl og.codercops.com/api/og?title=Hello</code>
+              <code class="timeline-terminal-body">curl "https://og.codercops.com/api/og?title=Hello"</code>
             </div>
           </div>
         </div>
@@ -222,10 +222,7 @@ const categoryCounts = getCategoryCounts();
               <button class="terminal-copy-btn" id="api-copy-btn" type="button">Copy</button>
             </div>
           </div>
-          <pre class="terminal-body"><code id="api-code-content">curl "https://og.codercops.com/api/og?\
-  template=blog-minimal-dark&\
-  title=Hello%20World&\
-  author=OGCOPS"</code></pre>
+          <pre class="terminal-body"><code id="api-code-content">curl "https://og.codercops.com/api/og?template=blog-minimal-dark&title=Hello%20World&author=OGCOPS" --output og.png</code></pre>
         </div>
         <div class="api-teaser-info">
           <span class="section-label">Free API</span>
