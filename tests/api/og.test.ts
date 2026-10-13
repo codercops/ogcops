@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { ogQuerySchema, parseSearchParams, mergeOgParams } from '@/lib/api-validation';
 import { getTemplate } from '@/templates/registry';
 
@@ -136,5 +136,62 @@ describe('mergeOgParams', () => {
     );
     expect(merged.quote).toBe('Talk is cheap, show me the code.');
     expect(merged.author).toBe(template!.defaults.author);
+  });
+});
+
+// og-engine pulls in the resvg wasm binary through a Vite-only `?module`
+// specifier that vitest cannot resolve, so it has to be mocked before the route
+// handler is imported.
+vi.mock('@/lib/og-engine', () => ({
+  renderToPng: vi.fn(async () => new Uint8Array([137, 80, 78, 71])),
+}));
+
+const { GET } = await import('@/pages/api/og');
+
+function makeContext(url: string) {
+  return {
+    request: new Request(url),
+    locals: {},
+  } as unknown as Parameters<NonNullable<typeof GET>>[0];
+}
+
+const BASE = 'http://localhost:4321/api/og';
+
+describe('OG API error caching', () => {
+  it('does not cache a 404 for a template that does not exist', async () => {
+    const res = await GET(makeContext(`${BASE}?template=does-not-exist&title=Hi`));
+
+    expect(res.status).toBe(404);
+    expect(res.headers.get('cache-control')).toBe('no-store');
+  });
+
+  it('does not cache a 400 for invalid params', async () => {
+    const res = await GET(makeContext(`${BASE}?width=not-a-number&title=Hi`));
+
+    expect(res.status).toBe(400);
+    expect(res.headers.get('cache-control')).toBe('no-store');
+  });
+
+  it('does not cache a 500 when rendering throws', async () => {
+    const template = getTemplate('blog-minimal-dark')!;
+    const render = vi.spyOn(template, 'render').mockImplementation(() => {
+      throw new Error('boom');
+    });
+
+    try {
+      const res = await GET(makeContext(`${BASE}?template=blog-minimal-dark&title=Hi`));
+
+      expect(res.status).toBe(500);
+      expect(res.headers.get('cache-control')).toBe('no-store');
+    } finally {
+      render.mockRestore();
+    }
+  });
+
+  it('still caches a 200 for a day', async () => {
+    const res = await GET(makeContext(`${BASE}?template=blog-minimal-dark&title=Hi`));
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get('cache-control')).toBe('public, max-age=86400');
   });
 });
