@@ -59,4 +59,10 @@ describe('canonical and favicon attribute order', () => {
     const tags = await fetchMetaTags('https://example.com/page');
     expect(tags.favicon).toBeUndefined();
   });
+
+  it('matches an uppercase rel, like the old case-insensitive regexes', async () => {
+    stubFetch('<link REL="Canonical" HREF="https://example.com/page">');
+    const tags = await fetchMetaTags('https://example.com/page');
+    expect(tags.canonical).toBe('https://example.com/page');
+  });
 });
