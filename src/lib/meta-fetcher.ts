@@ -82,13 +82,22 @@ function parseMetaTags(html: string, baseUrl: string): MetaTags {
     }
   }
 
-  // Extract canonical
-  const canonicalMatch = html.match(/<link[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["']/i);
-  if (canonicalMatch) tags.canonical = canonicalMatch[1];
+  // Extract canonical and favicon. Attribute order varies (`rel` before or
+  // after `href`), so match the tag first and read the attributes from it.
+  for (const m of html.matchAll(/<link\b([^>]*)>/gi)) {
+    const attrs = parseAttributes(m[1]);
+    if (!attrs.rel) continue;
+    const rel = attrs.rel.toLowerCase();
 
-  // Extract favicon
-  const faviconMatch = html.match(/<link[^>]*rel=["'](?:shortcut )?icon["'][^>]*href=["']([^"']+)["']/i);
-  if (faviconMatch) tags.favicon = resolveUrl(faviconMatch[1], baseUrl);
+    if (rel === 'canonical' && !tags.canonical && attrs.href) {
+      // Resolve like the favicon does, so a relative canonical is stored absolute.
+      tags.canonical = resolveUrl(attrs.href, baseUrl);
+    }
+    // Exact rel match, so `apple-touch-icon` is not picked up as the favicon.
+    if ((rel === 'icon' || rel === 'shortcut icon') && !tags.favicon && attrs.href) {
+      tags.favicon = resolveUrl(attrs.href, baseUrl);
+    }
+  }
 
   return tags;
 }
