@@ -86,3 +86,50 @@ describe('Meta Analyzer', () => {
     expect(['A', 'B']).toContain(result.grade);
   });
 });
+
+describe('analyzeMeta', () => {
+  const full: MetaTags = {
+    title: 'Example Page',
+    description: 'This is a great page with useful content for developers.',
+    ogTitle: 'Example Page - Site',
+    ogDescription: 'This is a great page with useful content for developers.',
+    ogImage: 'https://example.com/og.png',
+    ogImageWidth: '1200',
+    ogImageHeight: '630',
+    ogUrl: 'https://example.com',
+    ogType: 'website',
+    twitterCard: 'summary_large_image',
+    twitterTitle: 'Example Page',
+    twitterImage: 'https://example.com/og.png',
+    canonical: 'https://example.com',
+  };
+  const longTitle = 'A'.repeat(80);
+  const longDescription = 'A'.repeat(170);
+
+  it.each([
+    [90, 'A', { ogUrl: undefined, ogImageWidth: undefined, ogDescription: undefined }],
+    [89, 'B', { ogImageWidth: undefined, twitterCard: undefined }],
+    [75, 'B', { twitterCard: undefined, title: longTitle, description: 'Too short', ogDescription: undefined, ogUrl: undefined }],
+    [74, 'C', { twitterCard: undefined, title: longTitle, description: 'Too short', ogDescription: undefined, ogImageWidth: undefined }],
+    [60, 'C', { ogTitle: undefined, twitterCard: undefined, title: longTitle, description: 'Too short', ogDescription: undefined, ogUrl: undefined, ogType: undefined, ogImageWidth: undefined }],
+    [59, 'D', { ogImage: undefined, twitterCard: undefined, title: longTitle, description: longDescription, ogDescription: undefined }],
+    [40, 'D', { title: undefined, ogTitle: undefined, ogImage: undefined, twitterCard: undefined, ogUrl: undefined }],
+    [39, 'F', { title: undefined, ogTitle: undefined, ogImage: undefined, twitterCard: undefined, description: longDescription }],
+  ])('gives score %i grade %s', (score, grade, overrides) => {
+    const result = analyzeMeta({ ...full, ...overrides });
+    expect(result.score).toBe(score);
+    expect(result.grade).toBe(grade);
+  });
+
+  it.each([
+    ['A', {}, 'Excellent! Your meta tags are well-configured.'],
+    ['B', { ogImageWidth: undefined, twitterCard: undefined }, 'Good setup with minor improvements possible.'],
+    ['C with no errors', { title: longTitle, description: 'Too short', ogDescription: undefined, ogImageWidth: undefined, twitterCard: undefined }, 'Decent, a few warnings to fix.'],
+    ['C with one error', { ogTitle: undefined, twitterCard: undefined, title: longTitle, description: 'Too short' }, 'Decent, but 1 critical issue found.'],
+    ['C with two errors', { ogTitle: undefined, ogImage: undefined }, 'Decent, but 2 critical issues found.'],
+    ['D with one error', { ogImage: undefined, twitterCard: undefined, title: longTitle, description: longDescription, ogDescription: undefined }, '1 critical issue affecting social previews.'],
+    ['F with five errors', { title: undefined, description: undefined, ogTitle: undefined, ogDescription: undefined, ogImage: undefined, twitterImage: undefined }, '5 critical issues affecting social previews.'],
+  ])('writes the summary for %s', (_, overrides, summary) => {
+    expect(analyzeMeta({ ...full, ...overrides }).summary).toContain(summary);
+  });
+});
