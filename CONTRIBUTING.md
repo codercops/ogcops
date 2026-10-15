@@ -128,7 +128,7 @@ public/fonts/          # Bundled .woff fonts (Inter, Playfair Display, JetBrains
 5. Run `npm run dev`, open `http://localhost:4321/create/{category}` and check your template with long text and with optional fields left empty
 6. Run `npm run check` and `npm run test`
 
-The tests check the template's shape and size but don't run Satori yet, so the live preview in step 5 is where layout problems show up. You don't need to update template counts in the README.
+`tests/templates/render.test.ts` renders every template with Satori, once with its defaults and once with the optional text fields empty, so a div with several children and no `display: 'flex'` fails `npm run test`. The live preview in step 5 is still where you check how it looks. You don't need to update template counts in the README.
 
 Use `src/templates/blog/minimal-dark.ts` as a reference implementation.
 
