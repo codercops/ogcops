@@ -8,3 +8,4 @@ export { default as githubTerminalStyle } from './terminal-style';
 export { default as githubCodeWindow } from './code-window';
 export { default as githubMinimalBadge } from './minimal-badge';
 export { default as githubMatrix } from './matrix';
+export { default as githubIssueCard } from './issue-card';
