@@ -42,7 +42,7 @@ export async function fetchMetaTags(url: string): Promise<MetaTags> {
   return parseMetaTags(html, url);
 }
 
-function parseMetaTags(html: string, baseUrl: string): MetaTags {
+export function parseMetaTags(html: string, baseUrl: string): MetaTags {
   const tags: MetaTags = {};
 
   // Extract <title>
@@ -104,22 +104,30 @@ function parseMetaTags(html: string, baseUrl: string): MetaTags {
 
 function parseAttributes(str: string): Record<string, string> {
   const attrs: Record<string, string> = {};
-  const regex = /(\w[\w-]*)=["']([^"']*?)["']/gi;
+  const regex = /(\w[\w-]*)=(?:"([^"]*)"|'([^']*)')/gi;
   let m;
   while ((m = regex.exec(str)) !== null) {
-    attrs[m[1].toLowerCase()] = decodeEntities(m[2]);
+    attrs[m[1].toLowerCase()] = decodeEntities(m[2] ?? m[3]);
   }
   return attrs;
 }
 
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: '\u00a0',
+};
+
 function decodeEntities(str: string): string {
-  return str
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&#x27;/g, "'");
+  return str.replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, (entity, body: string) => {
+    if (body[0] !== '#') return NAMED_ENTITIES[body] ?? entity;
+    const hex = body[1] === 'x' || body[1] === 'X';
+    const code = parseInt(body.slice(hex ? 2 : 1), hex ? 16 : 10);
+    return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : entity;
+  });
 }
 
 function resolveUrl(url: string, base: string): string {
