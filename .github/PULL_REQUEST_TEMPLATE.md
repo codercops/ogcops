@@ -33,6 +33,7 @@ Closes #
 - [ ] I was assigned the linked issue
 - [ ] `npm run check` passes
 - [ ] `npm run test` passes
+- [ ] For a bug fix: the new test fails without my change
 - [ ] Tested locally with `npm run dev`
 - [ ] Screenshots included for visual changes
 - [ ] New templates follow the [Template Guidelines](https://github.com/codercops/ogcops/blob/dev/CONTRIBUTING.md#template-guidelines)
