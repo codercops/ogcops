@@ -23,7 +23,7 @@ export function PreviewApp() {
       />
 
       {error && (
-        <div className="preview-error">
+        <div className="preview-error" role="alert">
           <span>{error}</span>
         </div>
       )}

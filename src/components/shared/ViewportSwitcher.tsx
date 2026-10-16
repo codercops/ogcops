@@ -22,8 +22,10 @@ export function ViewportSwitcher({ value, onChange, compact }: ViewportSwitcherP
           className={`viewport-btn ${value === vp.id ? 'viewport-btn-active' : ''}`}
           onClick={() => onChange(vp.id)}
           title={`${vp.label} (${vp.sublabel})`}
+          aria-label={vp.label}
+          aria-pressed={value === vp.id}
         >
-          <span className="viewport-btn-icon">{vp.icon}</span>
+          <span className="viewport-btn-icon" aria-hidden="true">{vp.icon}</span>
           {!compact && <span className="viewport-btn-label">{vp.label}</span>}
           {!compact && <span className="viewport-btn-size">{vp.sublabel}</span>}
         </button>
