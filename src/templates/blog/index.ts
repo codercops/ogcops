@@ -10,3 +10,4 @@ export { default as blogBoldTypography } from './bold-typography';
 export { default as blogDuotone } from './duotone';
 export { default as blogGeometric } from './geometric';
 export { default as blogRetroTerminal } from './retro-terminal';
+export { default as blogSeriesPart } from './series-part';

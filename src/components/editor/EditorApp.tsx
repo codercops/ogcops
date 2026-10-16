@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import type { TemplateDefinition, TemplateCategory } from '@/templates/types';
 import { getAllTemplates, getTemplate } from '@/templates/registry';
+import { normalizeColorFields } from '@/templates/utils';
 import { useEditorState } from './useEditorState';
 import { useSatoriRenderer } from './useSatoriRenderer';
 import { useDebounce } from './useDebounce';
@@ -88,7 +89,9 @@ function EditorAppInner({ initialCategory }: EditorAppProps) {
   // Re-render on param or template change
   useEffect(() => {
     if (currentTemplate) {
-      const element = currentTemplate.render(debouncedParams);
+      const mergedParams = { ...currentTemplate.defaults, ...debouncedParams };
+      const normalizedParams = normalizeColorFields(currentTemplate, mergedParams);
+      const element = currentTemplate.render(normalizedParams);
       render(element);
     }
   }, [currentTemplate, debouncedParams, render]);
@@ -192,7 +195,8 @@ function EditorAppInner({ initialCategory }: EditorAppProps) {
               <div className="editor-export-preview">
                 <Canvas svg={svg} loading={loading} error={error} />
               </div>
-              <ExportBar apiUrl={apiUrl} downloadUrl={downloadUrl} params={state.params} templateId={state.templateId} />
+              {/* The topbar ExportBar always mounts and owns the shortcuts, so this second one opts out. */}
+              <ExportBar apiUrl={apiUrl} downloadUrl={downloadUrl} params={state.params} templateId={state.templateId} shortcuts={false} />
               <PlatformPreviewStrip
                 svg={svg}
                 title={String(state.params.title || '')}

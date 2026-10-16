@@ -71,9 +71,8 @@ import '@/styles/api-docs.css';
             <div class="param-head">
               <code class="param-name">title</code>
               <span class="param-type">string</span>
-              <span class="param-required">required</span>
             </div>
-            <p class="param-desc">Main title text</p>
+            <p class="param-desc">Main title text (optional; template default used when omitted)</p>
           </div>
           <div class="param-item">
             <div class="param-head">
@@ -94,14 +93,21 @@ import '@/styles/api-docs.css';
               <code class="param-name">bgColor</code>
               <span class="param-type">string</span>
             </div>
-            <p class="param-desc">Background color (hex, e.g. <code>#0a0a0a</code>)</p>
+            <p class="param-desc">Background color (3- or 6-digit hex, with or without <code>#</code>, e.g. <code>#0a0a0a</code>, <code>0a0a0a</code>, <code>#000</code>, <code>000</code>)</p>
           </div>
           <div class="param-item">
             <div class="param-head">
               <code class="param-name">accentColor</code>
               <span class="param-type">string</span>
             </div>
-            <p class="param-desc">Accent color (hex)</p>
+            <p class="param-desc">Accent color (3- or 6-digit hex, with or without <code>#</code>, e.g. <code>#e07a5f</code>, <code>e07a5f</code>, <code>#0f0</code>, <code>0f0</code>)</p>
+          </div>
+          <div class="param-item">
+            <div class="param-head">
+              <code class="param-name">textColor</code>
+              <span class="param-type">string</span>
+            </div>
+            <p class="param-desc">Text color (3- or 6-digit hex, with or without <code>#</code>, e.g. <code>#ffffff</code>, <code>fff</code>)</p>
           </div>
           <div class="param-item">
             <div class="param-head">

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const ogQuerySchema = z.object({
   template: z.string().default('blog-minimal-dark'),
-  title: z.string().min(1, 'Title is required'),
+  title: z.string().optional(),
   description: z.string().optional().default(''),
   author: z.string().optional().default(''),
   date: z.string().optional().default(''),
@@ -41,4 +41,29 @@ export function parseSearchParams(
 
   const errors = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
   return { success: false, error: errors };
+}
+
+const ogQuerySchemaKeys = new Set(Object.keys(ogQuerySchema.shape));
+
+export function mergeOgParams(
+  params: OGQueryParams,
+  defaults: Record<string, string | number | boolean>,
+  searchParams: URLSearchParams
+): Record<string, string | number | boolean> {
+  const merged: Record<string, string | number | boolean> = { ...defaults };
+
+  for (const [key, value] of Object.entries(params)) {
+    if (value != null && value !== '') {
+      merged[key] = value as string | number | boolean;
+    }
+  }
+
+  // Template-specific params (not part of the schema) override defaults when non-empty
+  searchParams.forEach((value, key) => {
+    if (!ogQuerySchemaKeys.has(key) && value !== '') {
+      merged[key] = value;
+    }
+  });
+
+  return merged;
 }

@@ -3,7 +3,7 @@ import { defineMiddleware } from 'astro:middleware';
 // CORS for the public API, applied to every response on these paths,
 // including preflights the routes don't handle themselves. Route handlers can still set their own
 // values; these only fill in what is missing.
-const CORS_RULES: [RegExp, Record<string, string>][] = [
+export const CORS_RULES: [RegExp, Record<string, string>][] = [
   [
     /^\/api\/og$/,
     {
@@ -15,10 +15,38 @@ const CORS_RULES: [RegExp, Record<string, string>][] = [
   [/^\/api\/templates\/[^/]+\/thumbnail\.png$/, { 'Access-Control-Allow-Origin': '*' }],
   [/^\/api\/templates$/, { 'Access-Control-Allow-Origin': '*' }],
   [/^\/api\/preview$/, { 'Access-Control-Allow-Origin': '*' }],
+  [
+    /^\/api\/ai\/generate$/,
+    {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  ],
+  [
+    /^\/api\/ai\/validate$/,
+    {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  ],
+  [
+    /^\/api\/ai\/autofill$/,
+    {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  ],
 ];
 
+export function getCorsRule(pathname: string): Record<string, string> | undefined {
+  return CORS_RULES.find(([pattern]) => pattern.test(pathname))?.[1];
+}
+
 export const onRequest = defineMiddleware(async ({ url, request }, next) => {
-  const rule = CORS_RULES.find(([pattern]) => pattern.test(url.pathname))?.[1];
+  const rule = getCorsRule(url.pathname);
   if (!rule) return next();
 
   if (request.method === 'OPTIONS') {

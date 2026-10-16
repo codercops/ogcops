@@ -9,3 +9,7 @@ dist/
 # Cloudflare: local wrangler state and secrets
 .wrangler/
 .dev.vars*
+
+# local tooling notes
+CLAUDE.md
+AGENTS.md

@@ -6,6 +6,11 @@ interface ExportBarProps {
   downloadUrl: string;
   params: Record<string, any>;
   templateId: string;
+  /**
+   * Whether this bar owns the keyboard shortcuts. Pass false on a second
+   * ExportBar so Ctrl/Cmd+S and Ctrl/Cmd+Shift+C fire once, not once per bar.
+   */
+  shortcuts?: boolean;
 }
 
 declare global {
@@ -14,7 +19,13 @@ declare global {
   }
 }
 
-export function ExportBar({ apiUrl, downloadUrl, params, templateId }: ExportBarProps) {
+export function ExportBar({
+  apiUrl,
+  downloadUrl,
+  params,
+  templateId,
+  shortcuts = true,
+}: ExportBarProps) {
   const [downloading, setDownloading] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const downloadRef = useRef(downloadUrl);
@@ -68,6 +79,10 @@ export function ExportBar({ apiUrl, downloadUrl, params, templateId }: ExportBar
 
   // Keyboard shortcuts
   useEffect(() => {
+    // A second ExportBar can be mounted at the same time (the mobile Export
+    // tab). Only the first one registers, so a key press fires once.
+    if (!shortcuts) return;
+
     function handleKeyDown(e: KeyboardEvent) {
       const mod = e.metaKey || e.ctrlKey;
       if (!mod) return;
@@ -87,7 +102,7 @@ export function ExportBar({ apiUrl, downloadUrl, params, templateId }: ExportBar
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleDownload, copyToClipboard]);
+  }, [handleDownload, copyToClipboard, shortcuts]);
 
   const metaTags = generateMetaTags({
     title: params.title ? String(params.title) : undefined,

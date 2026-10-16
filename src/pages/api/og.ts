@@ -1,7 +1,8 @@
 import type { APIRoute } from 'astro';
-import { ogQuerySchema, parseSearchParams } from '@/lib/api-validation';
+import { ogQuerySchema, parseSearchParams, mergeOgParams } from '@/lib/api-validation';
 import { renderToPng } from '@/lib/og-engine';
 import { getTemplate } from '@/templates/registry';
+import { normalizeColorFields } from '@/templates/utils';
 
 export const GET: APIRoute = async ({ request, locals }) => {
   const url = new URL(request.url);
@@ -21,6 +22,11 @@ export const GET: APIRoute = async ({ request, locals }) => {
     'Cache-Control': 'public, max-age=86400',
   };
 
+  // A failed render must not stick. The URL is whatever the caller put in their
+  // og:image, so caching a 400/404/500 for a day would pin the broken image on
+  // every client that fetched it. Success stays cacheable.
+  const errorHeaders = { ...headers, 'Cache-Control': 'no-store' };
+
   // Handle CORS preflight
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers });
@@ -31,7 +37,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
   if (!parsed.success) {
     return new Response(JSON.stringify({ error: parsed.error }), {
       status: 400,
-      headers: { ...headers, 'Content-Type': 'application/json' },
+      headers: { ...errorHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -44,28 +50,18 @@ export const GET: APIRoute = async ({ request, locals }) => {
       JSON.stringify({ error: `Template "${params.template}" not found` }),
       {
         status: 404,
-        headers: { ...headers, 'Content-Type': 'application/json' },
+        headers: { ...errorHeaders, 'Content-Type': 'application/json' },
       }
     );
   }
 
   try {
-    // Merge template defaults with provided params
-    const mergedParams: Record<string, string | number | boolean> = { ...template.defaults };
-    for (const [key, value] of Object.entries(params)) {
-      if (value != null && value !== '') {
-        mergedParams[key] = value as string | number | boolean;
-      }
-    }
+    // Merge template defaults with provided params. Schema params override
+    // defaults when non-empty; template-specific query params override too.
+    const mergedParams = mergeOgParams(params, template.defaults, url.searchParams);
+    const normalizedParams = normalizeColorFields(template, mergedParams);
 
-    // Also pass through any extra query params (template-specific fields)
-    url.searchParams.forEach((value, key) => {
-      if (!(key in mergedParams) && value) {
-        mergedParams[key] = value;
-      }
-    });
-
-    const element = template.render(mergedParams);
+    const element = template.render(normalizedParams);
     const png = await renderToPng(element, {
       width: params.width,
       height: params.height,
@@ -87,7 +83,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
       JSON.stringify({ error: 'Failed to generate image' }),
       {
         status: 500,
-        headers: { ...headers, 'Content-Type': 'application/json' },
+        headers: { ...errorHeaders, 'Content-Type': 'application/json' },
       }
     );
   }

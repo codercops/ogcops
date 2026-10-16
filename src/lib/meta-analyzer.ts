@@ -107,7 +107,9 @@ export function analyzeMeta(tags: MetaTags): AnalysisResult {
       : score >= 75
         ? 'Good setup with minor improvements possible.'
         : score >= 60
-          ? `Decent, but ${issueCount} critical issue${issueCount !== 1 ? 's' : ''} found.`
+          ? issueCount === 0
+            ? 'Decent, a few warnings to fix.'
+            : `Decent, but ${issueCount} critical issue${issueCount !== 1 ? 's' : ''} found.`
           : `Needs work — ${issueCount} critical issue${issueCount !== 1 ? 's' : ''} affecting social previews.`;
 
   return { score, grade, issues, summary };

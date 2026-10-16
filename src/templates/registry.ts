@@ -54,6 +54,7 @@ import blogBoldTypography from './blog/bold-typography';
 import blogDuotone from './blog/duotone';
 import blogGeometric from './blog/geometric';
 import blogRetroTerminal from './blog/retro-terminal';
+import blogSeriesPart from './blog/series-part';
 
 [
   blogMinimalDark,
@@ -68,6 +69,7 @@ import blogRetroTerminal from './blog/retro-terminal';
   blogDuotone,
   blogGeometric,
   blogRetroTerminal,
+  blogSeriesPart,
 ].forEach(registerTemplate);
 
 // Product

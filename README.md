@@ -3,6 +3,7 @@
 [![CI](https://github.com/codercops/ogcops/actions/workflows/ci.yml/badge.svg)](https://github.com/codercops/ogcops/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Discord](https://img.shields.io/badge/chat-Discord-5865F2.svg?logo=discord&logoColor=white)](https://discord.gg/mpGdJyjaRQ)
 
 > Free, open-source OG image generator. 109 templates, 8 platform previews, free API. No login, no watermarks.
 
@@ -105,7 +106,7 @@ The Worker config is in `wrangler.jsonc`. `npm run preview` builds and serves it
 ## Tech Stack
 
 - [Astro](https://astro.build) + [React](https://react.dev) Islands
-- [Satori](https://github.com/vercel/satori) + [@resvg/resvg-wasm](https://github.com/nicolo-ribaudo/resvg-js)
+- [Satori](https://github.com/vercel/satori) + [@resvg/resvg-wasm](https://github.com/thx/resvg-js)
 - [Zod](https://zod.dev) for API validation
 - [Vitest](https://vitest.dev) for testing
 - Deployed to [Cloudflare Workers](https://workers.cloudflare.com)
@@ -125,6 +126,7 @@ git checkout -b your-feature-branch
 ```
 
 - [Open an issue](https://github.com/codercops/ogcops/issues) — bug reports and feature requests
+- [Join the Discord](https://discord.gg/mpGdJyjaRQ) to chat with other contributors
 - [Start a discussion](https://github.com/codercops/ogcops/discussions) — questions, ideas, show & tell
 
 ## License
@@ -140,6 +142,6 @@ git checkout -b your-feature-branch
 ## Acknowledgments
 
 - [Satori](https://github.com/vercel/satori) by Vercel — SVG generation from JSX
-- [resvg-wasm](https://github.com/nicolo-ribaudo/resvg-js) — SVG to PNG conversion
+- [resvg-wasm](https://github.com/thx/resvg-js) — SVG to PNG conversion
 - [Astro](https://astro.build) — web framework
 - [React](https://react.dev) — UI components

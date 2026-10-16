@@ -8,13 +8,55 @@ We're taking part in Hacktoberfest this year, and first-time contributors are ve
 
 1. Pick an open issue labeled [`hacktoberfest`](https://github.com/codercops/ogcops/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest+no%3Aassignee) or [`good first issue`](https://github.com/codercops/ogcops/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+no%3Aassignee) that nobody is assigned to. New template ideas are listed in [#5](https://github.com/codercops/ogcops/issues/5).
 2. Comment on it to ask for it. I'll assign it to you, usually within a day. Please don't start on an issue that's assigned to someone else.
-3. Take one issue at a time. Once your PR is merged, grab the next one.
+3. Take one issue at a time. Once your PR is merged, grab the next one. After 3 merged PRs with us you can hold two issues at once.
 4. If you're assigned and there's no PR or update for 5 days, I'll free the issue up for someone else. Just comment if you need more time.
-5. Open your PR against `dev` and put `Closes #<issue number>` in the description.
+5. Open your PR against `dev` and put `Closes #<issue number>` in the description. A check on the PR ("Claim check") fails if that issue isn't assigned to you. Another one ("Description check") fails while the "How I tested this" or "AI assistance" section of the description is missing or empty.
 
-PRs count for Hacktoberfest once they're merged or labeled `hacktoberfest-accepted`. PRs that aren't linked to an issue, only reformat code, or change things nobody asked for will be closed, and spammy ones get the `spam` label. If you have an idea that isn't an issue yet, open an issue first so we can agree on it before you write code.
+PRs count for Hacktoberfest once they're merged or labeled `hacktoberfest-accepted`. PRs that aren't linked to an issue, only reformat code, or change things nobody asked for will be closed, and spammy ones get the `spam` label. If you have an idea that isn't an issue yet, open an issue first so we can agree on it before you write code. The full rules are under [Ground Rules](#ground-rules) below.
 
-Stuck? Ask on the issue. Questions are welcome.
+Stuck? Ask on the issue, or in `#oss-help` on our [Discord](https://discord.gg/mpGdJyjaRQ). Questions are welcome. Claims still happen on the issue, so the assignment stays visible to everyone.
+
+## Ground Rules
+
+### AI Tools
+
+You can use AI tools (Copilot, ChatGPT, Claude, Cursor and so on). Two conditions:
+
+1. Say so in the PR. If a tool wrote or rewrote more than autocomplete-sized pieces, fill in the "AI assistance" line in the PR template: which tool, and what you used it for.
+2. You own every line. Run it, test it, and be ready to explain it in review. If you can't explain a change, the PR gets closed.
+
+PRs that are unreviewed AI output (code that doesn't run, invented APIs, a description that doesn't match the diff, unrelated rewrites) are treated as spam.
+
+### Spam
+
+These get closed and labeled `spam`:
+
+- a PR for an issue that isn't assigned to you, or that isn't linked to an issue at all
+- formatting, whitespace or typo-only changes nobody asked for
+- one fix split into several PRs
+- a copy of someone else's PR
+- claiming a pile of issues at once, or bulk and automated submissions
+- untested generated code
+
+Two spam PRs and you won't be assigned more issues this month, and you're out of the CODERCOPS goodies.
+
+### Reviews
+
+Every PR needs a "How I tested this" line: what you ran or clicked through to check it works.
+
+For a bug fix, check that your new test fails without the fix: undo the change in the source, run the tests, then put it back. A test that passes either way doesn't catch anything.
+
+I review most PRs within a few days. Please don't ping repeatedly or DM maintainers about a review. If three days pass with no reply, one follow-up comment on the PR is fine.
+
+### Goodies
+
+The top 5 contributors this October get a CODERCOPS T-shirt and stickers. You need at least 5 merged PRs labeled `hacktoberfest-accepted` across chatcops, ogcops, toolbelt and discord-bot, merged between Oct 1 and Oct 31 (UTC), and ties go to whoever got there first. To keep it fair:
+
+- only PRs for issues that were assigned to you count
+- a fix split into several PRs counts once
+- what counts is the maintainers' call, and that call is final
+
+These goodies come from CODERCOPS through our own open source program. They're separate from Hacktoberfest, so anything Hacktoberfest itself gives out is a different thing with its own rules.
 
 ## Ways to Contribute
 

@@ -1,3 +1,5 @@
+import type { TemplateDefinition } from './types';
+
 /**
  * Truncate text to a max length with ellipsis.
  */
@@ -23,8 +25,50 @@ export function autoFontSize(
  * Parse hex color, supporting both with and without #.
  */
 export function parseColor(color: string): string {
+  if (typeof color !== 'string') return '';
   const c = color.replace(/^#/, '');
   return `#${c}`;
+}
+
+/**
+ * Normalize a hex color value to lowercase #rrggbb format.
+ * Accepts RGB, #RGB, RRGGBB, and #RRGGBB.
+ * Returns normalized lowercase #rrggbb, or fallback for invalid/incomplete input.
+ */
+export function normalizeHexColor(value: unknown, fallback: string): string {
+  if (typeof value !== 'string') return fallback;
+  const trimmed = value.trim();
+  const hex = trimmed.startsWith('#') ? trimmed.slice(1) : trimmed;
+  if (/^[0-9a-fA-F]{3}$/.test(hex)) {
+    const [r, g, b] = hex;
+    return `#${r}${r}${g}${g}${b}${b}`.toLowerCase();
+  }
+  if (/^[0-9a-fA-F]{6}$/.test(hex)) {
+    return `#${hex.toLowerCase()}`;
+  }
+  return fallback;
+}
+
+/**
+ * Normalizes every `type: 'color'` field in params using its template default as fallback.
+ */
+export function normalizeColorFields(
+  template: Pick<TemplateDefinition, 'fields' | 'defaults'>,
+  params: Record<string, any>
+): Record<string, any> {
+  if (!template || !template.fields) return { ...params };
+
+  const normalized = { ...params };
+  for (const field of template.fields) {
+    if (field.type === 'color') {
+      const fallback = normalizeHexColor(
+        template.defaults?.[field.key] ?? field.defaultValue,
+        '#000000'
+      );
+      normalized[field.key] = normalizeHexColor(normalized[field.key], fallback);
+    }
+  }
+  return normalized;
 }
 
 /**
@@ -47,17 +91,32 @@ export function mixColors(color1: string, color2: string, ratio: number): string
   return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
 
-function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) }
-    : null;
+export function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+  if (typeof hex !== 'string') return null;
+  const clean = hex.trim().replace(/^#/, '');
+  if (/^[a-f\d]{3}$/i.test(clean)) {
+    return {
+      r: parseInt(clean[0] + clean[0], 16),
+      g: parseInt(clean[1] + clean[1], 16),
+      b: parseInt(clean[2] + clean[2], 16),
+    };
+  }
+  const match = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(clean);
+  if (match) {
+    return {
+      r: parseInt(match[1], 16),
+      g: parseInt(match[2], 16),
+      b: parseInt(match[3], 16),
+    };
+  }
+  return null;
 }
 
 /**
  * Determine if a color is light or dark (for contrast text).
  */
 export function isLightColor(hex: string): boolean {
+  if (typeof hex !== 'string') return false;
   const rgb = hexToRgb(parseColor(hex));
   if (!rgb) return false;
   const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;

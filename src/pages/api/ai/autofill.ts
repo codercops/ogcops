@@ -20,10 +20,6 @@ const autofillSchema = z.object({
 });
 
 export const POST: APIRoute = async ({ request }) => {
-  if (request.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: CORS_HEADERS });
-  }
-
   let body: unknown;
   try {
     body = await request.json();
