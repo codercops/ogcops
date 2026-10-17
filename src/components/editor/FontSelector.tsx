@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 interface FontSelectorProps {
   label: string;
   value: string;
@@ -6,18 +8,28 @@ interface FontSelectorProps {
 }
 
 const defaultFontOptions = [
-  { label: 'Inter', value: 'Inter' },
-  { label: 'Playfair Display', value: 'Playfair Display' },
-  { label: 'JetBrains Mono', value: 'JetBrains Mono' },
+  { label: "Inter", value: "Inter" },
+  { label: "Playfair Display", value: "Playfair Display" },
+  { label: "JetBrains Mono", value: "JetBrains Mono" },
 ];
 
-export function FontSelector({ label, value, onChange, options }: FontSelectorProps) {
+export function FontSelector({
+  label,
+  value,
+  onChange,
+  options,
+}: FontSelectorProps) {
+  const id = useId();
   const opts = options || defaultFontOptions;
 
   return (
     <div className="editor-field">
-      <label className="editor-field-label">{label}</label>
+      <label htmlFor={id} className="editor-field-label">
+        {label}
+      </label>
+
       <select
+        id={id}
         className="editor-field-input editor-select"
         value={value}
         onChange={(e) => onChange(e.target.value)}

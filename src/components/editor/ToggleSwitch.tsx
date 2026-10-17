@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 interface ToggleSwitchProps {
   label: string;
   value: boolean;
@@ -5,15 +7,21 @@ interface ToggleSwitchProps {
 }
 
 export function ToggleSwitch({ label, value, onChange }: ToggleSwitchProps) {
+  const id = useId();
+
   return (
     <div className="editor-field editor-toggle-row">
-      <label className="editor-field-label">{label}</label>
+      <span id={id} className="editor-field-label">
+        {label}
+      </span>
+
       <button
         type="button"
-        className={`editor-toggle ${value ? 'active' : ''}`}
+        className={`editor-toggle ${value ? "active" : ""}`}
         onClick={() => onChange(!value)}
         role="switch"
         aria-checked={value}
+        aria-labelledby={id}
       >
         <span className="editor-toggle-thumb" />
       </button>
