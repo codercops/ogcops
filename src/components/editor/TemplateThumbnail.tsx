@@ -5,11 +5,17 @@ interface TemplateThumbnailProps {
   onClick: () => void;
 }
 
-export function TemplateThumbnail({ id, name, isActive, onClick }: TemplateThumbnailProps) {
+export function TemplateThumbnail({
+  id,
+  name,
+  isActive,
+  onClick,
+}: TemplateThumbnailProps) {
   return (
     <button
       type="button"
-      className={`template-thumb ${isActive ? 'active' : ''}`}
+      className={`template-thumb ${isActive ? "active" : ""}`}
+      aria-pressed={isActive}
       onClick={onClick}
       title={name}
     >
