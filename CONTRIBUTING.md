@@ -167,6 +167,7 @@ chore: update dependencies
 - **Satori:** Every `div` needs explicit `display: 'flex'`
 - **Utilities:** Use shared helpers from `src/templates/utils.ts`
 - **Path alias:** `@/*` maps to `src/*`
+- **Formatting:** The repo has no formatter config, so if your editor formats on save, turn that off here. Match the code around your change (single quotes, semicolons, 2 spaces) and leave lines you didn't change as they are.
 
 ## Testing
 
