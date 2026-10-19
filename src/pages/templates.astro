@@ -21,15 +21,15 @@ const templateCount = getTemplateCount();
       <div class="gallery-search-wrap">
         <div class="gallery-search-inner">
           <svg class="gallery-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="text" class="gallery-search" id="gallery-search" placeholder="Search templates..." aria-label="Search templates" autocomplete="off"/>
+          <input type="text" class="gallery-search" id="gallery-search" placeholder="Search templates..." aria-label="Search templates" autocomplete="off" />
         </div>
       </div>
 
       <!-- Filter Bar -->
       <div class="template-filter-bar">
         <div class="pill-group">
-        <button class="pill pill-active" data-filter="all" aria-pressed="true"> All <span class="pill-count">{templates.length}</span></button>
-         {ALL_CATEGORIES.map((cat) => {
+          <button class="pill pill-active" data-filter="all" aria-pressed="true"> All <span class="pill-count">{templates.length}</span></button>
+          {ALL_CATEGORIES.map((cat) => {
             const meta = CATEGORY_META[cat];
             const count = categoryCounts[cat] || 0;
             return (

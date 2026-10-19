@@ -1,16 +1,16 @@
-import { useMemo } from "react";
-import type { TemplateDefinition, TemplateCategory } from "@/templates/types";
-import { CATEGORY_META, ALL_CATEGORIES } from "@/templates/types";
-import { TemplateThumbnail } from "./TemplateThumbnail";
-import { AITemplateSearch } from "./AITemplateSearch";
+import { useMemo } from 'react';
+import type { TemplateDefinition, TemplateCategory } from '@/templates/types';
+import { CATEGORY_META, ALL_CATEGORIES } from '@/templates/types';
+import { TemplateThumbnail } from './TemplateThumbnail';
+import { AITemplateSearch } from './AITemplateSearch';
 
 interface TemplatePanelProps {
   templates: TemplateDefinition[];
   activeTemplateId: string;
-  category: TemplateCategory | "all";
+  category: TemplateCategory | 'all';
   searchQuery: string;
   onTemplateSelect: (template: TemplateDefinition) => void;
-  onCategoryChange: (category: TemplateCategory | "all") => void;
+  onCategoryChange: (category: TemplateCategory | 'all') => void;
   onSearchChange: (query: string) => void;
 }
 
@@ -25,11 +25,14 @@ export function TemplatePanel({
 }: TemplatePanelProps) {
   const filtered = useMemo(() => {
     let result = templates;
-    if (category !== "all") {
+
+    if (category !== 'all') {
       result = result.filter((t) => t.category === category);
     }
+
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
+
       result = result.filter(
         (t) =>
           t.name.toLowerCase().includes(q) ||
@@ -37,6 +40,7 @@ export function TemplatePanel({
           t.tags.some((tag) => tag.toLowerCase().includes(q)),
       );
     }
+
     return result;
   }, [templates, category, searchQuery]);
 
@@ -51,33 +55,37 @@ export function TemplatePanel({
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
         />
+
         <AITemplateSearch
           templates={templates}
           onTemplateSelect={onTemplateSelect}
         />
       </div>
+
       <div className="template-categories">
         <button
           type="button"
-          className={`template-cat-pill ${category === "all" ? "active" : ""}`}
-          onClick={() => onCategoryChange("all")}
-          aria-pressed={category === "all"}
+          className={`template-cat-pill ${category === 'all' ? 'active' : ''}`}
+          onClick={() => onCategoryChange('all')}
+          aria-pressed={category === 'all'}
         >
           All
         </button>
+
         {ALL_CATEGORIES.map((cat) => (
           <button
             key={cat}
             type="button"
-            className={`template-cat-pill ${category === cat ? "active" : ""}`}
+            className={`template-cat-pill ${category === cat ? 'active' : ''}`}
             onClick={() => onCategoryChange(cat)}
             aria-pressed={category === cat}
           >
-            <span aria-hidden="true">{CATEGORY_META[cat].icon}</span>{" "}
+            <span aria-hidden="true">{CATEGORY_META[cat].icon}</span>{' '}
             {CATEGORY_META[cat].label}
           </button>
         ))}
       </div>
+
       <div className="template-grid">
         {filtered.map((t) => (
           <TemplateThumbnail
@@ -88,6 +96,7 @@ export function TemplatePanel({
             onClick={() => onTemplateSelect(t)}
           />
         ))}
+
         {filtered.length === 0 && (
           <div className="template-empty">No templates found</div>
         )}

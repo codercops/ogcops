@@ -14,7 +14,7 @@ export function TemplateThumbnail({
   return (
     <button
       type="button"
-      className={`template-thumb ${isActive ? "active" : ""}`}
+      className={`template-thumb ${isActive ? 'active' : ''}`}
       aria-pressed={isActive}
       onClick={onClick}
       title={name}
@@ -28,8 +28,12 @@ export function TemplateThumbnail({
           height={315}
         />
       </div>
+
       <span className="template-thumb-name">{name}</span>
-      {isActive && <span className="template-thumb-check" aria-hidden="true" />}
+
+      {isActive && (
+        <span className="template-thumb-check" aria-hidden="true" />
+      )}
     </button>
   );
 }
