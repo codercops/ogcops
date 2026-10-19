@@ -46,7 +46,7 @@ const templateCount = getTemplateCount();
       <!-- Template Grid -->
       <div class="grid grid-3 gallery-grid" id="gallery-grid">
         {templates.map((t) => (
-          <a href={`/create?template=${t.id}`} class="gallery-card" data-category={t.category} data-name={t.name.toLowerCase()}>
+          <a href={`/create?template=${t.id}`} class="gallery-card" data-category={t.category} data-name={t.name.toLowerCase()} data-description={(t.description || '').toLowerCase()} data-tags={(t.tags || []).join(' ').toLowerCase()}>
             <div class="gallery-card-preview">
               <img
                 src={`/api/templates/${t.id}/thumbnail.png`}
@@ -93,9 +93,14 @@ const templateCount = getTemplateCount();
 
     cards.forEach(card => {
       const category = card.dataset.category;
-      const name = card.dataset.name || '';
+      const name = (card.dataset.name || '').toLowerCase();
+      const description = (card.dataset.description || '').toLowerCase();
+      const tags = (card.dataset.tags || '').toLowerCase();
       const matchesCategory = activeFilter === 'all' || category === activeFilter;
-      const matchesSearch = !query || name.includes(query);
+      const matchesSearch = !query ||
+        name.includes(query) ||
+        description.includes(query) ||
+        tags.includes(query);
 
       if (matchesCategory && matchesSearch) {
         card.style.display = '';
@@ -110,19 +115,51 @@ const templateCount = getTemplateCount();
     if (gridEl) gridEl.style.display = visible === 0 ? 'none' : '';
   }
 
+  function setCategory(filter) {
+    if (!filter) return false;
+    let foundBtn = null;
+    const filterBtns = document.querySelectorAll('[data-filter]');
+    filterBtns.forEach(btn => {
+      if (btn.dataset.filter === filter) {
+        foundBtn = btn;
+      }
+    });
+    if (!foundBtn) return false;
+    activeFilter = filter;
+    filterBtns.forEach(b => {
+      const isActive = b === foundBtn;
+      b.classList.toggle('pill-active', isActive);
+      b.setAttribute('aria-pressed', String(isActive));
+    });
+    return true;
+  }
+
   document.querySelectorAll('[data-filter]').forEach(btn => {
     btn.addEventListener('click', () => {
-      activeFilter = btn.dataset.filter;
-      document.querySelectorAll('[data-filter]').forEach(b => {
-        const isActive = b === btn;
-        b.classList.toggle('pill-active', isActive);
-        b.setAttribute('aria-pressed', String(isActive));
-      });
+      setCategory(btn.dataset.filter);
       filterCards();
     });
   });
 
   searchInput?.addEventListener('input', filterCards);
+
+  const params = new URLSearchParams(window.location.search);
+  const qParam = params.get('q');
+  const catParam = params.get('category');
+
+  let shouldFilter = false;
+  if (catParam && setCategory(catParam)) {
+    if (catParam !== 'all') {
+      shouldFilter = true;
+    }
+  }
+  if (qParam && searchInput) {
+    searchInput.value = qParam;
+    shouldFilter = true;
+  }
+  if (shouldFilter) {
+    filterCards();
+  }
 </script>
 
 <style>
