@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Toast from '../components/Toast.astro';
 import { getTemplateCount } from '@/templates/registry';
 
 const templateCount = getTemplateCount();
@@ -16,6 +17,12 @@ const {
 
 const siteName = 'OGCOPS';
 const fullTitle = `${title} | ${siteName}`;
+const canonicalURL = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site)
+  : undefined;
+const ogImageURL = Astro.site
+  ? new URL('/og-default.png', Astro.site)
+  : undefined;
 ---
 
 <!doctype html>
@@ -24,6 +31,20 @@ const fullTitle = `${title} | ${siteName}`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content={description} />
+    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    {ogImageURL && <meta property="og:image" content={ogImageURL} />}
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    {ogImageURL && <meta name="twitter:image" content={ogImageURL} />}
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -31,10 +52,6 @@ const fullTitle = `${title} | ${siteName}`;
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#0C0A09" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)" />
-
-    <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
-    <meta name="twitter:card" content="summary_large_image" />
 
     <title>{fullTitle}</title>
 
@@ -57,6 +74,7 @@ const fullTitle = `${title} | ${siteName}`;
   </head>
   <body>
     <slot />
+    <Toast />
   </body>
 </html>
 
