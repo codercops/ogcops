@@ -28,7 +28,7 @@ const templateCount = getTemplateCount();
       <!-- Filter Bar -->
       <div class="template-filter-bar">
         <div class="pill-group">
-          <button class="pill pill-active" data-filter="all" aria-pressed="true"> All <span class="pill-count">{templates.length}</span></button>
+          <button class="pill pill-active" data-filter="all" aria-pressed="true">All <span class="pill-count">{templates.length}</span></button>
           {ALL_CATEGORIES.map((cat) => {
             const meta = CATEGORY_META[cat];
             const count = categoryCounts[cat] || 0;

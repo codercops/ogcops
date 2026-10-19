@@ -5,12 +5,7 @@ interface TemplateThumbnailProps {
   onClick: () => void;
 }
 
-export function TemplateThumbnail({
-  id,
-  name,
-  isActive,
-  onClick,
-}: TemplateThumbnailProps) {
+export function TemplateThumbnail({ id, name, isActive, onClick }: TemplateThumbnailProps) {
   return (
     <button
       type="button"
@@ -28,12 +23,8 @@ export function TemplateThumbnail({
           height={315}
         />
       </div>
-
       <span className="template-thumb-name">{name}</span>
-
-      {isActive && (
-        <span className="template-thumb-check" aria-hidden="true" />
-      )}
+      {isActive && <span className="template-thumb-check" aria-hidden="true" />}
     </button>
   );
 }

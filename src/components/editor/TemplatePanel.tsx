@@ -25,22 +25,18 @@ export function TemplatePanel({
 }: TemplatePanelProps) {
   const filtered = useMemo(() => {
     let result = templates;
-
     if (category !== 'all') {
       result = result.filter((t) => t.category === category);
     }
-
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-
       result = result.filter(
         (t) =>
           t.name.toLowerCase().includes(q) ||
           t.description.toLowerCase().includes(q) ||
-          t.tags.some((tag) => tag.toLowerCase().includes(q)),
+          t.tags.some((tag) => tag.toLowerCase().includes(q))
       );
     }
-
     return result;
   }, [templates, category, searchQuery]);
 
@@ -55,13 +51,8 @@ export function TemplatePanel({
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
         />
-
-        <AITemplateSearch
-          templates={templates}
-          onTemplateSelect={onTemplateSelect}
-        />
+        <AITemplateSearch templates={templates} onTemplateSelect={onTemplateSelect} />
       </div>
-
       <div className="template-categories">
         <button
           type="button"
@@ -71,7 +62,6 @@ export function TemplatePanel({
         >
           All
         </button>
-
         {ALL_CATEGORIES.map((cat) => (
           <button
             key={cat}
@@ -80,12 +70,10 @@ export function TemplatePanel({
             onClick={() => onCategoryChange(cat)}
             aria-pressed={category === cat}
           >
-            <span aria-hidden="true">{CATEGORY_META[cat].icon}</span>{' '}
-            {CATEGORY_META[cat].label}
+            <span aria-hidden="true">{CATEGORY_META[cat].icon}</span> {CATEGORY_META[cat].label}
           </button>
         ))}
       </div>
-
       <div className="template-grid">
         {filtered.map((t) => (
           <TemplateThumbnail
@@ -96,7 +84,6 @@ export function TemplatePanel({
             onClick={() => onTemplateSelect(t)}
           />
         ))}
-
         {filtered.length === 0 && (
           <div className="template-empty">No templates found</div>
         )}
