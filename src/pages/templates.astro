@@ -78,88 +78,92 @@ const templateCount = getTemplateCount();
 </Layout>
 
 <script is:inline>
-  // Category filter + search
-  const searchInput = document.getElementById('gallery-search');
-  const cards = document.querySelectorAll('.gallery-card');
-  const showingEl = document.getElementById('gallery-showing');
-  const emptyEl = document.getElementById('gallery-empty');
-  const gridEl = document.getElementById('gallery-grid');
-  const totalCount = cards.length;
-  let activeFilter = 'all';
+  // Category filter + search. ClientRouter runs this script once, so set up on every page load.
+  function initGallery() {
+    const searchInput = document.getElementById('gallery-search');
+    if (!searchInput) return;
+    const cards = document.querySelectorAll('.gallery-card');
+    const showingEl = document.getElementById('gallery-showing');
+    const emptyEl = document.getElementById('gallery-empty');
+    const gridEl = document.getElementById('gallery-grid');
+    const totalCount = cards.length;
+    let activeFilter = 'all';
 
-  function filterCards() {
-    const query = (searchInput?.value || '').toLowerCase().trim();
-    let visible = 0;
+    function filterCards() {
+      const query = (searchInput?.value || '').toLowerCase().trim();
+      let visible = 0;
 
-    cards.forEach(card => {
-      const category = card.dataset.category;
-      const name = (card.dataset.name || '').toLowerCase();
-      const description = (card.dataset.description || '').toLowerCase();
-      const tags = (card.dataset.tags || '').toLowerCase();
-      const matchesCategory = activeFilter === 'all' || category === activeFilter;
-      const matchesSearch = !query ||
-        name.includes(query) ||
-        description.includes(query) ||
-        tags.includes(query);
+      cards.forEach(card => {
+        const category = card.dataset.category;
+        const name = (card.dataset.name || '').toLowerCase();
+        const description = (card.dataset.description || '').toLowerCase();
+        const tags = (card.dataset.tags || '').toLowerCase();
+        const matchesCategory = activeFilter === 'all' || category === activeFilter;
+        const matchesSearch = !query ||
+          name.includes(query) ||
+          description.includes(query) ||
+          tags.includes(query);
 
-      if (matchesCategory && matchesSearch) {
-        card.style.display = '';
-        visible++;
-      } else {
-        card.style.display = 'none';
+        if (matchesCategory && matchesSearch) {
+          card.style.display = '';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (showingEl) showingEl.innerHTML = 'Showing <strong>' + visible + '</strong> of ' + totalCount + ' templates';
+      if (emptyEl) emptyEl.style.display = visible === 0 ? 'flex' : 'none';
+      if (gridEl) gridEl.style.display = visible === 0 ? 'none' : '';
+    }
+
+    function setCategory(filter) {
+      if (!filter) return false;
+      let foundBtn = null;
+      const filterBtns = document.querySelectorAll('[data-filter]');
+      filterBtns.forEach(btn => {
+        if (btn.dataset.filter === filter) {
+          foundBtn = btn;
+        }
+      });
+      if (!foundBtn) return false;
+      activeFilter = filter;
+      filterBtns.forEach(b => {
+        const isActive = b === foundBtn;
+        b.classList.toggle('pill-active', isActive);
+        b.setAttribute('aria-pressed', String(isActive));
+      });
+      return true;
+    }
+
+    document.querySelectorAll('[data-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setCategory(btn.dataset.filter);
+        filterCards();
+      });
+    });
+
+    searchInput?.addEventListener('input', filterCards);
+
+    const params = new URLSearchParams(window.location.search);
+    const qParam = params.get('q');
+    const catParam = params.get('category');
+
+    let shouldFilter = false;
+    if (catParam && setCategory(catParam)) {
+      if (catParam !== 'all') {
+        shouldFilter = true;
       }
-    });
-
-    if (showingEl) showingEl.innerHTML = 'Showing <strong>' + visible + '</strong> of ' + totalCount + ' templates';
-    if (emptyEl) emptyEl.style.display = visible === 0 ? 'flex' : 'none';
-    if (gridEl) gridEl.style.display = visible === 0 ? 'none' : '';
-  }
-
-  function setCategory(filter) {
-    if (!filter) return false;
-    let foundBtn = null;
-    const filterBtns = document.querySelectorAll('[data-filter]');
-    filterBtns.forEach(btn => {
-      if (btn.dataset.filter === filter) {
-        foundBtn = btn;
-      }
-    });
-    if (!foundBtn) return false;
-    activeFilter = filter;
-    filterBtns.forEach(b => {
-      const isActive = b === foundBtn;
-      b.classList.toggle('pill-active', isActive);
-      b.setAttribute('aria-pressed', String(isActive));
-    });
-    return true;
-  }
-
-  document.querySelectorAll('[data-filter]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      setCategory(btn.dataset.filter);
-      filterCards();
-    });
-  });
-
-  searchInput?.addEventListener('input', filterCards);
-
-  const params = new URLSearchParams(window.location.search);
-  const qParam = params.get('q');
-  const catParam = params.get('category');
-
-  let shouldFilter = false;
-  if (catParam && setCategory(catParam)) {
-    if (catParam !== 'all') {
+    }
+    if (qParam && searchInput) {
+      searchInput.value = qParam;
       shouldFilter = true;
     }
+    if (shouldFilter) {
+      filterCards();
+    }
   }
-  if (qParam && searchInput) {
-    searchInput.value = qParam;
-    shouldFilter = true;
-  }
-  if (shouldFilter) {
-    filterCards();
-  }
+  document.addEventListener('astro:page-load', initGallery);
 </script>
 
 <style>
