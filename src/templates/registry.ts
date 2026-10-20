@@ -168,11 +168,12 @@ import developerGithubStyle from './developer/github-style';
 import developerResumeHeader from './developer/resume-header';
 import developerVscodeTheme from './developer/vscode-theme';
 import developerLinkTree from './developer/link-tree';
+import developerOpenToWork from './developer/open-to-work';
 
 [
   developerPortfolioCard, developerTechStack, developerTerminalBio, developerGradientProfile,
   developerSkillsRadar, developerGithubStyle, developerResumeHeader, developerVscodeTheme,
-  developerLinkTree,
+  developerLinkTree, developerOpenToWork,
 ].forEach(registerTemplate);
 
 // Newsletter
