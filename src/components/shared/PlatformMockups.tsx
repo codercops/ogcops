@@ -9,6 +9,8 @@ export interface MockupProps {
   description: string;
   domain: string;
   viewport?: ViewportSize;
+  /** The page's twitter:card value. */
+  cardType?: string;
 }
 
 export const PLATFORM_WIDTHS: Record<PlatformId, Record<ViewportSize, number>> = {
@@ -56,7 +58,34 @@ function SquareNoImage({ size = 56 }: { size?: number }) {
 /* ─────────────────────────────────────────────
    Twitter / X  — same layout all sizes
    ───────────────────────────────────────────── */
-function TwitterMockup({ imageUri, title, description, domain }: MockupProps) {
+function TwitterMockup({ imageUri, title, description, domain, cardType }: MockupProps) {
+  if (cardType === 'summary') {
+    return (
+      <div style={{
+        display: 'flex', borderRadius: 12, overflow: 'hidden',
+        border: '1px solid #CFD9DE', background: '#fff',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      }}>
+        {imageUri ? (
+          <div style={{ width: 96, height: 96, flexShrink: 0, overflow: 'hidden', borderRight: '1px solid #CFD9DE' }}>
+            <img src={imageUri} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          </div>
+        ) : <SquareNoImage size={96} />}
+        <div style={{ flex: 1, minWidth: 0, padding: '10px 12px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ fontSize: 11, color: '#536471' }}>
+            {domain}
+          </div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#0F1419', lineHeight: '18px', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {truncate(title || 'Your Title', 70)}
+          </div>
+          <div style={{ fontSize: 13, color: '#536471', lineHeight: '16px', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {truncate(description, 100)}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       borderRadius: 12, overflow: 'hidden',

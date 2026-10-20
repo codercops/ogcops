@@ -1,5 +1,10 @@
 import type { APIRoute } from 'astro';
-import { ogQuerySchema, parseSearchParams, mergeOgParams } from '@/lib/api-validation';
+import {
+  ogQuerySchema,
+  parseSearchParams,
+  mergeOgParams,
+  resolveDimensions,
+} from '@/lib/api-validation';
 import { renderToPng } from '@/lib/og-engine';
 import { getTemplate } from '@/templates/registry';
 import { normalizeColorFields } from '@/templates/utils';
@@ -43,6 +48,15 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
   const params = parsed.data;
 
+  // Resolve and validate output dimensions (1200:630 aspect ratio)
+  const dimensions = resolveDimensions(params.width, params.height);
+  if (!dimensions.success) {
+    return new Response(JSON.stringify({ error: dimensions.error }), {
+      status: 400,
+      headers: { ...errorHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
   // Find template
   const template = getTemplate(params.template);
   if (!template) {
@@ -63,8 +77,9 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
     const element = template.render(normalizedParams);
     const png = await renderToPng(element, {
-      width: params.width,
-      height: params.height,
+      width: 1200,
+      height: 630,
+      scaleDown: dimensions.width !== 1200 ? dimensions.width : undefined,
     });
 
     const response = new Response(png, {
