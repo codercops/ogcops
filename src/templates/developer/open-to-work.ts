@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'developer-open-to-work',
@@ -43,15 +43,20 @@ const template: TemplateDefinition = {
   },
   render: (params) => {
     const name = truncate(String(params.name || 'Developer'), 36);
+    const nameSize = autoFontSize(name, [
+      { maxLen: 18, size: 64 },
+      { maxLen: 28, size: 52 },
+      { maxLen: 36, size: 44 },
+    ]);
     const role = params.role ? truncate(String(params.role), 60) : '';
     const availability = String(params.availability || 'Open to work');
     const skills = String(params.skills || '')
       .split(',')
-      .map((s: string) => s.trim())
+      .map((s: string) => truncate(s.trim(), 20))
       .filter(Boolean)
       .slice(0, 6);
-    const location = params.location ? truncate(String(params.location), 48) : '';
-    const website = params.website ? truncate(String(params.website), 48) : '';
+    const location = params.location ? truncate(String(params.location), 32) : '';
+    const website = params.website ? truncate(String(params.website), 32) : '';
     const bgColor = String(params.bgColor || '#0a0a0a');
     const accentColor = String(params.accentColor || '#22C55E');
     const textColor = String(params.textColor || '#FFFFFF');
@@ -135,7 +140,7 @@ const template: TemplateDefinition = {
                   type: 'span',
                   props: {
                     style: {
-                      fontSize: '64px',
+                      fontSize: `${nameSize}px`,
                       fontWeight: 700,
                       color: textColor,
                       fontFamily: 'Playfair Display, serif',
