@@ -240,10 +240,12 @@ import jobSalaryHighlight from './job/salary-highlight';
 import jobTeamPhoto from './job/team-photo';
 import jobStartupHiring from './job/startup-hiring';
 import jobDeveloperRole from './job/developer-role';
+import jobOpenRoles from './job/open-roles';
 
 [
   jobListingCard, jobTechStackRole, jobRemoteBadge, jobCompanyCulture,
   jobSalaryHighlight, jobTeamPhoto, jobStartupHiring, jobDeveloperRole,
+  jobOpenRoles,
 ].forEach(registerTemplate);
 
 // Tutorial
