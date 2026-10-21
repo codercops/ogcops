@@ -108,7 +108,7 @@ const template: TemplateDefinition = {
                             props: {
                               style: {
                                 fontSize: '26px',
-                                fontWeight: 800,
+                                fontWeight: 700,
                                 color: onAccent,
                               },
                               children: company.charAt(0).toUpperCase(),
@@ -180,7 +180,7 @@ const template: TemplateDefinition = {
             props: {
               style: {
                 fontSize: `${titleSize}px`,
-                fontWeight: 800,
+                fontWeight: 700,
                 color: textColor,
                 lineHeight: 1.15,
               },
