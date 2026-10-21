@@ -259,8 +259,10 @@ import tutorialPlatformBranded from './tutorial/platform-branded';
 import tutorialCodeTutorial from './tutorial/code-tutorial';
 import tutorialWorkshopBanner from './tutorial/workshop-banner';
 import tutorialCertification from './tutorial/certification';
+import tutorialQuizCard from './tutorial/quiz-card';
 
 [
   tutorialCourseCard, tutorialStepByStep, tutorialVideoLesson, tutorialDifficultyBadge,
   tutorialPlatformBranded, tutorialCodeTutorial, tutorialWorkshopBanner, tutorialCertification,
+  tutorialQuizCard,
 ].forEach(registerTemplate);
