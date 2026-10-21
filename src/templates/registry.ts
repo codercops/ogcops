@@ -208,10 +208,11 @@ import quoteBookPage from './quote/book-page';
 import quoteBoldHighlight from './quote/bold-highlight';
 import quoteMinimalDash from './quote/minimal-dash';
 import quotePhotoBackground from './quote/photo-background';
+import quoteStickyNote from './quote/sticky-note';
 
 [
   quoteCenteredSerif, quoteGradientCard, quoteSpeechBubble, quoteTwitterStyle,
-  quoteBookPage, quoteBoldHighlight, quoteMinimalDash, quotePhotoBackground,
+  quoteBookPage, quoteBoldHighlight, quoteMinimalDash, quotePhotoBackground, quoteStickyNote,
 ].forEach(registerTemplate);
 
 // E-commerce
