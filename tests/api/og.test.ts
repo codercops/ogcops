@@ -131,6 +131,19 @@ describe('resolveDimensions', () => {
     });
   });
 
+  it('rounds a fractional width to a whole number', () => {
+    expect(resolveDimensions(600.5)).toEqual({
+      success: true,
+      width: 601,
+      height: 316,
+    });
+    expect(resolveDimensions(333.3)).toEqual({
+      success: true,
+      width: 333,
+      height: 175,
+    });
+  });
+
   it('derives width when only height is supplied', () => {
     expect(resolveDimensions(undefined, 315)).toEqual({
       success: true,
@@ -392,6 +405,30 @@ describe('OG API dimension resolution and scaling', () => {
     expect(renderToPng).toHaveBeenCalledWith(
       expect.anything(),
       { width: 1200, height: 630, scaleDown: 600 }
+    );
+  });
+
+  it('scales down to a whole-number width when width is fractional', async () => {
+    const { renderToPng } = await import('@/lib/og-engine');
+    vi.mocked(renderToPng).mockClear();
+
+    const res = await GET(makeContext(`${BASE}?template=blog-minimal-dark&title=Hi&width=600.5`));
+    expect(res.status).toBe(200);
+    expect(renderToPng).toHaveBeenCalledWith(
+      expect.anything(),
+      { width: 1200, height: 630, scaleDown: 601 }
+    );
+  });
+
+  it('scales down to 601 when height is fractional', async () => {
+    const { renderToPng } = await import('@/lib/og-engine');
+    vi.mocked(renderToPng).mockClear();
+
+    const res = await GET(makeContext(`${BASE}?template=blog-minimal-dark&title=Hi&height=315.5`));
+    expect(res.status).toBe(200);
+    expect(renderToPng).toHaveBeenCalledWith(
+      expect.anything(),
+      { width: 1200, height: 630, scaleDown: 601 }
     );
   });
 
