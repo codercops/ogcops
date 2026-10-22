@@ -39,7 +39,7 @@ export async function fetchMetaTags(url: string): Promise<MetaTags> {
   }
 
   const html = await response.text();
-  return parseMetaTags(html, response.url || url);
+  return parseMetaTags(html, url);
 }
 
 export function parseMetaTags(html: string, baseUrl: string): MetaTags {
@@ -50,8 +50,10 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
   if (titleMatch) tags.title = decodeEntities(titleMatch[1].trim());
 
   // Extract meta tags
-  for (const tag of findTags(html, 'meta')) {
-    const attrs = parseAttributes(tag);
+  const metaRegex = /<meta\s+([^>]*?)\/?>/gi;
+  let match;
+  while ((match = metaRegex.exec(html)) !== null) {
+    const attrs = parseAttributes(match[1]);
 
     // Standard meta (name/content)
     if (attrs.name && attrs.content) {
@@ -82,8 +84,8 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
 
   // Extract canonical and favicon. Attribute order varies (`rel` before or
   // after `href`), so match the tag first and read the attributes from it.
-  for (const tag of findTags(html, 'link')) {
-    const attrs = parseAttributes(tag);
+  for (const m of html.matchAll(/<link\b([^>]*)>/gi)) {
+    const attrs = parseAttributes(m[1]);
     if (!attrs.rel) continue;
     const rel = attrs.rel.toLowerCase();
 
@@ -102,76 +104,12 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
 
 function parseAttributes(str: string): Record<string, string> {
   const attrs: Record<string, string> = {};
-  let index = 0;
-
-  while (index < str.length) {
-    while (/\s/.test(str[index] ?? '')) index++;
-    if (index >= str.length || str[index] === '/') break;
-
-    const nameStart = index;
-    while (index < str.length && !/[\s=/>]/.test(str[index])) index++;
-    if (nameStart === index) {
-      index++;
-      continue;
-    }
-
-    const name = str.slice(nameStart, index).toLowerCase();
-    while (/\s/.test(str[index] ?? '')) index++;
-
-    if (str[index] !== '=') {
-      attrs[name] = '';
-      continue;
-    }
-
-    index++;
-    while (/\s/.test(str[index] ?? '')) index++;
-
-    let value = '';
-    const quote = str[index];
-    if (quote === '"' || quote === "'") {
-      index++;
-      const valueStart = index;
-      while (index < str.length && str[index] !== quote) index++;
-      value = str.slice(valueStart, index);
-      if (str[index] === quote) index++;
-    } else {
-      const valueStart = index;
-      while (index < str.length && !/[\s>]/.test(str[index])) index++;
-      value = str.slice(valueStart, index);
-    }
-
-    attrs[name] = decodeEntities(value);
+  const regex = /(\w[\w-]*)=(?:"([^"]*)"|'([^']*)')/gi;
+  let m;
+  while ((m = regex.exec(str)) !== null) {
+    attrs[m[1].toLowerCase()] = decodeEntities(m[2] ?? m[3]);
   }
-
   return attrs;
-}
-
-function findTags(html: string, tagName: 'meta' | 'link'): string[] {
-  const tags: string[] = [];
-  const startPattern = new RegExp(`<${tagName}\\b`, 'gi');
-  let match;
-
-  while ((match = startPattern.exec(html)) !== null) {
-    let quote: '"' | "'" | undefined;
-    let end = match.index + match[0].length;
-
-    for (; end < html.length; end++) {
-      const char = html[end];
-      if (quote) {
-        if (char === quote) quote = undefined;
-      } else if (char === '"' || char === "'") {
-        quote = char;
-      } else if (char === '>') {
-        tags.push(html.slice(match.index + match[0].length, end));
-        startPattern.lastIndex = end + 1;
-        break;
-      }
-    }
-
-    if (end === html.length) break;
-  }
-
-  return tags;
 }
 
 const NAMED_ENTITIES: Record<string, string> = {
