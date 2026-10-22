@@ -68,6 +68,38 @@ describe('tutorial-quiz-card', () => {
     expect(cards.every((card) => !textContent(card).includes('Correct'))).toBe(true);
   });
 
+  it('darkens accent text on light backgrounds while preserving the dark default', () => {
+    const defaultRendered = tutorialQuizCard.render({ ...tutorialQuizCard.defaults, showAnswer: true });
+    const defaultCards = optionCards(defaultRendered);
+    const defaultLetter = defaultCards[1].props.children[0].props.children.props.style.color;
+    const defaultReveal = defaultRendered.props.children[3].props.children[1].props.style.color;
+    expect(defaultLetter).toBe(tutorialQuizCard.defaults.accentColor);
+    expect(defaultReveal).toBe(tutorialQuizCard.defaults.accentColor);
+
+    const lightRendered = tutorialQuizCard.render({
+      ...tutorialQuizCard.defaults,
+      bgColor: '#ffffff',
+      textColor: '#111111',
+      showAnswer: true,
+    });
+    const lightCards = optionCards(lightRendered);
+    const lightLetter = lightCards[1].props.children[0].props.children.props.style.color;
+    const lightReveal = lightRendered.props.children[3].props.children[1].props.style.color;
+    expect(lightLetter).toBe('#1f6888');
+    expect(lightReveal).toBe('#1f6888');
+
+    const paleAccentRendered = tutorialQuizCard.render({
+      ...tutorialQuizCard.defaults,
+      bgColor: '#ffffff',
+      textColor: '#111111',
+      accentColor: '#fde047',
+      showAnswer: true,
+    });
+    const paleAccentCards = optionCards(paleAccentRendered);
+    expect(paleAccentCards[1].props.children[0].props.children.props.style.color).toBe('#8b7b27');
+    expect(paleAccentRendered.props.children[3].props.children[1].props.style.color).toBe('#8b7b27');
+  });
+
   it('handles editor query parameters and long questions', () => {
     const parsed = parseEditorQueryParams(
       '?template=tutorial-quiz-card&showAnswer=1',

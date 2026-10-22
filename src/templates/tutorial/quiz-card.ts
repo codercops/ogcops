@@ -1,5 +1,5 @@
 import type { TemplateDefinition, SatoriElement } from '../types';
-import { autoFontSize, commonFields, contrastText, isLightColor, truncate } from '../utils';
+import { autoFontSize, commonFields, contrastText, isLightColor, mixColors, truncate } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'tutorial-quiz-card',
@@ -47,6 +47,7 @@ const template: TemplateDefinition = {
     const bgColor = String(params.bgColor || '#0f172a');
     const accentColor = String(params.accentColor || '#38bdf8');
     const textColor = String(params.textColor || '#f8fafc');
+    const accentInk = isLightColor(bgColor) ? mixColors(accentColor, '#000000', 0.45) : accentColor;
     const mutedColor = isLightColor(bgColor) ? '#475569' : '#94a3b8';
     const questionSize = autoFontSize(title, [
       { maxLen: 48, size: 42 },
@@ -91,7 +92,7 @@ const template: TemplateDefinition = {
                     style: {
                       fontSize: '18px',
                       fontWeight: 700,
-                      color: isCorrect ? contrastText(accentColor) : accentColor,
+                      color: isCorrect ? contrastText(accentColor) : accentInk,
                     },
                     children: letter,
                   },
@@ -211,7 +212,7 @@ const template: TemplateDefinition = {
               children: [
                 { type: 'span', props: { style: { fontSize: '15px', fontWeight: 600, color: mutedColor }, children: 'Choose the best answer' } },
                 ...(showAnswer
-                  ? [{ type: 'span', props: { style: { fontSize: '14px', fontWeight: 700, color: accentColor }, children: 'Answer revealed' } }]
+                  ? [{ type: 'span', props: { style: { fontSize: '14px', fontWeight: 700, color: accentInk }, children: 'Answer revealed' } }]
                   : []),
               ],
             },
