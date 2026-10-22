@@ -261,9 +261,10 @@ import tutorialCodeTutorial from './tutorial/code-tutorial';
 import tutorialWorkshopBanner from './tutorial/workshop-banner';
 import tutorialCertification from './tutorial/certification';
 import tutorialQuizCard from './tutorial/quiz-card';
+import tutorialCheatSheet from './tutorial/cheat-sheet';
 
 [
   tutorialCourseCard, tutorialStepByStep, tutorialVideoLesson, tutorialDifficultyBadge,
   tutorialPlatformBranded, tutorialCodeTutorial, tutorialWorkshopBanner, tutorialCertification,
-  tutorialQuizCard,
+  tutorialQuizCard, tutorialCheatSheet,
 ].forEach(registerTemplate);
