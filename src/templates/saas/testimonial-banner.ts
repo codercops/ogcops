@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, commonFields } from '../utils';
+import { truncate, commonFields, starIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'saas-testimonial-banner',
@@ -90,16 +90,7 @@ const template: TemplateDefinition = {
                     width: '24px',
                     height: '24px',
                   },
-                  children: {
-                    type: 'span',
-                    props: {
-                      style: {
-                        fontSize: '20px',
-                        color: i < rating ? accentColor : `${textColor}22`,
-                      },
-                      children: '\u2605',
-                    },
-                  },
+                  children: starIcon(20, i < rating ? accentColor : `${textColor}22`),
                 },
               })),
             },

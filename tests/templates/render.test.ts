@@ -41,4 +41,30 @@ describe('template render', () => {
       expect(svg).toMatch(/^<svg/);
     },
   );
+
+  it.each([
+    'ecommerce-product-card',
+    'ecommerce-review-highlight',
+    'tutorial-platform-branded',
+    'saas-testimonial-banner',
+    'github-stars-banner',
+  ])('renders %s without Unicode star glyphs', async (templateId) => {
+    const template = getAllTemplates().find(({ id }) => id === templateId);
+    if (!template) throw new Error(`Template not found: ${templateId}`);
+
+    const svg = await render(template.render(template.defaults));
+    expect(svg).not.toContain('★');
+  });
+
+  it('preserves filled and empty stars for a three-star product rating', async () => {
+    const template = getAllTemplates().find(({ id }) => id === 'ecommerce-product-card');
+    if (!template) throw new Error('Template not found: ecommerce-product-card');
+
+    const element = template.render({ ...template.defaults, rating: 3 });
+    const svg = await render(element);
+    expect(svg).not.toContain('★');
+    const elementJson = JSON.stringify(element);
+    expect(elementJson.match(/"fill":"#F5C518"/g)).toHaveLength(3);
+    expect(elementJson.match(/"fill":"#333333"/g)).toHaveLength(2);
+  });
 });

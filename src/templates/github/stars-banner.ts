@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, starIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'github-stars-banner',
@@ -154,14 +154,10 @@ const template: TemplateDefinition = {
               children: [
                 // Star icon
                 {
-                  type: 'span',
+                  type: 'div',
                   props: {
-                    style: {
-                      fontSize: '48px',
-                      color: accentColor,
-                      marginBottom: '12px',
-                    },
-                    children: '\u2605',
+                    style: { display: 'flex', marginBottom: '12px' },
+                    children: starIcon(48, accentColor),
                   },
                 },
                 // Count
