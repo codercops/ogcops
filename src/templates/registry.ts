@@ -105,11 +105,13 @@ import saasCleanCorporate from './saas/clean-corporate';
 import saasStartupBold from './saas/startup-bold';
 import saasFeatureSpotlight from './saas/feature-spotlight';
 import saasSocialProof from './saas/social-proof';
+import saasIntegration from './saas/integration';
 
 [
   saasDashboardPreview, saasPricingHighlight, saasMetricShowcase, saasTestimonialBanner,
   saasComparison, saasGradientMesh, saasCleanCorporate, saasStartupBold,
   saasFeatureSpotlight, saasSocialProof,
+  saasIntegration,
 ].forEach(registerTemplate);
 
 // GitHub
