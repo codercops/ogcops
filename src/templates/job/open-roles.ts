@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, contrastText, commonFields } from '../utils';
+import { truncate, autoFontSize, contrastText, isLightColor, mixColors, commonFields } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'job-open-roles',
@@ -56,6 +56,7 @@ const template: TemplateDefinition = {
     const accentColor = String(params.accentColor || '#22C55E');
     const textColor = String(params.textColor || '#FFFFFF');
     const onAccent = contrastText(accentColor);
+    const accentInk = isLightColor(bgColor) ? mixColors(accentColor, '#000000', 0.45) : accentColor;
 
     return {
       type: 'div',
@@ -162,7 +163,7 @@ const template: TemplateDefinition = {
                           style: {
                             fontSize: '16px',
                             fontWeight: 700,
-                            color: accentColor,
+                            color: accentInk,
                             letterSpacing: '0.03em',
                           },
                           children: `${roleCount} open role${roleCount === 1 ? '' : 's'}`,
@@ -298,7 +299,7 @@ const template: TemplateDefinition = {
                                 style: {
                                   fontSize: '17px',
                                   fontWeight: 600,
-                                  color: accentColor,
+                                  color: accentInk,
                                 },
                                 children: ctaText,
                               },
