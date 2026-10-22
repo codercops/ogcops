@@ -1,5 +1,5 @@
 import type { TemplateDefinition, SatoriElement } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, isLightColor, mixColors } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'podcast-conversation',
@@ -42,6 +42,7 @@ const template: TemplateDefinition = {
     const bgColor = String(params.bgColor || '#0f0f23');
     const accentColor = String(params.accentColor || '#E07A5F');
     const textColor = String(params.textColor || '#FFFFFF');
+    const ink = (color: string) => (isLightColor(bgColor) ? mixColors(color, '#000000', 0.45) : color);
     const titleSize = autoFontSize(title, [
       { maxLen: 30, size: 36 },
       { maxLen: 50, size: 30 },
@@ -88,7 +89,7 @@ const template: TemplateDefinition = {
             type: 'span',
             props: {
               style: {
-                width: '360px',
+                maxWidth: '360px',
                 fontSize: '26px',
                 fontWeight: 700,
                 color: textColor,
@@ -104,7 +105,7 @@ const template: TemplateDefinition = {
                 type: 'span',
                 props: {
                   style: {
-                    width: '360px',
+                    maxWidth: '360px',
                     fontSize: '15px',
                     color: `${textColor}77`,
                     marginTop: '8px',
@@ -146,7 +147,7 @@ const template: TemplateDefinition = {
                 ...(showName
                   ? [{
                       type: 'span',
-                      props: { style: { fontSize: '18px', fontWeight: 700, color: accentColor }, children: showName },
+                      props: { style: { fontSize: '18px', fontWeight: 700, color: ink(accentColor) }, children: showName },
                     }]
                   : [{ type: 'div', props: { children: '' } }]),
                 ...(episodeNumber
@@ -166,16 +167,24 @@ const template: TemplateDefinition = {
             props: {
               style: { display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1, gap: '24px' },
               children: [
-                guestCard(guest1, guest1Role, accentColor),
-                { type: 'span', props: { style: { fontSize: '34px', fontWeight: 700, color: `${textColor}66` }, children: '&' } },
-                guestCard(guest2, guest2Role, '#7B61FF'),
+                {
+                  type: 'div',
+                  props: {
+                    style: { display: 'flex', alignItems: 'flex-start', justifyContent: 'center' },
+                    children: [
+                      guestCard(guest1, guest1Role, ink(accentColor)),
+                      { type: 'span', props: { style: { fontSize: '34px', fontWeight: 700, color: `${textColor}66`, marginTop: '41px' }, children: '&' } },
+                      guestCard(guest2, guest2Role, ink('#7B61FF')),
+                    ],
+                  },
+                },
               ],
             },
           },
           {
             type: 'h1',
             props: {
-              style: { width: '100%', fontSize: `${titleSize}px`, fontWeight: 700, color: textColor, textAlign: 'center', lineHeight: 1.2, margin: 0 },
+              style: { display: 'flex', justifyContent: 'center', width: '100%', fontSize: `${titleSize}px`, fontWeight: 700, color: textColor, textAlign: 'center', lineHeight: 1.2, margin: 0 },
               children: title,
             },
           },
