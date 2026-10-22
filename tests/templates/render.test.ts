@@ -52,8 +52,10 @@ describe('template render', () => {
     const template = getAllTemplates().find(({ id }) => id === templateId);
     if (!template) throw new Error(`Template not found: ${templateId}`);
 
-    const svg = await render(template.render(template.defaults));
+    const element = template.render(template.defaults);
+    const svg = await render(element);
     expect(svg).not.toContain('★');
+    expect(JSON.stringify(element)).not.toContain('★');
   });
 
   it('preserves filled and empty stars for a three-star product rating', async () => {
