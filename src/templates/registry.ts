@@ -179,11 +179,12 @@ import developerResumeHeader from './developer/resume-header';
 import developerVscodeTheme from './developer/vscode-theme';
 import developerLinkTree from './developer/link-tree';
 import developerOpenToWork from './developer/open-to-work';
+import developerDayStreak from './developer/day-streak';
 
 [
   developerPortfolioCard, developerTechStack, developerTerminalBio, developerGradientProfile,
   developerSkillsRadar, developerGithubStyle, developerResumeHeader, developerVscodeTheme,
-  developerLinkTree, developerOpenToWork,
+  developerLinkTree, developerOpenToWork, developerDayStreak,
 ].forEach(registerTemplate);
 
 // Newsletter
