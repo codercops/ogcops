@@ -90,6 +90,7 @@ export function usePreviewState() {
       const json = await res.json();
 
       if (!res.ok) {
+        setData(null);
         setError(json.error || 'Failed to check URL');
         return;
       }
@@ -100,6 +101,7 @@ export function usePreviewState() {
         window.history.replaceState(window.history.state, '', `/preview?url=${encodeURIComponent(normalizedUrl)}`);
       }
     } catch (err) {
+      setData(null);
       setError(err instanceof Error ? err.message : 'Network error');
     } finally {
       setLoading(false);
