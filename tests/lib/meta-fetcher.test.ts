@@ -46,6 +46,26 @@ describe('parseMetaTags', () => {
     const tags = parseMetaTags('<title>Tom &amp; Jerry&#039;s</title>', base);
     expect(tags.title).toBe("Tom & Jerry's");
   });
+
+  it('parses unquoted meta attributes', () => {
+    const tags = parseMetaTags('<meta name=twitter:card content="summary_large_image">', base);
+    expect(tags.twitterCard).toBe('summary_large_image');
+  });
+
+  it('parses unquoted content values', () => {
+    const tags = parseMetaTags('<meta name=description content=Hello>', base);
+    expect(tags.description).toBe('Hello');
+  });
+
+  it('keeps > inside a double-quoted attribute value', () => {
+    const tags = parseMetaTags('<meta property="og:title" content="Tips > Tricks">', base);
+    expect(tags.ogTitle).toBe('Tips > Tricks');
+  });
+
+  it('keeps > inside a single-quoted attribute value', () => {
+    const tags = parseMetaTags(`<meta property='og:title' content='Tips > Tricks'>`, base);
+    expect(tags.ogTitle).toBe('Tips > Tricks');
+  });
 });
 
 describe('canonical and favicon attribute order', () => {
@@ -100,5 +120,23 @@ describe('canonical and favicon attribute order', () => {
     stubFetch('<link REL="Canonical" HREF="https://example.com/page">');
     const tags = await fetchMetaTags('https://example.com/page');
     expect(tags.canonical).toBe('https://example.com/page');
+  });
+
+  it('parses unquoted link attributes and boolean attributes', async () => {
+    stubFetch('<link rel=icon crossorigin href=/favicon-32x32.png sizes=32x32>');
+    const tags = await fetchMetaTags('https://example.com/page');
+    expect(tags.favicon).toBe('https://example.com/favicon-32x32.png');
+  });
+
+  it('uses the final response URL for relative URLs after redirects', async () => {
+    const response = new Response('<meta property="og:image" content="cover.png">', {
+      status: 200,
+      headers: { 'content-type': 'text/html' },
+    });
+    Object.defineProperty(response, 'url', { value: 'https://example.com/posts/hello/' });
+    vi.stubGlobal('fetch', vi.fn(async () => response));
+
+    const tags = await fetchMetaTags('https://example.com/latest');
+    expect(tags.ogImage).toBe('https://example.com/posts/hello/cover.png');
   });
 });
