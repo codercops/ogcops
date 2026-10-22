@@ -156,6 +156,7 @@ import eventAgenda from './event/agenda';
 import podcastEpisodeCard from './podcast/episode-card';
 import podcastWaveform from './podcast/waveform';
 import podcastGuestSpotlight from './podcast/guest-spotlight';
+import podcastConversation from './podcast/conversation';
 import podcastSeriesBanner from './podcast/series-banner';
 import podcastMinimalPlayer from './podcast/minimal-player';
 import podcastVideoThumbnail from './podcast/video-thumbnail';
@@ -163,7 +164,7 @@ import podcastAudiogram from './podcast/audiogram';
 import podcastShowNotes from './podcast/show-notes';
 
 [
-  podcastEpisodeCard, podcastWaveform, podcastGuestSpotlight, podcastSeriesBanner,
+  podcastEpisodeCard, podcastWaveform, podcastGuestSpotlight, podcastConversation, podcastSeriesBanner,
   podcastMinimalPlayer, podcastVideoThumbnail, podcastAudiogram, podcastShowNotes,
 ].forEach(registerTemplate);
 
