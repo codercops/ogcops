@@ -59,6 +59,14 @@ describe('tutorial-before-after', () => {
     expect(getTemplatesByCategory('tutorial')).toContain(template);
   });
 
+  it('keeps the default before snippet within six lines and includes its closing brace', () => {
+    const beforeLines = String(template.defaults.beforeCode).split('\n');
+
+    expect(beforeLines.length).toBeLessThanOrEqual(6);
+    expect(beforeLines.at(-1)).toBe('}');
+    expect(getCodeLines(template.render(template.defaults)).slice(0, beforeLines.length)).toEqual(beforeLines);
+  });
+
   it('renders a Satori image when optional text fields are empty or omitted', async () => {
     const element = template.render({
       ...template.defaults,

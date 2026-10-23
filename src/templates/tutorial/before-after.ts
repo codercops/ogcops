@@ -18,7 +18,7 @@ const template: TemplateDefinition = {
   tags: ['tutorial', 'code', 'refactor', 'comparison', 'programming'],
   fields: [
     commonFields.title,
-    { key: 'beforeCode', label: 'Before Code', type: 'textarea', defaultValue: 'const users = getUsers();\nlet active = [];\nfor (const user of users) {\n  if (user.isActive) {\n    active.push(user);\n  }\n}', placeholder: 'Paste the original code', group: 'Content' },
+    { key: 'beforeCode', label: 'Before Code', type: 'textarea', defaultValue: 'const users = getUsers();\nconst active = [];\nfor (const user of users) {\n  if (user.isActive) active.push(user);\n}', placeholder: 'Paste the original code', group: 'Content' },
     { key: 'afterCode', label: 'After Code', type: 'textarea', defaultValue: 'const activeUsers = getUsers()\n  .filter((user) => user.isActive);', placeholder: 'Paste the refactored code', group: 'Content' },
     { key: 'language', label: 'Language', type: 'text', defaultValue: 'TypeScript', placeholder: 'TypeScript', group: 'Content' },
     { key: 'beforeLabel', label: 'Before Label', type: 'text', defaultValue: 'Before', placeholder: 'Before', group: 'Content' },
@@ -29,7 +29,7 @@ const template: TemplateDefinition = {
   ],
   defaults: {
     title: 'Refactor for cleaner, simpler code',
-    beforeCode: 'const users = getUsers();\nlet active = [];\nfor (const user of users) {\n  if (user.isActive) {\n    active.push(user);\n  }\n}',
+    beforeCode: 'const users = getUsers();\nconst active = [];\nfor (const user of users) {\n  if (user.isActive) active.push(user);\n}',
     afterCode: 'const activeUsers = getUsers()\n  .filter((user) => user.isActive);',
     language: 'TypeScript',
     beforeLabel: 'Before',
@@ -62,7 +62,7 @@ const template: TemplateDefinition = {
     const codeBackground = lightBackground ? '#ffffff' : '#0b1220';
     const borderColor = lightBackground ? '#dbe3ee' : '#283449';
     const beforeColor = lightBackground ? '#b42318' : '#f87171';
-    const afterColor = lightBackground ? mixColors(accentColor, '#000000', 0.2) : accentColor;
+    const afterColor = lightBackground ? mixColors(accentColor, '#000000', 0.45) : accentColor;
     const titleSize = autoFontSize(title, [
       { maxLen: 28, size: 44 },
       { maxLen: 48, size: 38 },
