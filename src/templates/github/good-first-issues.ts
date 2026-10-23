@@ -49,7 +49,7 @@ const template: TemplateDefinition = {
     const bgColor = String(params.bgColor || '#0d1117');
     const accentColor = String(params.accentColor || '#58a6ff');
     const textColor = String(params.textColor || '#e6edf3');
-    const adaptedAccent = isLightColor(bgColor) ? mixColors(accentColor, '#000000', 0.25) : accentColor;
+    const adaptedAccent = isLightColor(bgColor) ? mixColors(accentColor, '#000000', 0.45) : accentColor;
 
     const issueRows: SatoriElement[] = displayedIssues.map((issue) => ({
       type: 'div',
@@ -59,7 +59,7 @@ const template: TemplateDefinition = {
           ...(issue.number
             ? [{ type: 'span', props: { style: { width: '64px', flexShrink: 0, fontSize: '24px', fontWeight: 700, color: adaptedAccent, fontFamily: 'JetBrains Mono, monospace' }, children: `#${issue.number}` } }]
             : []),
-          { type: 'span', props: { style: { fontSize: '25px', color: textColor, whiteSpace: 'nowrap', overflow: 'hidden' }, children: truncate(issue.title, 64) } },
+          { type: 'span', props: { style: { flex: 1, minWidth: 0, fontSize: '25px', color: textColor, whiteSpace: 'nowrap', overflow: 'hidden' }, children: truncate(issue.title, 64) } },
         ],
       },
     }));

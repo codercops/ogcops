@@ -24,5 +24,12 @@ describe('github-good-first-issues', () => {
     const tree = serialized({ issues: '1 ' + 'A'.repeat(100), footer: '' });
     expect(tree).toContain('…');
     expect(tree).not.toContain('borderTop');
+    expect(tree).toContain('"flex":1');
+    expect(tree).toContain('"minWidth":0');
+  });
+
+  it('darkens accents further on light backgrounds', () => {
+    const tree = serialized({ bgColor: '#ffffff', accentColor: '#FFD700' });
+    expect(tree).toContain('"color":"#8c7600"');
   });
 });
