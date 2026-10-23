@@ -7,3 +7,4 @@ export { default as jobTeamPhoto } from './team-photo';
 export { default as jobStartupHiring } from './startup-hiring';
 export { default as jobDeveloperRole } from './developer-role';
 export { default as jobOpenRoles } from './open-roles';
+export { default as jobInterviewProcess } from './interview-process';

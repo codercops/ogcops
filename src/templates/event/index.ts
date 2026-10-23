@@ -10,3 +10,4 @@ export { default as eventTicketCta } from './ticket-cta';
 export { default as eventMultiSpeaker } from './multi-speaker';
 export { default as eventAgenda } from './agenda';
 export { default as eventWinners } from './winners';
+export { default as eventCallForSpeakers } from './call-for-speakers';
