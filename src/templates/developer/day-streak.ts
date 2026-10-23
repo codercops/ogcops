@@ -1,5 +1,5 @@
 import type { SatoriElement, TemplateDefinition } from '../types';
-import { contrastText, truncate, commonFields } from '../utils';
+import { isLightColor, mixColors, truncate, commonFields } from '../utils';
 
 const DEFAULT_CURRENT_DAY = 42;
 const DEFAULT_TOTAL_DAYS = 100;
@@ -55,7 +55,7 @@ const template: TemplateDefinition = {
     const author = params.author ? truncate(String(params.author), 36) : '';
     const bgColor = String(params.bgColor || '#0a0a0a');
     const accentColor = String(params.accentColor || '#E07A5F');
-    const accentTextColor = contrastText(accentColor);
+    const accentTextColor = isLightColor(bgColor) ? mixColors(accentColor, '#000000', 0.45) : accentColor;
     const textColor = String(params.textColor || '#FFFFFF');
     const totalDays = Math.min(100, Math.max(1, parseDayNumber(params.totalDays, DEFAULT_TOTAL_DAYS)));
     const currentDay = Math.min(totalDays, Math.max(1, parseDayNumber(params.currentDay, DEFAULT_CURRENT_DAY)));
@@ -117,7 +117,7 @@ const template: TemplateDefinition = {
           {
             type: 'div',
             props: {
-              style: { display: 'flex', flexDirection: 'column', gap: '7px', justifyContent: 'center', alignItems: 'center' },
+              style: { display: 'flex', flexDirection: 'column', gap: '7px', justifyContent: 'center', alignItems: 'flex-start' },
               children: rows,
             },
           },

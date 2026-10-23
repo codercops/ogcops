@@ -18,6 +18,7 @@ describe('developer-day-streak', () => {
     expect(text(tree)).toContain('Day 42');
     expect(text(tree)).toContain('of 100');
     expect(JSON.stringify(tree)).toContain('"width":"18px"');
+    expect(JSON.stringify(tree)).toContain('"color":"#E07A5F"');
   });
 
   it('defensively parses and clamps day values', () => {
