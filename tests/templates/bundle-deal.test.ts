@@ -57,6 +57,20 @@ describe('ecommerce-bundle-deal', () => {
     expect(getTextElements(element)).toContain(`${'A'.repeat(35)}…`);
   });
 
+  it('truncates displayed prices and fits the bundle total to its length', () => {
+    const element = template.render({
+      ...template.defaults,
+      oldPrice: '$999,999.99 USD after tax',
+      newPrice: '$999,999.99 USD after tax',
+    });
+    const elements = getAllElements(element);
+    const displayPrices = elements.filter((child) => child.props.children === '$999,999.99 U…');
+
+    expect(displayPrices).toHaveLength(2);
+    expect(displayPrices[0].props.style?.fontSize).toBe('42px');
+    expect(displayPrices[1].props.style?.fontSize).toBe(52);
+  });
+
   it('calculates the floored savings percentage from currency prices', () => {
     const element = template.render({
       ...template.defaults,
@@ -80,6 +94,24 @@ describe('ecommerce-bundle-deal', () => {
     });
 
     expect(getTextElements(element).some((value) => value.startsWith('Save '))).toBe(false);
+  });
+
+  it('darkens the accent for price text on light backgrounds only', () => {
+    const darkElement = template.render(template.defaults);
+    const lightElement = template.render({
+      ...template.defaults,
+      bgColor: '#FFFFFF',
+    });
+    const findBundleTotal = (element: SatoriElement) =>
+      getAllElements(element).find((child) => child.props.children === '$89');
+    const findPlusSigns = (element: SatoriElement) =>
+      getAllElements(element).filter((child) => child.props.children === '+');
+
+    expect(findBundleTotal(darkElement)?.props.style?.color).toBe('#E07A5F');
+    expect(findBundleTotal(darkElement)?.props.style?.fontSize).toBe(72);
+    expect(findBundleTotal(lightElement)?.props.style?.color).toBe('#7b4334');
+    expect(findPlusSigns(darkElement).every((child) => child.props.style?.color === '#E07A5F')).toBe(true);
+    expect(findPlusSigns(lightElement).every((child) => child.props.style?.color === '#7b4334')).toBe(true);
   });
 
   it('uses flex layout for every div', () => {

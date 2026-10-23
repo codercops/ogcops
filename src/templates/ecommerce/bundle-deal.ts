@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { autoFontSize, commonFields, contrastText, truncate } from '../utils';
+import { autoFontSize, commonFields, contrastText, isLightColor, mixColors, truncate } from '../utils';
 
 const defaultProducts = 'Wireless Headphones\nTravel Backpack\nSmart Watch';
 const pricePattern = /^[\$£€¥₹]?\s*([+-]?(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+))\s*[\$£€¥₹]?$/;
@@ -67,14 +67,17 @@ const template: TemplateDefinition = {
       .filter(Boolean)
       .slice(0, 3)
       .map((product) => truncate(product, 36));
-    const oldPrice = String(params.oldPrice ?? '$120');
-    const newPrice = String(params.newPrice ?? '$89');
+    const oldPriceValue = String(params.oldPrice ?? '$120');
+    const newPriceValue = String(params.newPrice ?? '$89');
+    const oldPrice = truncate(oldPriceValue, 14);
+    const newPrice = truncate(newPriceValue, 14);
     const siteName = truncate(String(params.siteName ?? ''), 40);
     const bgColor = String(params.bgColor ?? '#0a0a0a');
     const accentColor = String(params.accentColor ?? '#E07A5F');
     const textColor = String(params.textColor ?? '#FFFFFF');
-    const oldPriceNumber = parsePrice(oldPrice);
-    const newPriceNumber = parsePrice(newPrice);
+    const oldPriceNumber = parsePrice(oldPriceValue);
+    const newPriceNumber = parsePrice(newPriceValue);
+    const accentInk = isLightColor(bgColor) ? mixColors(accentColor, '#000000', 0.45) : accentColor;
     const savings =
       oldPriceNumber !== undefined &&
       newPriceNumber !== undefined &&
@@ -126,7 +129,7 @@ const template: TemplateDefinition = {
             style: {
               fontSize: '44px',
               fontWeight: 500,
-              color: accentColor,
+              color: accentInk,
             },
             children: '+',
           },
@@ -240,9 +243,12 @@ const template: TemplateDefinition = {
                   type: 'span',
                   props: {
                     style: {
-                      fontSize: '72px',
+                      fontSize: autoFontSize(newPrice, [
+                        { maxLen: 8, size: 72 },
+                        { maxLen: 14, size: 52 },
+                      ]),
                       fontWeight: 700,
-                      color: accentColor,
+                      color: accentInk,
                       lineHeight: 1,
                     },
                     children: newPrice,
