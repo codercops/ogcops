@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, musicNoteIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'podcast-show-notes',
@@ -100,13 +100,7 @@ const template: TemplateDefinition = {
                             borderRadius: '10px',
                             background: accentColor,
                           },
-                          children: {
-                            type: 'span',
-                            props: {
-                              style: { fontSize: '18px', color: '#FFFFFF' },
-                              children: '\u266A',
-                            },
-                          },
+                          children: musicNoteIcon(18, '#FFFFFF'),
                         },
                       },
                       ...(showName

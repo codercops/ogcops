@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, starIcon, forkIcon, flaskIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'github-repo-card',
@@ -82,13 +82,7 @@ const template: TemplateDefinition = {
                       borderRadius: '50%',
                       background: `${textColor}15`,
                     },
-                    children: {
-                      type: 'span',
-                      props: {
-                        style: { fontSize: '16px', color: `${textColor}88` },
-                        children: '\u2697',
-                      },
-                    },
+                    children: flaskIcon(16, `${textColor}88`),
                   },
                 },
                 {
@@ -203,13 +197,7 @@ const template: TemplateDefinition = {
                       gap: '6px',
                     },
                     children: [
-                      {
-                        type: 'span',
-                        props: {
-                          style: { fontSize: '16px', color: `${textColor}66` },
-                          children: '\u2605',
-                        },
-                      },
+                      starIcon(16, `${textColor}66`),
                       {
                         type: 'span',
                         props: {
@@ -230,13 +218,7 @@ const template: TemplateDefinition = {
                       gap: '6px',
                     },
                     children: [
-                      {
-                        type: 'span',
-                        props: {
-                          style: { fontSize: '16px', color: `${textColor}66`, fontFamily: 'JetBrains Mono, monospace' },
-                          children: '\u2442',
-                        },
-                      },
+                      forkIcon(16, `${textColor}66`),
                       {
                         type: 'span',
                         props: {

@@ -41,7 +41,7 @@ const navItems = [
     </button>
   </nav>
 
-  <!-- Mobile menu lives inside <header> so it survives transition:persist -->
+  <!-- Mobile menu lives inside <header>, which the router swaps on every navigation; the script below sets it up again on each page load -->
   <div class="mobile-menu" id="mobile-menu">
     <div class="mobile-menu-inner">
       {navItems.map((item, i) => (
@@ -64,45 +64,57 @@ const navItems = [
 
 <script is:inline>
   (function() {
-    var menuBtn = document.getElementById('mobile-menu-btn');
-    var menu = document.getElementById('mobile-menu');
-    if (!menuBtn || !menu) return;
+    // The router swaps the header on every navigation and runs this script only
+    // once, so the buttons are wired on each page load, and the one listener on
+    // document looks up the current menu when it runs.
+    function closeMenu() {
+      var menuBtn = document.getElementById('mobile-menu-btn');
+      var menu = document.getElementById('mobile-menu');
+      if (menuBtn) {
+        menuBtn.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      }
+      if (menu) menu.classList.remove('open');
+      document.body.style.overflow = '';
+    }
 
-    function openMenu() {
+    function openMenu(menuBtn, menu) {
       menuBtn.classList.add('open');
       menuBtn.setAttribute('aria-expanded', 'true');
       menu.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
 
-    function closeMenu() {
-      menuBtn.classList.remove('open');
-      menuBtn.setAttribute('aria-expanded', 'false');
-      menu.classList.remove('open');
-      document.body.style.overflow = '';
+    function initMobileMenu() {
+      var menuBtn = document.getElementById('mobile-menu-btn');
+      var menu = document.getElementById('mobile-menu');
+      if (!menuBtn || !menu) return;
+
+      menuBtn.addEventListener('click', function() {
+        if (menu.classList.contains('open')) {
+          closeMenu();
+        } else {
+          openMenu(menuBtn, menu);
+        }
+      });
+
+      menu.addEventListener('click', function(e) {
+        if (e.target.closest('.mobile-menu-link')) {
+          closeMenu();
+        } else if (e.target === menu || !e.target.closest('.mobile-menu-inner')) {
+          closeMenu();
+        }
+      });
     }
 
-    menuBtn.addEventListener('click', function() {
-      if (menu.classList.contains('open')) {
-        closeMenu();
-      } else {
-        openMenu();
-      }
-    });
-
-    menu.addEventListener('click', function(e) {
-      if (e.target.closest('.mobile-menu-link')) {
-        closeMenu();
-      } else if (e.target === menu || !e.target.closest('.mobile-menu-inner')) {
-        closeMenu();
-      }
-    });
-
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && menu.classList.contains('open')) {
+      var menu = document.getElementById('mobile-menu');
+      if (e.key === 'Escape' && menu && menu.classList.contains('open')) {
         closeMenu();
       }
     });
+
+    document.addEventListener('astro:page-load', initMobileMenu);
   })();
 </script>
 

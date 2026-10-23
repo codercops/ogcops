@@ -7,3 +7,4 @@ export { default as developerGithubStyle } from './github-style';
 export { default as developerResumeHeader } from './resume-header';
 export { default as developerVscodeTheme } from './vscode-theme';
 export { default as developerLinkTree } from './link-tree';
+export { default as developerOpenToWork } from './open-to-work';

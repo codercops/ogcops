@@ -1,5 +1,80 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, commonFields } from '../utils';
+import { truncate, commonFields, arrowRightIcon, playIcon } from '../utils';
+
+function renderLinkIcon(link: string, color: string) {
+  const key = link.toLowerCase();
+  switch (key) {
+    case 'github':
+      return {
+        type: 'svg',
+        props: {
+          width: 18,
+          height: 18,
+          viewBox: '0 0 24 24',
+          children: {
+            type: 'path',
+            props: {
+              d: 'M11 2h2v7.17l5.07-5.07 1.41 1.41L14.41 10.59H22v2h-7.59l5.07 5.07-1.41 1.41L13 13.83V21h-2v-7.17l-5.07 5.07-1.41-1.41L9.59 12.41H2v-2h7.59L4.52 5.34l1.41-1.41L11 9.07V2z',
+              fill: color,
+            },
+          },
+        },
+      };
+    case 'blog':
+      return {
+        type: 'svg',
+        props: {
+          width: 18,
+          height: 18,
+          viewBox: '0 0 24 24',
+          children: {
+            type: 'path',
+            props: {
+              d: 'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',
+              fill: color,
+            },
+          },
+        },
+      };
+    case 'twitter / x':
+      return {
+        type: 'svg',
+        props: {
+          width: 18,
+          height: 18,
+          viewBox: '0 0 24 24',
+          children: {
+            type: 'path',
+            props: {
+              d: 'M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z',
+              fill: color,
+            },
+          },
+        },
+      };
+    case 'linkedin':
+      return {
+        type: 'svg',
+        props: {
+          width: 18,
+          height: 18,
+          viewBox: '0 0 24 24',
+          children: {
+            type: 'path',
+            props: {
+              d: 'M4 10h10V5l8 7-8 7v-5H4v-4z',
+              fill: color,
+            },
+          },
+        },
+      };
+    case 'youtube':
+      return playIcon(18, color);
+    case 'portfolio':
+    default:
+      return arrowRightIcon(18, color);
+  }
+}
 
 const template: TemplateDefinition = {
   id: 'developer-link-tree',
@@ -45,14 +120,7 @@ const template: TemplateDefinition = {
     const accentColor = String(params.accentColor || '#E07A5F');
     const textColor = String(params.textColor || '#FFFFFF');
 
-    const linkIcons: Record<string, string> = {
-      portfolio: '\u2192',
-      github: '\u2731',
-      blog: '\u270E',
-      'twitter / x': '\u2709',
-      linkedin: '\u2B95',
-      youtube: '\u25B6',
-    };
+
 
     return {
       type: 'div',
@@ -243,16 +311,7 @@ const template: TemplateDefinition = {
                           children: link,
                         },
                       },
-                      {
-                        type: 'span',
-                        props: {
-                          style: {
-                            fontSize: '18px',
-                            color: i === 0 ? '#FFFFFF' : `${textColor}44`,
-                          },
-                          children: linkIcons[link.toLowerCase()] || '\u2192',
-                        },
-                      },
+                      renderLinkIcon(link, i === 0 ? '#FFFFFF' : `${textColor}44`),
                     ],
                   },
                 })),

@@ -7,24 +7,29 @@
 
 <script is:inline>
 (function() {
-  var btn = document.getElementById('back-to-top');
-  if (!btn) return;
-
-  var visible = false;
+  // The router swaps the button on every navigation and runs this script only
+  // once, so the click is wired on each page load, and the one scroll listener
+  // looks up the current button when it runs.
   function toggle() {
+    var btn = document.getElementById('back-to-top');
+    if (!btn) return;
     var show = window.scrollY > 500;
-    if (show !== visible) {
-      visible = show;
+    if (btn.classList.contains('back-to-top-visible') !== show) {
       btn.classList.toggle('back-to-top-visible', show);
     }
   }
 
-  window.addEventListener('scroll', toggle, { passive: true });
-  toggle();
+  function initBackToTop() {
+    var btn = document.getElementById('back-to-top');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    toggle();
+  }
 
-  btn.addEventListener('click', function() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  window.addEventListener('scroll', toggle, { passive: true });
+  document.addEventListener('astro:page-load', initBackToTop);
 })();
 </script>
 
@@ -48,13 +53,15 @@
     opacity: 0;
     transform: translateY(10px);
     pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease, color 0.15s ease, border-color 0.15s ease;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s, color 0.15s ease, border-color 0.15s ease;
   }
 
   .back-to-top-visible {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
+    visibility: visible;
   }
 
   .back-to-top:hover {

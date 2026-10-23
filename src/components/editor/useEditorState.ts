@@ -8,7 +8,7 @@ export interface EditorState {
   searchQuery: string;
 }
 
-type EditorAction =
+export type EditorAction =
   | { type: 'SET_TEMPLATE'; template: TemplateDefinition }
   | { type: 'SET_PARAM'; key: string; value: any }
   | { type: 'SET_PARAMS'; params: Record<string, any> }
@@ -16,7 +16,7 @@ type EditorAction =
   | { type: 'SET_CATEGORY'; category: TemplateCategory | 'all' }
   | { type: 'SET_SEARCH'; query: string };
 
-function reducer(state: EditorState, action: EditorAction): EditorState {
+export function editorReducer(state: EditorState, action: EditorAction): EditorState {
   switch (action.type) {
     case 'SET_TEMPLATE':
       return {
@@ -49,7 +49,7 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
 }
 
 export function useEditorState(initialTemplate: TemplateDefinition) {
-  const [state, dispatch] = useReducer(reducer, {
+  const [state, dispatch] = useReducer(editorReducer, {
     templateId: initialTemplate.id,
     category: initialTemplate.category,
     params: { ...initialTemplate.defaults },

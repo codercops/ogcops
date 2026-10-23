@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, musicNotesIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'podcast-series-banner',
@@ -79,16 +79,7 @@ const template: TemplateDefinition = {
                     background: `linear-gradient(135deg, ${accentColor} 0%, ${accentColor}88 100%)`,
                     boxShadow: `0 20px 60px ${accentColor}44`,
                   },
-                  children: {
-                    type: 'span',
-                    props: {
-                      style: {
-                        fontSize: '80px',
-                        color: '#FFFFFF',
-                      },
-                      children: '\u266B',
-                    },
-                  },
+                  children: musicNotesIcon(80, '#FFFFFF'),
                 },
               },
             },

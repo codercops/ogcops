@@ -185,6 +185,11 @@ const year = new Date().getFullYear();
 
 <script is:inline>
 (function() {
+  // The router swaps the footer on every navigation and runs this script only
+  // once. The numbers are fetched once, and every new footer is filled in from them.
+  var latest = null;
+  var loading = false;
+
   function updateDOM(data) {
     var today = document.getElementById('visitors-today');
     var total = document.getElementById('visitors-total');
@@ -193,28 +198,31 @@ const year = new Date().getFullYear();
   }
 
   function loadVisitors() {
-    // One increment per session
-    if (!sessionStorage.getItem('ogcops-counted')) {
-      fetch('/api/visitors', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          sessionStorage.setItem('ogcops-counted', '1');
-          updateDOM(data);
-        })
-        .catch(function(e) { console.warn('Visitor counter error:', e); });
-    } else {
-      fetch('/api/visitors')
-        .then(function(r) { return r.json(); })
-        .then(updateDOM)
-        .catch(function(e) { console.warn('Visitor counter error:', e); });
+    if (latest) {
+      updateDOM(latest);
+      return;
     }
+    // A fetch is already on its way and will fill in whichever footer is on the page
+    if (loading) return;
+    loading = true;
+
+    // One increment per session
+    var counted = !!sessionStorage.getItem('ogcops-counted');
+    var request = counted
+      ? fetch('/api/visitors')
+      : fetch('/api/visitors', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+    request
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!counted) sessionStorage.setItem('ogcops-counted', '1');
+        latest = data;
+        updateDOM(data);
+      })
+      .catch(function(e) { console.warn('Visitor counter error:', e); })
+      .finally(function() { loading = false; });
   }
 
-  // Ensure DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadVisitors);
-  } else {
-    loadVisitors();
-  }
+  // astro:page-load fires on the first load and after every navigation
+  document.addEventListener('astro:page-load', loadVisitors);
 })();
 </script>

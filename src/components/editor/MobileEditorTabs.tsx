@@ -18,6 +18,7 @@ export function MobileEditorTabs({ activeTab, onTabChange }: MobileEditorTabsPro
           type="button"
           className={`mobile-tab ${activeTab === tab.id ? 'active' : ''}`}
           onClick={() => onTabChange(tab.id)}
+          aria-pressed={activeTab === tab.id}
         >
           {tab.label}
         </button>

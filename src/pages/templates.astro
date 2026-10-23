@@ -21,20 +21,21 @@ const templateCount = getTemplateCount();
       <div class="gallery-search-wrap">
         <div class="gallery-search-inner">
           <svg class="gallery-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="text" class="gallery-search" id="gallery-search" placeholder="Search templates..." autocomplete="off" />
+          <input type="text" class="gallery-search" id="gallery-search" placeholder="Search templates..." aria-label="Search templates" autocomplete="off" />
         </div>
       </div>
 
       <!-- Filter Bar -->
       <div class="template-filter-bar">
         <div class="pill-group">
-          <button class="pill pill-active" data-filter="all">All <span class="pill-count">{templates.length}</span></button>
+          <button class="pill pill-active" data-filter="all" aria-pressed="true">All <span class="pill-count">{templates.length}</span></button>
           {ALL_CATEGORIES.map((cat) => {
             const meta = CATEGORY_META[cat];
             const count = categoryCounts[cat] || 0;
             return (
-              <button class="pill" data-filter={cat}>
-                {meta.icon} {meta.label} <span class="pill-count">{count}</span>
+              <button class="pill" data-filter={cat} aria-pressed="false">
+                <span aria-hidden="true">{meta.icon}</span>{' '}
+                {meta.label} <span class="pill-count">{count}</span>
               </button>
             );
           })}
@@ -45,7 +46,7 @@ const templateCount = getTemplateCount();
       <!-- Template Grid -->
       <div class="grid grid-3 gallery-grid" id="gallery-grid">
         {templates.map((t) => (
-          <a href={`/create?template=${t.id}`} class="gallery-card" data-category={t.category} data-name={t.name.toLowerCase()}>
+          <a href={`/create?template=${t.id}`} class="gallery-card" data-category={t.category} data-name={t.name.toLowerCase()} data-description={(t.description || '').toLowerCase()} data-tags={(t.tags || []).join(' ').toLowerCase()}>
             <div class="gallery-card-preview">
               <img
                 src={`/api/templates/${t.id}/thumbnail.png`}
@@ -77,48 +78,92 @@ const templateCount = getTemplateCount();
 </Layout>
 
 <script is:inline>
-  // Category filter + search
-  const searchInput = document.getElementById('gallery-search');
-  const cards = document.querySelectorAll('.gallery-card');
-  const showingEl = document.getElementById('gallery-showing');
-  const emptyEl = document.getElementById('gallery-empty');
-  const gridEl = document.getElementById('gallery-grid');
-  const totalCount = cards.length;
-  let activeFilter = 'all';
+  // Category filter + search. ClientRouter runs this script once, so set up on every page load.
+  function initGallery() {
+    const searchInput = document.getElementById('gallery-search');
+    if (!searchInput) return;
+    const cards = document.querySelectorAll('.gallery-card');
+    const showingEl = document.getElementById('gallery-showing');
+    const emptyEl = document.getElementById('gallery-empty');
+    const gridEl = document.getElementById('gallery-grid');
+    const totalCount = cards.length;
+    let activeFilter = 'all';
 
-  function filterCards() {
-    const query = (searchInput?.value || '').toLowerCase().trim();
-    let visible = 0;
+    function filterCards() {
+      const query = (searchInput?.value || '').toLowerCase().trim();
+      let visible = 0;
 
-    cards.forEach(card => {
-      const category = card.dataset.category;
-      const name = card.dataset.name || '';
-      const matchesCategory = activeFilter === 'all' || category === activeFilter;
-      const matchesSearch = !query || name.includes(query);
+      cards.forEach(card => {
+        const category = card.dataset.category;
+        const name = (card.dataset.name || '').toLowerCase();
+        const description = (card.dataset.description || '').toLowerCase();
+        const tags = (card.dataset.tags || '').toLowerCase();
+        const matchesCategory = activeFilter === 'all' || category === activeFilter;
+        const matchesSearch = !query ||
+          name.includes(query) ||
+          description.includes(query) ||
+          tags.includes(query);
 
-      if (matchesCategory && matchesSearch) {
-        card.style.display = '';
-        visible++;
-      } else {
-        card.style.display = 'none';
+        if (matchesCategory && matchesSearch) {
+          card.style.display = '';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (showingEl) showingEl.innerHTML = 'Showing <strong>' + visible + '</strong> of ' + totalCount + ' templates';
+      if (emptyEl) emptyEl.style.display = visible === 0 ? 'flex' : 'none';
+      if (gridEl) gridEl.style.display = visible === 0 ? 'none' : '';
+    }
+
+    function setCategory(filter) {
+      if (!filter) return false;
+      let foundBtn = null;
+      const filterBtns = document.querySelectorAll('[data-filter]');
+      filterBtns.forEach(btn => {
+        if (btn.dataset.filter === filter) {
+          foundBtn = btn;
+        }
+      });
+      if (!foundBtn) return false;
+      activeFilter = filter;
+      filterBtns.forEach(b => {
+        const isActive = b === foundBtn;
+        b.classList.toggle('pill-active', isActive);
+        b.setAttribute('aria-pressed', String(isActive));
+      });
+      return true;
+    }
+
+    document.querySelectorAll('[data-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setCategory(btn.dataset.filter);
+        filterCards();
+      });
+    });
+
+    searchInput?.addEventListener('input', filterCards);
+
+    const params = new URLSearchParams(window.location.search);
+    const qParam = params.get('q');
+    const catParam = params.get('category');
+
+    let shouldFilter = false;
+    if (catParam && setCategory(catParam)) {
+      if (catParam !== 'all') {
+        shouldFilter = true;
       }
-    });
-
-    if (showingEl) showingEl.innerHTML = 'Showing <strong>' + visible + '</strong> of ' + totalCount + ' templates';
-    if (emptyEl) emptyEl.style.display = visible === 0 ? 'flex' : 'none';
-    if (gridEl) gridEl.style.display = visible === 0 ? 'none' : '';
-  }
-
-  document.querySelectorAll('[data-filter]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activeFilter = btn.dataset.filter;
-      document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('pill-active'));
-      btn.classList.add('pill-active');
+    }
+    if (qParam && searchInput) {
+      searchInput.value = qParam;
+      shouldFilter = true;
+    }
+    if (shouldFilter) {
       filterCards();
-    });
-  });
-
-  searchInput?.addEventListener('input', filterCards);
+    }
+  }
+  document.addEventListener('astro:page-load', initGallery);
 </script>
 
 <style>

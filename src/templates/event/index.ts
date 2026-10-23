@@ -8,3 +8,4 @@ export { default as eventCountdown } from './countdown';
 export { default as eventVenueMap } from './venue-map';
 export { default as eventTicketCta } from './ticket-cta';
 export { default as eventMultiSpeaker } from './multi-speaker';
+export { default as eventAgenda } from './agenda';

@@ -8,3 +8,5 @@ export { default as saasCleanCorporate } from './clean-corporate';
 export { default as saasStartupBold } from './startup-bold';
 export { default as saasFeatureSpotlight } from './feature-spotlight';
 export { default as saasSocialProof } from './social-proof';
+export { default as saasIntegration } from './integration';
+export { default as saasUptimeStatus } from './uptime-status';

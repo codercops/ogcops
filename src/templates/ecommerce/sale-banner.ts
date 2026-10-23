@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, commonFields } from '../utils';
+import { truncate, commonFields, arrowRightIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'ecommerce-sale-banner',
@@ -127,16 +127,7 @@ const template: TemplateDefinition = {
                   : []),
                 ...(originalPrice && salePrice
                   ? [
-                      {
-                        type: 'span',
-                        props: {
-                          style: {
-                            fontSize: '32px',
-                            color: `${textColor}44`,
-                          },
-                          children: '\u2192',
-                        },
-                      },
+                      arrowRightIcon(32, `${textColor}44`),
                     ]
                   : []),
                 ...(salePrice

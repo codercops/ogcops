@@ -6,3 +6,4 @@ export { default as quoteBookPage } from './book-page';
 export { default as quoteBoldHighlight } from './bold-highlight';
 export { default as quoteMinimalDash } from './minimal-dash';
 export { default as quotePhotoBackground } from './photo-background';
+export { default as quoteStickyNote } from './sticky-note';

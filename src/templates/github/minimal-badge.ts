@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, hexagonIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'github-minimal-badge',
@@ -10,7 +10,7 @@ const template: TemplateDefinition = {
   fields: [
     { key: 'repoName', label: 'Repository', type: 'text', defaultValue: 'my-project', placeholder: 'repo-name', group: 'Content' },
     commonFields.description,
-    { key: 'icon', label: 'Icon/Emoji', type: 'text', defaultValue: '\u2B21', placeholder: 'Emoji or symbol', group: 'Content' },
+    { key: 'icon', label: 'Icon', type: 'text', defaultValue: '\u2B21', placeholder: 'Symbol or text', group: 'Content' },
     { key: 'badge', label: 'Badge Text', type: 'text', defaultValue: 'Open Source', placeholder: 'Badge label', group: 'Content' },
     commonFields.bgColor,
     commonFields.accentColor,
@@ -68,13 +68,15 @@ const template: TemplateDefinition = {
                 border: `2px solid ${accentColor}25`,
                 marginBottom: '28px',
               },
-              children: {
-                type: 'span',
-                props: {
-                  style: { fontSize: '36px', color: accentColor },
-                  children: icon,
-                },
-              },
+              children: icon === '\u2B21'
+                ? hexagonIcon(36, accentColor)
+                : {
+                    type: 'span',
+                    props: {
+                      style: { fontSize: '36px', color: accentColor },
+                      children: icon,
+                    },
+                  },
             },
           },
           // Repo name

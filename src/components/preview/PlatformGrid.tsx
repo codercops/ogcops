@@ -42,6 +42,7 @@ export function PlatformGrid({ platforms }: PlatformGridProps) {
                     description={preview?.description || ''}
                     domain={preview?.siteName || p.name}
                     viewport={viewport}
+                    cardType={preview?.cardType}
                   />
                 </div>
               </div>

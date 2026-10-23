@@ -23,9 +23,10 @@ export function URLInput({ value, onChange, onSubmit, loading }: URLInputProps) 
           className="preview-url-btn"
           onClick={onSubmit}
           disabled={loading || !value.trim()}
+          aria-label={loading ? 'Checking...' : undefined}
         >
           {loading ? (
-            <span className="preview-spinner" />
+            <span className="preview-spinner" aria-hidden="true" />
           ) : (
             'Check'
           )}

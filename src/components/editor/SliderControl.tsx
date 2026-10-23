@@ -1,3 +1,5 @@
+import { useId } from 'react';
+
 interface SliderControlProps {
   label: string;
   value: number;
@@ -7,13 +9,19 @@ interface SliderControlProps {
 }
 
 export function SliderControl({ label, value, onChange, min = 0, max = 100 }: SliderControlProps) {
+  const id = useId();
+
   return (
     <div className="editor-field">
       <div className="editor-field-label-row">
-        <label className="editor-field-label">{label}</label>
+        <label htmlFor={id} className="editor-field-label">
+          {label}
+        </label>
         <span className="editor-field-value">{value}</span>
       </div>
+
       <input
+        id={id}
         type="range"
         className="editor-slider"
         value={value}

@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, commonFields } from '../utils';
+import { truncate, commonFields, arrowRightIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'ecommerce-price-drop',
@@ -117,16 +117,7 @@ const template: TemplateDefinition = {
                   },
                 },
                 // Arrow
-                {
-                  type: 'span',
-                  props: {
-                    style: {
-                      fontSize: '40px',
-                      color: accentColor,
-                    },
-                    children: '\u2192',
-                  },
-                },
+                arrowRightIcon(40, accentColor),
                 // New price
                 {
                   type: 'span',
