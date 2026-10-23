@@ -38,8 +38,8 @@ const template: TemplateDefinition = {
       { maxLen: 72, size: 30 },
     ]);
     const siteName = String(params.siteName || '');
-    const orderNumber = String(params.orderNumber || '');
-    const estimate = String(params.estimate || '');
+    const orderNumber = String(params.orderNumber || '').trim();
+    const estimate = String(params.estimate || '').trim();
     const stepValue = String(params.currentStep ?? '').trim();
     const parsedStep = stepValue ? Number(stepValue) : Number.NaN;
     const currentStep = Number.isFinite(parsedStep)

@@ -54,6 +54,18 @@ describe('ecommerce-order-status', () => {
     expect(values).toContain(ecommerceOrderStatus.defaults.title);
   });
 
+  it('hides whitespace-only order number and delivery estimate', () => {
+    const rendered = ecommerceOrderStatus.render({
+      ...ecommerceOrderStatus.defaults,
+      orderNumber: '   ',
+      estimate: '   ',
+    });
+    const values = textContent(rendered);
+    expect(values.some((value) => value.includes('Order '))).toBe(false);
+    expect(values).not.toContain('   ');
+    expect(values).not.toContain(ecommerceOrderStatus.defaults.estimate);
+  });
+
   it('adapts progress colors for a light background and keeps contrast on active steps', () => {
     const lightParams = {
       ...ecommerceOrderStatus.defaults,
