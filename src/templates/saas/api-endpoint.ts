@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { autoFontSize, commonFields, mixColors, truncate } from '../utils';
+import { autoFontSize, commonFields, isLightColor, mixColors, truncate } from '../utils';
 
 const METHODS = {
   GET: '#86efac',
@@ -60,6 +60,7 @@ const template: TemplateDefinition = {
     const responseExample = truncate(String(params.responseExample ?? '').trim(), 72);
     const bgColor = String(params.bgColor || '#0b1220');
     const accentColor = String(params.accentColor || '#60a5fa');
+    const accentTextColor = isLightColor(bgColor) ? mixColors(accentColor, '#000000', 0.45) : accentColor;
     const textColor = String(params.textColor || '#f8fafc');
     const pathSize = autoFontSize(path, [
       { maxLen: 26, size: 48 },
@@ -87,12 +88,12 @@ const template: TemplateDefinition = {
         children: [
           {
             type: 'span',
-            props: { style: { fontSize: `${nameSize}px`, fontWeight: 600, color: accentColor }, children: siteName },
+            props: { style: { fontSize: `${nameSize}px`, fontWeight: 600, color: accentTextColor }, children: siteName },
           },
           {
             type: 'div',
             props: {
-              style: { display: 'flex', flexDirection: 'column', gap: '28px' },
+              style: { display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, gap: '28px' },
               children: [
                 {
                   type: 'div',

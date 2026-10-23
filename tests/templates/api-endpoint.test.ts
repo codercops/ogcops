@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import satori from 'satori';
+import satori, { type SatoriNode } from 'satori';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import apiEndpoint from '@/templates/saas/api-endpoint';
@@ -68,6 +68,41 @@ describe('saas-api-endpoint', () => {
       expect((luminance(pill.props.style.background) + 0.05) / (luminance(pill.props.style.color) + 0.05)).toBeGreaterThan(4.5);
       const svg = await satori(element as any, { width: 1200, height: 630, fonts });
       expect(svg).toMatch(/^<svg[^>]*width="1200"[^>]*height="630"/);
+    }
+  });
+
+  it.each(['#ffffff', '#f1f5f9', '#0b1220'])('keeps the product name readable on %s', async (bgColor) => {
+    const element = tree({ bgColor });
+    const name = elements(element).find((el) => el.props.children === 'Acme API')!;
+    const levels = [luminance(name.props.style.color), luminance(bgColor)].sort((a, b) => a - b);
+    expect((levels[1] + 0.05) / (levels[0] + 0.05)).toBeGreaterThan(4.5);
+    if (bgColor === '#0b1220') expect(name.props.style.color).toBe(apiEndpoint.defaults.accentColor);
+    const svg = await satori(element as any, { width: 1200, height: 630, fonts });
+    expect(svg).toContain(`fill="${name.props.style.color}"`);
+  });
+
+  it.each([
+    { responseStatus: '', responseExample: '' },
+    { responseStatus: '200 OK', responseExample: '' },
+    { responseStatus: '', responseExample: '{ "ok": true }' },
+    { responseStatus: '200 OK', responseExample: '{ "ok": true }' },
+  ])('centers the endpoint with response fields %j', async (response) => {
+    for (const description of ['', 'Retrieve an invoice.']) {
+      const nodes: SatoriNode[] = [];
+      await satori(tree({ ...response, description }) as any, {
+        width: 1200, height: 630, fonts, onNodeDetected: (node) => nodes.push(node),
+      });
+      const name = nodes.find((node) => node.textContent === 'Acme API')!;
+      const pill = nodes.find((node) => node.type === 'div' && node.textContent === 'GET')!;
+      const descriptionNode = nodes.find((node) => node.textContent === description);
+      const panel = nodes.find((node) => node.props.style?.padding === '24px 28px');
+      const contentBottom = descriptionNode ? descriptionNode.top + descriptionNode.height : pill.top + pill.height;
+      const availableBottom = panel ? panel.top : 630 - 64;
+      const center = (pill.top + contentBottom) / 2;
+      const availableCenter = (name.top + name.height + availableBottom) / 2;
+      expect(Math.abs(center - availableCenter)).toBeLessThanOrEqual(1);
+      expect(pill.top).toBeGreaterThan(name.top + name.height);
+      expect(contentBottom).toBeLessThan(availableBottom);
     }
   });
 
