@@ -8,3 +8,4 @@ export { default as tutorialWorkshopBanner } from './workshop-banner';
 export { default as tutorialCertification } from './certification';
 export { default as tutorialQuizCard } from './quiz-card';
 export { default as tutorialCheatSheet } from './cheat-sheet';
+export { default as tutorialBeforeAfter } from './before-after';
