@@ -7,3 +7,4 @@ export { default as ecommerceNewArrival } from './new-arrival';
 export { default as ecommerceComparisonGrid } from './comparison-grid';
 export { default as ecommerceBrandStory } from './brand-story';
 export { default as ecommerceCouponCode } from './coupon-code';
+export { default as ecommerceBundleDeal } from './bundle-deal';
