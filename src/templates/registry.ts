@@ -130,6 +130,7 @@ import githubMatrix from './github/matrix';
 import githubContributorsWall from './github/contributors-wall';
 import githubIssueCard from './github/issue-card';
 import githubPullRequest from './github/pull-request';
+import githubGoodFirstIssues from './github/good-first-issues';
 
 [
   githubRepoCard, githubContributionGraph, githubReadmeHero, githubReleaseNotes,
@@ -137,6 +138,7 @@ import githubPullRequest from './github/pull-request';
   githubMinimalBadge, githubMatrix, githubContributorsWall,
   githubIssueCard,
   githubPullRequest,
+  githubGoodFirstIssues,
 ].forEach(registerTemplate);
 
 // Event
