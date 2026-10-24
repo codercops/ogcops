@@ -178,10 +178,11 @@ import podcastMinimalPlayer from './podcast/minimal-player';
 import podcastVideoThumbnail from './podcast/video-thumbnail';
 import podcastAudiogram from './podcast/audiogram';
 import podcastShowNotes from './podcast/show-notes';
+import podcastTopEpisodes from './podcast/top-episodes';
 
 [
   podcastEpisodeCard, podcastWaveform, podcastGuestSpotlight, podcastConversation, podcastSeriesBanner,
-  podcastMinimalPlayer, podcastVideoThumbnail, podcastAudiogram, podcastShowNotes,
+  podcastMinimalPlayer, podcastVideoThumbnail, podcastAudiogram, podcastShowNotes, podcastTopEpisodes,
 ].forEach(registerTemplate);
 
 // Developer
