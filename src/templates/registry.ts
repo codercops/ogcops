@@ -215,11 +215,12 @@ import newsletterMinimalNumber from './newsletter/minimal-number';
 import newsletterNewspaperFold from './newsletter/newspaper-fold';
 import newsletterSubscriberCount from './newsletter/subscriber-count';
 import newsletterSubscribeCard from './newsletter/subscribe-card';
+import newsletterSponsor from './newsletter/sponsor';
 
 [
   newsletterIssueCard, newsletterDigestBanner, newsletterPreviewText, newsletterEditorial,
   newsletterCuratedLinks, newsletterMinimalNumber, newsletterNewspaperFold, newsletterSubscriberCount,
-  newsletterSubscribeCard,
+  newsletterSubscribeCard, newsletterSponsor,
 ].forEach(registerTemplate);
 
 // Quote
