@@ -1,5 +1,7 @@
 import { useReducer, useMemo, useCallback } from 'react';
 import type { TemplateDefinition, TemplateCategory } from '@/templates/types';
+import { getTemplate } from '@/templates/registry';
+import { buildOgQuery } from '@/lib/url-builder';
 
 export interface EditorState {
   templateId: string;
@@ -80,17 +82,12 @@ export function useEditorState(initialTemplate: TemplateDefinition) {
     dispatch({ type: 'SET_SEARCH', query });
   }, []);
 
-  // Build query string shared by both URLs
-  const queryString = useMemo(() => {
-    const params = new URLSearchParams();
-    params.set('template', state.templateId);
-    for (const [key, value] of Object.entries(state.params)) {
-      if (value !== undefined && value !== null && value !== '') {
-        params.set(key, String(value));
-      }
-    }
-    return params.toString();
-  }, [state.templateId, state.params]);
+  // Build query string shared by both URLs. A field cleared in the editor goes
+  // in as `key=`, so the downloaded image matches the preview.
+  const queryString = useMemo(
+    () => buildOgQuery(state.templateId, state.params, getTemplate(state.templateId)?.defaults),
+    [state.templateId, state.params]
+  );
 
   // Production URL for sharing / meta tags
   const apiUrl = useMemo(

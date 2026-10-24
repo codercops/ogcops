@@ -7,6 +7,7 @@ import {
 } from '@/lib/api-validation';
 import { getTemplate, getAllTemplates } from '@/templates/registry';
 import { normalizeColorFields } from '@/templates/utils';
+import type { TemplateField } from '@/templates/types';
 
 describe('OG API Validation', () => {
   it('should validate valid params', () => {
@@ -323,6 +324,47 @@ describe('mergeOgParams', () => {
     expect(merged.quote).toBe('Talk is cheap, show me the code.');
     expect(merged.author).toBe(template!.defaults.author);
   });
+
+  describe('with the template fields', () => {
+    const fieldDefaults: Record<string, string | number | boolean> = {
+      ...defaults,
+      title: 'Default title',
+      imageUrl: 'https://example.com/cover.png',
+    };
+    const fields: TemplateField[] = [
+      { key: 'title', label: 'Title', type: 'text', defaultValue: 'Default title', required: true, group: 'Content' },
+      { key: 'quote', label: 'Quote', type: 'textarea', defaultValue: 'Default quote', group: 'Content' },
+      { key: 'author', label: 'Author', type: 'text', defaultValue: 'Default Author', group: 'Content' },
+      { key: 'bgColor', label: 'Background', type: 'color', defaultValue: '#0a0a0a', group: 'Style' },
+      { key: 'imageUrl', label: 'Image', type: 'image', defaultValue: 'https://example.com/cover.png', group: 'Style' },
+    ];
+
+    function mergeWithFields(query: string) {
+      const searchParams = new URLSearchParams(query);
+      const parsed = parseSearchParams(searchParams, ogQuerySchema);
+      if (!parsed.success) throw new Error(parsed.error);
+      return mergeOgParams(parsed.data, fieldDefaults, searchParams, fields);
+    }
+
+    it('keeps an optional text field empty when it is sent empty', () => {
+      const merged = mergeWithFields('quote=&author=');
+      expect(merged.quote).toBe('');
+      expect(merged.author).toBe('');
+    });
+
+    it('still uses the default when the param is left out', () => {
+      const merged = mergeWithFields('');
+      expect(merged.quote).toBe('Default quote');
+      expect(merged.author).toBe('Default Author');
+    });
+
+    it('falls back to the default for empty required fields, colors and images', () => {
+      const merged = mergeWithFields('title=&bgColor=&imageUrl=');
+      expect(merged.title).toBe('Default title');
+      expect(merged.bgColor).toBe('#0a0a0a');
+      expect(merged.imageUrl).toBe('https://example.com/cover.png');
+    });
+  });
 });
 
 // og-engine pulls in the resvg wasm binary through a Vite-only `?module`
@@ -546,5 +588,26 @@ describe('OG API empty parameters fall back to the defaults', () => {
   it('still returns 404 for a template that does not exist', async () => {
     const res = await GET(makeContext(`${BASE}?template=does-not-exist`));
     expect(res.status).toBe(404);
+  });
+});
+
+describe('OG API cleared fields', () => {
+  it('keeps an optional field the editor cleared empty, and uses the default when it is left out', async () => {
+    const template = getTemplate('newsletter-subscribe-card')!;
+    const render = vi.spyOn(template, 'render');
+
+    try {
+      const cleared = await GET(makeContext(`${BASE}?template=newsletter-subscribe-card&subscriberCount=`));
+      expect(cleared.status).toBe(200);
+      expect(render).toHaveBeenLastCalledWith(expect.objectContaining({ subscriberCount: '' }));
+
+      const omitted = await GET(makeContext(`${BASE}?template=newsletter-subscribe-card`));
+      expect(omitted.status).toBe(200);
+      expect(render).toHaveBeenLastCalledWith(
+        expect.objectContaining({ subscriberCount: template.defaults.subscriberCount })
+      );
+    } finally {
+      render.mockRestore();
+    }
   });
 });

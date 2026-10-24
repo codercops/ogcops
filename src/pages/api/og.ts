@@ -71,8 +71,9 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
   try {
     // Merge template defaults with provided params. Schema params override
-    // defaults when non-empty; template-specific query params override too.
-    const mergedParams = mergeOgParams(params, template.defaults, url.searchParams);
+    // defaults when non-empty; template-specific query params override too,
+    // and an optional text field sent empty stays empty.
+    const mergedParams = mergeOgParams(params, template.defaults, url.searchParams, template.fields);
     const normalizedParams = normalizeColorFields(template, mergedParams);
 
     const element = template.render(normalizedParams);
