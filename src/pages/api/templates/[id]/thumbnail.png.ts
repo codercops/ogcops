@@ -9,9 +9,12 @@ export const GET: APIRoute = async ({ params, url, locals }) => {
   const { id } = params;
 
   // Thumbnails only change on deploy, so repeats come from the edge cache
-  // instead of the renderer. The cache only exists on the custom domain
-  // (not in `astro dev` or on workers.dev).
-  const cache = (globalThis.caches as (CacheStorage & { default?: Cache }) | undefined)?.default;
+  // instead of the renderer. The Cloudflare adapter may expose a persistent
+  // `caches.default` during `astro dev`, so disable it there to avoid serving
+  // stale thumbnails after template changes.
+  const cache = import.meta.env.DEV
+    ? undefined
+    : (globalThis.caches as (CacheStorage & { default?: Cache }) | undefined)?.default;
   const cacheKey = new Request(url.toString());
   const cached = await cache?.match(cacheKey);
   if (cached) return cached;

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import {
   ogQuerySchema,
   parseSearchParams,
@@ -334,16 +334,21 @@ vi.mock('@/lib/og-engine', () => ({
 
 const { GET } = await import('@/pages/api/og');
 
-function makeContext(url: string) {
+function makeContext(url: string, locals: object = {}) {
   return {
     request: new Request(url),
-    locals: {},
+    locals,
   } as unknown as Parameters<NonNullable<typeof GET>>[0];
 }
 
 const BASE = 'http://localhost:4321/api/og';
 
 describe('OG API error caching', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
   it('does not cache a 404 for a template that does not exist', async () => {
     const res = await GET(makeContext(`${BASE}?template=does-not-exist&title=Hi`));
 
@@ -379,6 +384,51 @@ describe('OG API error caching', () => {
 
     expect(res.status).toBe(200);
     expect(res.headers.get('cache-control')).toBe('public, max-age=86400');
+  });
+
+  it('does not read or write the Cloudflare cache in development', async () => {
+    const cache = {
+      match: vi.fn().mockResolvedValue(undefined),
+      put: vi.fn().mockResolvedValue(undefined),
+    };
+    vi.stubEnv('DEV', true);
+    vi.stubGlobal('caches', { default: cache });
+
+    const res = await GET(
+      makeContext(`${BASE}?template=blog-minimal-dark&title=Hi`, {
+        cfContext: { waitUntil: vi.fn() },
+      })
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toBe('image/png');
+    expect(cache.match).not.toHaveBeenCalled();
+    expect(cache.put).not.toHaveBeenCalled();
+  });
+
+  it('looks up and caches a successful 200 response outside development', async () => {
+    const cache = {
+      match: vi.fn().mockResolvedValue(undefined),
+      put: vi.fn().mockResolvedValue(undefined),
+    };
+    const waitUntil = vi.fn();
+    vi.stubEnv('DEV', false);
+    vi.stubGlobal('caches', { default: cache });
+
+    const res = await GET(
+      makeContext(`${BASE}?template=blog-minimal-dark&title=Hi`, {
+        cfContext: { waitUntil },
+      })
+    );
+
+    expect(res.status).toBe(200);
+    expect(cache.match).toHaveBeenCalledWith(expect.any(Request));
+    expect(cache.put).toHaveBeenCalledOnce();
+    expect(cache.put).toHaveBeenCalledWith(
+      expect.any(Request),
+      expect.objectContaining({ status: 200 })
+    );
+    expect(waitUntil).toHaveBeenCalledOnce();
   });
 });
 
