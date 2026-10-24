@@ -108,6 +108,7 @@ import saasSocialProof from './saas/social-proof';
 import saasIntegration from './saas/integration';
 import saasUptimeStatus from './saas/uptime-status';
 import saasApiEndpoint from './saas/api-endpoint';
+import saasRoadmap from './saas/roadmap';
 
 [
   saasDashboardPreview, saasPricingHighlight, saasMetricShowcase, saasTestimonialBanner,
@@ -116,6 +117,7 @@ import saasApiEndpoint from './saas/api-endpoint';
   saasIntegration,
   saasUptimeStatus,
   saasApiEndpoint,
+  saasRoadmap,
 ].forEach(registerTemplate);
 
 // GitHub
