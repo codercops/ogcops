@@ -13,7 +13,11 @@ function walk(node: any, visit: (node: any) => void): void {
 }
 
 function rows(element: any): any[] {
-  return element.props.children[2].props.children;
+  return element.props.children.find((child: any) =>
+    child.type === 'div'
+    && child.props.style.flexDirection === 'column'
+    && Array.isArray(child.props.children),
+  ).props.children;
 }
 
 function textContent(element: any): string[] {
@@ -44,6 +48,20 @@ describe('podcast-top-episodes', () => {
     expect(textContent(rendered)).toContain(podcastTopEpisodes.defaults.episode1);
   });
 
+  it('uses singular footer text for one episode and hides a blank show name row', () => {
+    const rendered = podcastTopEpisodes.render({
+      ...podcastTopEpisodes.defaults,
+      showName: '   ',
+      episode2: '',
+      episode3: '',
+    });
+    const text = textContent(rendered);
+    expect(text).toContain('1 EPISODE');
+    expect(text).not.toContain('1 EPISODES');
+    expect(text).not.toContain('The Signal');
+    expect(rendered.props.children[0].type).toBe('h1');
+  });
+
   it('truncates long titles on one line while retaining the duration column', () => {
     const longTitle = 'A remarkably long episode title '.repeat(8);
     const rendered = podcastTopEpisodes.render({
@@ -55,7 +73,17 @@ describe('podcast-top-episodes', () => {
     expect(firstRow.props.children[1].props.children).toBe(`${longTitle.slice(0, 55).trimEnd()}…`);
     expect(firstRow.props.children[1].props.style).toMatchObject({ flex: 1, minWidth: 0, whiteSpace: 'nowrap' });
     expect(firstRow.props.children[2].props.children).toBe('48 min');
-    expect(firstRow.props.children[2].props.style).toMatchObject({ width: '120px', flexShrink: 0 });
+    expect(firstRow.props.children[2].props.style).toMatchObject({ width: '120px', flexShrink: 0, whiteSpace: 'nowrap' });
+  });
+
+  it('truncates long durations to one line without changing the column width', () => {
+    const rendered = podcastTopEpisodes.render({
+      ...podcastTopEpisodes.defaults,
+      duration1: '1 hour 48 minutes and 30 seconds',
+    });
+    const duration = rows(rendered)[0].props.children[2];
+    expect(duration.props.children).toBe('1 hour 48 m…');
+    expect(duration.props.style).toMatchObject({ width: '120px', whiteSpace: 'nowrap' });
   });
 
   it('uses a readable darkened rank color on a light background with a pale accent', () => {

@@ -59,16 +59,18 @@ const template: TemplateDefinition = {
           fontFamily: 'Inter, sans-serif',
         },
         children: [
-          {
-            type: 'div',
-            props: {
-              style: { display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' },
-              children: [
-                { type: 'div', props: { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: accentInk } } },
-                { type: 'span', props: { style: { display: 'flex', fontSize: '20px', fontWeight: 700, color: mutedColor, letterSpacing: '0.04em' }, children: showName } },
-              ],
-            },
-          },
+          ...(showName
+            ? [{
+                type: 'div',
+                props: {
+                  style: { display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' },
+                  children: [
+                    { type: 'div', props: { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: accentInk } } },
+                    { type: 'span', props: { style: { display: 'flex', fontSize: '20px', fontWeight: 700, color: mutedColor, letterSpacing: '0.04em' }, children: showName } },
+                  ],
+                },
+              }]
+            : []),
           {
             type: 'h1',
             props: { style: { display: 'flex', margin: '0 0 34px', fontSize: '42px', lineHeight: 1.15, fontWeight: 700, color: textColor }, children: title },
@@ -94,7 +96,7 @@ const template: TemplateDefinition = {
                     { type: 'span', props: { style: { display: 'flex', width: '76px', flexShrink: 0, fontSize: '38px', fontWeight: 800, color: accentInk }, children: String(index + 1).padStart(2, '0') } },
                     { type: 'span', props: { style: { display: 'flex', flex: 1, minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap', fontSize: '24px', fontWeight: 600, color: textColor }, children: truncate(episode.title, 56) } },
                     ...(episode.duration
-                      ? [{ type: 'span', props: { style: { display: 'flex', justifyContent: 'flex-end', width: '120px', flexShrink: 0, fontSize: '18px', color: mutedColor }, children: truncate(episode.duration, 18) } }]
+                      ? [{ type: 'span', props: { style: { display: 'flex', justifyContent: 'flex-end', width: '120px', flexShrink: 0, whiteSpace: 'nowrap', fontSize: '18px', color: mutedColor }, children: truncate(episode.duration, 12) } }]
                       : []),
                   ],
                 },
@@ -106,7 +108,7 @@ const template: TemplateDefinition = {
             props: {
               style: { display: 'flex', alignItems: 'center', gap: '10px', marginTop: '22px' },
               children: [
-                { type: 'span', props: { style: { display: 'flex', fontSize: '15px', fontWeight: 700, color: accentInk }, children: `${episodes.length} EPISODES` } },
+                { type: 'span', props: { style: { display: 'flex', fontSize: '15px', fontWeight: 700, color: accentInk }, children: `${episodes.length} ${episodes.length === 1 ? 'EPISODE' : 'EPISODES'}` } },
                 { type: 'span', props: { style: { display: 'flex', fontSize: '15px', color: mutedColor }, children: '·' } },
                 { type: 'span', props: { style: { display: 'flex', fontSize: '15px', color: mutedColor }, children: 'PODCAST CHART' } },
               ],
