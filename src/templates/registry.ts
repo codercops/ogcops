@@ -275,11 +275,12 @@ import jobStartupHiring from './job/startup-hiring';
 import jobDeveloperRole from './job/developer-role';
 import jobOpenRoles from './job/open-roles';
 import jobInterviewProcess from './job/interview-process';
+import jobBenefits from './job/benefits';
 
 [
   jobListingCard, jobTechStackRole, jobRemoteBadge, jobCompanyCulture,
   jobSalaryHighlight, jobTeamPhoto, jobStartupHiring, jobDeveloperRole,
-  jobOpenRoles, jobInterviewProcess,
+  jobOpenRoles, jobInterviewProcess, jobBenefits,
 ].forEach(registerTemplate);
 
 // Tutorial
