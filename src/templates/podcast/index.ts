@@ -7,3 +7,4 @@ export { default as podcastMinimalPlayer } from './minimal-player';
 export { default as podcastVideoThumbnail } from './video-thumbnail';
 export { default as podcastAudiogram } from './audiogram';
 export { default as podcastShowNotes } from './show-notes';
+export { default as podcastTopEpisodes } from './top-episodes';
