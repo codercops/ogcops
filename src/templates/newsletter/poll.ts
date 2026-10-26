@@ -97,6 +97,8 @@ const template: TemplateDefinition = {
                 fontWeight: 600,
                 lineHeight: 1.25,
                 whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
                 color: textColor,
               },
               children: answer,

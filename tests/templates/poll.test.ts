@@ -82,15 +82,24 @@ describe('newsletter-poll', () => {
   });
 
   it('truncates long answers within a single-line pill', () => {
-    const longAnswer = 'I read the full newsletter on my laptop over breakfast every Friday';
-    const rendered = tree({ option1: longAnswer });
-    const answer = allElements(rendered).find((element) =>
-      element.type === 'span' && textContent(element).some((text) => text.startsWith('I read the full'))
+    const rendered = tree({
+      option1: 'MOSTLY ON MY PHONE DURING THE COMMUTE',
+      option2: 'ON A BIG MONITOR AT WORK EVERY MORNING',
+    });
+    const answers = allElements(rendered).filter((element) =>
+      element.type === 'span' && textContent(element).some((text) =>
+        text.startsWith('MOSTLY ON MY PHONE') || text.startsWith('ON A BIG MONITOR')
+      )
     );
 
-    expect(textContent(answer)[0]).toHaveLength(36);
-    expect(textContent(answer)[0]).toMatch(/…$/);
-    expect(answer?.props.style.whiteSpace).toBe('nowrap');
+    expect(answers).toHaveLength(2);
+    for (const answer of answers) {
+      expect(textContent(answer)[0]).toHaveLength(36);
+      expect(textContent(answer)[0]).toMatch(/…$/);
+      expect(answer.props.style.whiteSpace).toBe('nowrap');
+      expect(answer.props.style.overflow).toBe('hidden');
+      expect(answer.props.style.textOverflow).toBe('ellipsis');
+    }
   });
 
   it('hides an empty issue and newsletter name cleanly', () => {
