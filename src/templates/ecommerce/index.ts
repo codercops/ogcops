@@ -10,3 +10,4 @@ export { default as ecommerceCouponCode } from './coupon-code';
 export { default as ecommerceBundleDeal } from './bundle-deal';
 export { default as ecommerceOrderStatus } from './order-status';
 export { default as ecommerceGiftCard } from './gift-card';
+export { default as ecommerceBackInStock } from './back-in-stock';
