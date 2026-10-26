@@ -107,6 +107,9 @@ import saasFeatureSpotlight from './saas/feature-spotlight';
 import saasSocialProof from './saas/social-proof';
 import saasIntegration from './saas/integration';
 import saasUptimeStatus from './saas/uptime-status';
+import saasApiEndpoint from './saas/api-endpoint';
+import saasRoadmap from './saas/roadmap';
+import saasMaintenance from './saas/maintenance';
 
 [
   saasDashboardPreview, saasPricingHighlight, saasMetricShowcase, saasTestimonialBanner,
@@ -114,6 +117,9 @@ import saasUptimeStatus from './saas/uptime-status';
   saasFeatureSpotlight, saasSocialProof,
   saasIntegration,
   saasUptimeStatus,
+  saasApiEndpoint,
+  saasRoadmap,
+  saasMaintenance,
 ].forEach(registerTemplate);
 
 // GitHub
@@ -155,13 +161,14 @@ import eventVenueMap from './event/venue-map';
 import eventTicketCta from './event/ticket-cta';
 import eventMultiSpeaker from './event/multi-speaker';
 import eventAgenda from './event/agenda';
+import eventOfficeHours from './event/office-hours';
 import eventWinners from './event/winners';
 import eventCallForSpeakers from './event/call-for-speakers';
 
 [
   eventConference, eventMeetup, eventWebinar, eventWorkshop, eventHackathon,
   eventSpeakerSpotlight, eventCountdown, eventVenueMap, eventTicketCta, eventMultiSpeaker,
-  eventAgenda, eventWinners,
+  eventAgenda, eventOfficeHours, eventWinners,
   eventCallForSpeakers,
 ].forEach(registerTemplate);
 
@@ -176,10 +183,12 @@ import podcastVideoThumbnail from './podcast/video-thumbnail';
 import podcastAudiogram from './podcast/audiogram';
 import podcastShowNotes from './podcast/show-notes';
 import podcastListenOn from './podcast/listen-on';
+import podcastTopEpisodes from './podcast/top-episodes';
 
 [
   podcastEpisodeCard, podcastWaveform, podcastGuestSpotlight, podcastConversation, podcastSeriesBanner,
-  podcastMinimalPlayer, podcastVideoThumbnail, podcastAudiogram, podcastShowNotes, podcastListenOn,
+  podcastMinimalPlayer, podcastVideoThumbnail, podcastAudiogram, podcastShowNotes, podcastTopEpisodes,
+  podcastListenOn,
 ].forEach(registerTemplate);
 
 // Developer
@@ -194,11 +203,13 @@ import developerVscodeTheme from './developer/vscode-theme';
 import developerLinkTree from './developer/link-tree';
 import developerOpenToWork from './developer/open-to-work';
 import developerDayStreak from './developer/day-streak';
+import developerNow from './developer/now';
 
 [
   developerPortfolioCard, developerTechStack, developerTerminalBio, developerGradientProfile,
   developerSkillsRadar, developerGithubStyle, developerResumeHeader, developerVscodeTheme,
   developerLinkTree, developerOpenToWork, developerDayStreak,
+  developerNow,
 ].forEach(registerTemplate);
 
 // Newsletter
@@ -211,11 +222,13 @@ import newsletterMinimalNumber from './newsletter/minimal-number';
 import newsletterNewspaperFold from './newsletter/newspaper-fold';
 import newsletterSubscriberCount from './newsletter/subscriber-count';
 import newsletterSubscribeCard from './newsletter/subscribe-card';
+import newsletterSponsor from './newsletter/sponsor';
+import newsletterPoll from './newsletter/poll';
 
 [
   newsletterIssueCard, newsletterDigestBanner, newsletterPreviewText, newsletterEditorial,
   newsletterCuratedLinks, newsletterMinimalNumber, newsletterNewspaperFold, newsletterSubscriberCount,
-  newsletterSubscribeCard,
+  newsletterSubscribeCard, newsletterSponsor, newsletterPoll,
 ].forEach(registerTemplate);
 
 // Quote
@@ -228,10 +241,14 @@ import quoteBoldHighlight from './quote/bold-highlight';
 import quoteMinimalDash from './quote/minimal-dash';
 import quotePhotoBackground from './quote/photo-background';
 import quoteStickyNote from './quote/sticky-note';
+import quoteCodeComment from './quote/code-comment';
+import quoteSubtitle from './quote/subtitle';
+import quoteArticleExcerpt from './quote/article-excerpt';
 
 [
   quoteCenteredSerif, quoteGradientCard, quoteSpeechBubble, quoteTwitterStyle,
   quoteBookPage, quoteBoldHighlight, quoteMinimalDash, quotePhotoBackground, quoteStickyNote,
+  quoteCodeComment, quoteSubtitle, quoteArticleExcerpt,
 ].forEach(registerTemplate);
 
 // E-commerce
@@ -244,12 +261,16 @@ import ecommerceNewArrival from './ecommerce/new-arrival';
 import ecommerceComparisonGrid from './ecommerce/comparison-grid';
 import ecommerceBrandStory from './ecommerce/brand-story';
 import ecommerceCouponCode from './ecommerce/coupon-code';
+import ecommerceBundleDeal from './ecommerce/bundle-deal';
 import ecommerceOrderStatus from './ecommerce/order-status';
+import ecommerceGiftCard from './ecommerce/gift-card';
+import ecommerceBackInStock from './ecommerce/back-in-stock';
 
 [
   ecommerceProductCard, ecommerceSaleBanner, ecommerceCollection, ecommerceReviewHighlight,
   ecommercePriceDrop, ecommerceNewArrival, ecommerceComparisonGrid, ecommerceBrandStory,
-  ecommerceCouponCode, ecommerceOrderStatus,
+  ecommerceCouponCode, ecommerceOrderStatus, ecommerceBundleDeal, ecommerceGiftCard,
+  ecommerceBackInStock,
 ].forEach(registerTemplate);
 
 // Job
@@ -263,11 +284,13 @@ import jobStartupHiring from './job/startup-hiring';
 import jobDeveloperRole from './job/developer-role';
 import jobOpenRoles from './job/open-roles';
 import jobInterviewProcess from './job/interview-process';
+import jobBenefits from './job/benefits';
+import jobInternship from './job/internship';
 
 [
   jobListingCard, jobTechStackRole, jobRemoteBadge, jobCompanyCulture,
   jobSalaryHighlight, jobTeamPhoto, jobStartupHiring, jobDeveloperRole,
-  jobOpenRoles, jobInterviewProcess,
+  jobOpenRoles, jobInterviewProcess, jobBenefits, jobInternship,
 ].forEach(registerTemplate);
 
 // Tutorial
@@ -282,9 +305,10 @@ import tutorialCertification from './tutorial/certification';
 import tutorialQuizCard from './tutorial/quiz-card';
 import tutorialCheatSheet from './tutorial/cheat-sheet';
 import tutorialBeforeAfter from './tutorial/before-after';
+import tutorialGlossary from './tutorial/glossary';
 
 [
   tutorialCourseCard, tutorialStepByStep, tutorialVideoLesson, tutorialDifficultyBadge,
   tutorialPlatformBranded, tutorialCodeTutorial, tutorialWorkshopBanner, tutorialCertification,
-  tutorialQuizCard, tutorialCheatSheet, tutorialBeforeAfter,
+  tutorialQuizCard, tutorialCheatSheet, tutorialBeforeAfter, tutorialGlossary,
 ].forEach(registerTemplate);

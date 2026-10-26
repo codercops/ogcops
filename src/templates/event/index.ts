@@ -9,5 +9,6 @@ export { default as eventVenueMap } from './venue-map';
 export { default as eventTicketCta } from './ticket-cta';
 export { default as eventMultiSpeaker } from './multi-speaker';
 export { default as eventAgenda } from './agenda';
+export { default as eventOfficeHours } from './office-hours';
 export { default as eventWinners } from './winners';
 export { default as eventCallForSpeakers } from './call-for-speakers';

@@ -9,3 +9,4 @@ export { default as developerVscodeTheme } from './vscode-theme';
 export { default as developerLinkTree } from './link-tree';
 export { default as developerOpenToWork } from './open-to-work';
 export { default as developerDayStreak } from './day-streak';
+export { default as developerNow } from './now';
