@@ -281,15 +281,18 @@ const categoryCounts = getCategoryCounts();
 </Layout>
 
 <script is:inline>
-  // Terminal copy button
-  document.getElementById('api-copy-btn')?.addEventListener('click', function() {
-    const code = document.getElementById('api-code-content')?.textContent || '';
-    navigator.clipboard.writeText(code).then(() => {
-      this.textContent = 'Copied!';
-      window.showToast?.('Copied to clipboard!', 'success');
-      setTimeout(() => { this.textContent = 'Copy'; }, 2000);
+  // Terminal copy button. ClientRouter runs this script once, so set up on every page load.
+  function initTerminalCopy() {
+    document.getElementById('api-copy-btn')?.addEventListener('click', function() {
+      const code = document.getElementById('api-code-content')?.textContent || '';
+      navigator.clipboard.writeText(code).then(() => {
+        this.textContent = 'Copied!';
+        window.showToast?.('Copied to clipboard!', 'success');
+        setTimeout(() => { this.textContent = 'Copy'; }, 2000);
+      });
     });
-  });
+  }
+  document.addEventListener('astro:page-load', initTerminalCopy);
 </script>
 
 <style>

@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, commonFields } from '../utils';
+import { truncate, commonFields, arrowRightIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'newsletter-curated-links',
@@ -132,16 +132,7 @@ const template: TemplateDefinition = {
                       },
                     },
                     // Arrow
-                    {
-                      type: 'span',
-                      props: {
-                        style: {
-                          fontSize: '18px',
-                          color: accentColor,
-                        },
-                        children: '\u2192',
-                      },
-                    },
+                    arrowRightIcon(18, accentColor),
                     // Link text
                     {
                       type: 'span',

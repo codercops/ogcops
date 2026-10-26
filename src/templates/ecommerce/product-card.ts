@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, starIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'ecommerce-product-card',
@@ -46,16 +46,7 @@ const template: TemplateDefinition = {
       { maxLen: 80, size: 24 },
     ]);
 
-    const stars = Array.from({ length: 5 }, (_, i) => ({
-      type: 'span',
-      props: {
-        style: {
-          fontSize: '24px',
-          color: i < rating ? '#F5C518' : '#333333',
-        },
-        children: '\u2605',
-      },
-    }));
+    const stars = Array.from({ length: 5 }, (_, i) => starIcon(24, i < rating ? '#F5C518' : '#333333'));
 
     return {
       type: 'div',

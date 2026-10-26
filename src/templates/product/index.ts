@@ -8,3 +8,4 @@ export { default as productFeatureGrid } from './feature-grid';
 export { default as productAnnouncement } from './announcement';
 export { default as productMinimalBadge } from './minimal-badge';
 export { default as productDarkPremium } from './dark-premium';
+export { default as productShortcutTip } from './shortcut-tip';

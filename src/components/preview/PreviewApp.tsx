@@ -1,12 +1,28 @@
-import { usePreviewState } from './usePreviewState';
+import { useEffect, useRef } from 'react';
+import { usePreviewState, parsePreviewQueryParams, isValidPreviewUrl } from './usePreviewState';
 import { URLInput } from './URLInput';
 import { PlatformGrid } from './PlatformGrid';
 import { MetaTagReport } from './MetaTagReport';
 import { FixItButton } from './FixItButton';
 import { AIAnalyzer } from './AIAnalyzer';
 
+export { parsePreviewQueryParams, isValidPreviewUrl };
+
 export function PreviewApp() {
   const { url, setUrl, loading, error, data, checkUrl } = usePreviewState();
+  const checkedInitialUrl = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (checkedInitialUrl.current) return;
+    checkedInitialUrl.current = true;
+
+    const initialUrl = parsePreviewQueryParams(window.location.search);
+    if (initialUrl) {
+      setUrl(initialUrl);
+      checkUrl(initialUrl);
+    }
+  }, [checkUrl, setUrl]);
 
   return (
     <div className="preview-app">
@@ -23,7 +39,7 @@ export function PreviewApp() {
       />
 
       {error && (
-        <div className="preview-error">
+        <div className="preview-error" role="alert">
           <span>{error}</span>
         </div>
       )}

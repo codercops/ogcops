@@ -71,18 +71,18 @@ const template: TemplateDefinition = {
                 background: accentColor,
               },
               children: {
-                type: 'div',
+                type: 'svg',
                 props: {
+                  width: 36,
+                  height: 44,
+                  viewBox: '0 0 36 44',
                   style: {
-                    display: 'flex',
-                    width: 0,
-                    height: 0,
-                    borderTop: '22px solid transparent',
-                    borderBottom: '22px solid transparent',
-                    borderLeft: '36px solid #FFFFFF',
                     marginLeft: '8px',
                   },
-                  children: '',
+                  children: {
+                    type: "path",
+                    props: { d: 'M0 0L36 22L0 44Z', fill: '#FFFFFF' },
+                  },
                 },
               },
             },

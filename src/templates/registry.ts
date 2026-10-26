@@ -55,6 +55,7 @@ import blogDuotone from './blog/duotone';
 import blogGeometric from './blog/geometric';
 import blogRetroTerminal from './blog/retro-terminal';
 import blogSeriesPart from './blog/series-part';
+import blogSummaryCard from './blog/summary-card';
 
 [
   blogMinimalDark,
@@ -70,6 +71,7 @@ import blogSeriesPart from './blog/series-part';
   blogGeometric,
   blogRetroTerminal,
   blogSeriesPart,
+  blogSummaryCard,
 ].forEach(registerTemplate);
 
 // Product
@@ -83,11 +85,13 @@ import productFeatureGrid from './product/feature-grid';
 import productAnnouncement from './product/announcement';
 import productMinimalBadge from './product/minimal-badge';
 import productDarkPremium from './product/dark-premium';
+import productShortcutTip from './product/shortcut-tip';
 
 [
   productCenteredHero, productSplitScreen, productGradientWave, productNeonGlow,
   productGlassmorphism, productAppShowcase, productFeatureGrid, productAnnouncement,
   productMinimalBadge, productDarkPremium,
+  productShortcutTip,
 ].forEach(registerTemplate);
 
 // SaaS
@@ -101,11 +105,15 @@ import saasCleanCorporate from './saas/clean-corporate';
 import saasStartupBold from './saas/startup-bold';
 import saasFeatureSpotlight from './saas/feature-spotlight';
 import saasSocialProof from './saas/social-proof';
+import saasIntegration from './saas/integration';
+import saasUptimeStatus from './saas/uptime-status';
 
 [
   saasDashboardPreview, saasPricingHighlight, saasMetricShowcase, saasTestimonialBanner,
   saasComparison, saasGradientMesh, saasCleanCorporate, saasStartupBold,
   saasFeatureSpotlight, saasSocialProof,
+  saasIntegration,
+  saasUptimeStatus,
 ].forEach(registerTemplate);
 
 // GitHub
@@ -119,11 +127,16 @@ import githubTerminalStyle from './github/terminal-style';
 import githubCodeWindow from './github/code-window';
 import githubMinimalBadge from './github/minimal-badge';
 import githubMatrix from './github/matrix';
+import githubContributorsWall from './github/contributors-wall';
+import githubIssueCard from './github/issue-card';
+import githubPullRequest from './github/pull-request';
 
 [
   githubRepoCard, githubContributionGraph, githubReadmeHero, githubReleaseNotes,
   githubLanguageBars, githubStarsBanner, githubTerminalStyle, githubCodeWindow,
-  githubMinimalBadge, githubMatrix,
+  githubMinimalBadge, githubMatrix, githubContributorsWall,
+  githubIssueCard,
+  githubPullRequest,
 ].forEach(registerTemplate);
 
 // Event
@@ -137,16 +150,19 @@ import eventCountdown from './event/countdown';
 import eventVenueMap from './event/venue-map';
 import eventTicketCta from './event/ticket-cta';
 import eventMultiSpeaker from './event/multi-speaker';
+import eventAgenda from './event/agenda';
 
 [
   eventConference, eventMeetup, eventWebinar, eventWorkshop, eventHackathon,
   eventSpeakerSpotlight, eventCountdown, eventVenueMap, eventTicketCta, eventMultiSpeaker,
+  eventAgenda,
 ].forEach(registerTemplate);
 
 // Podcast
 import podcastEpisodeCard from './podcast/episode-card';
 import podcastWaveform from './podcast/waveform';
 import podcastGuestSpotlight from './podcast/guest-spotlight';
+import podcastConversation from './podcast/conversation';
 import podcastSeriesBanner from './podcast/series-banner';
 import podcastMinimalPlayer from './podcast/minimal-player';
 import podcastVideoThumbnail from './podcast/video-thumbnail';
@@ -154,7 +170,7 @@ import podcastAudiogram from './podcast/audiogram';
 import podcastShowNotes from './podcast/show-notes';
 
 [
-  podcastEpisodeCard, podcastWaveform, podcastGuestSpotlight, podcastSeriesBanner,
+  podcastEpisodeCard, podcastWaveform, podcastGuestSpotlight, podcastConversation, podcastSeriesBanner,
   podcastMinimalPlayer, podcastVideoThumbnail, podcastAudiogram, podcastShowNotes,
 ].forEach(registerTemplate);
 
@@ -168,11 +184,12 @@ import developerGithubStyle from './developer/github-style';
 import developerResumeHeader from './developer/resume-header';
 import developerVscodeTheme from './developer/vscode-theme';
 import developerLinkTree from './developer/link-tree';
+import developerOpenToWork from './developer/open-to-work';
 
 [
   developerPortfolioCard, developerTechStack, developerTerminalBio, developerGradientProfile,
   developerSkillsRadar, developerGithubStyle, developerResumeHeader, developerVscodeTheme,
-  developerLinkTree,
+  developerLinkTree, developerOpenToWork,
 ].forEach(registerTemplate);
 
 // Newsletter
@@ -184,10 +201,12 @@ import newsletterCuratedLinks from './newsletter/curated-links';
 import newsletterMinimalNumber from './newsletter/minimal-number';
 import newsletterNewspaperFold from './newsletter/newspaper-fold';
 import newsletterSubscriberCount from './newsletter/subscriber-count';
+import newsletterSubscribeCard from './newsletter/subscribe-card';
 
 [
   newsletterIssueCard, newsletterDigestBanner, newsletterPreviewText, newsletterEditorial,
   newsletterCuratedLinks, newsletterMinimalNumber, newsletterNewspaperFold, newsletterSubscriberCount,
+  newsletterSubscribeCard,
 ].forEach(registerTemplate);
 
 // Quote
@@ -199,10 +218,11 @@ import quoteBookPage from './quote/book-page';
 import quoteBoldHighlight from './quote/bold-highlight';
 import quoteMinimalDash from './quote/minimal-dash';
 import quotePhotoBackground from './quote/photo-background';
+import quoteStickyNote from './quote/sticky-note';
 
 [
   quoteCenteredSerif, quoteGradientCard, quoteSpeechBubble, quoteTwitterStyle,
-  quoteBookPage, quoteBoldHighlight, quoteMinimalDash, quotePhotoBackground,
+  quoteBookPage, quoteBoldHighlight, quoteMinimalDash, quotePhotoBackground, quoteStickyNote,
 ].forEach(registerTemplate);
 
 // E-commerce
@@ -214,10 +234,12 @@ import ecommercePriceDrop from './ecommerce/price-drop';
 import ecommerceNewArrival from './ecommerce/new-arrival';
 import ecommerceComparisonGrid from './ecommerce/comparison-grid';
 import ecommerceBrandStory from './ecommerce/brand-story';
+import ecommerceCouponCode from './ecommerce/coupon-code';
 
 [
   ecommerceProductCard, ecommerceSaleBanner, ecommerceCollection, ecommerceReviewHighlight,
   ecommercePriceDrop, ecommerceNewArrival, ecommerceComparisonGrid, ecommerceBrandStory,
+  ecommerceCouponCode,
 ].forEach(registerTemplate);
 
 // Job
@@ -229,10 +251,12 @@ import jobSalaryHighlight from './job/salary-highlight';
 import jobTeamPhoto from './job/team-photo';
 import jobStartupHiring from './job/startup-hiring';
 import jobDeveloperRole from './job/developer-role';
+import jobOpenRoles from './job/open-roles';
 
 [
   jobListingCard, jobTechStackRole, jobRemoteBadge, jobCompanyCulture,
   jobSalaryHighlight, jobTeamPhoto, jobStartupHiring, jobDeveloperRole,
+  jobOpenRoles,
 ].forEach(registerTemplate);
 
 // Tutorial
@@ -244,8 +268,10 @@ import tutorialPlatformBranded from './tutorial/platform-branded';
 import tutorialCodeTutorial from './tutorial/code-tutorial';
 import tutorialWorkshopBanner from './tutorial/workshop-banner';
 import tutorialCertification from './tutorial/certification';
+import tutorialQuizCard from './tutorial/quiz-card';
 
 [
   tutorialCourseCard, tutorialStepByStep, tutorialVideoLesson, tutorialDifficultyBadge,
   tutorialPlatformBranded, tutorialCodeTutorial, tutorialWorkshopBanner, tutorialCertification,
+  tutorialQuizCard,
 ].forEach(registerTemplate);

@@ -1,6 +1,213 @@
 import type { TemplateDefinition } from './types';
 
 /**
+ * Create a Satori-compatible inline star icon without relying on font glyphs.
+ */
+export function starIcon(size: number, color: string) {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      children: {
+        type: 'path',
+        props: {
+          d: 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z',
+          fill: color,
+        },
+      },
+    },
+  };
+}
+
+/**
+ * Create a Satori-compatible inline right arrow icon.
+ */
+export function arrowRightIcon(size: number, color: string) {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      fill: 'none',
+      stroke: color,
+      strokeWidth: '2.5',
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round',
+      children: {
+        type: 'path',
+        props: {
+          d: 'M5 12h14M12 5l7 7-7 7',
+        },
+      },
+    },
+  };
+}
+
+/**
+ * Create a Satori-compatible inline single musical note icon (♪).
+ */
+export function musicNoteIcon(size: number, color: string) {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      children: {
+        type: 'path',
+        props: {
+          d: 'M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z',
+          fill: color,
+        },
+      },
+    },
+  };
+}
+
+/**
+ * Create a Satori-compatible inline beamed musical notes icon (♫).
+ */
+export function musicNotesIcon(size: number, color: string) {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      children: {
+        type: 'path',
+        props: {
+          d: 'M9 3l10-2v13.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V6.73L9 8.73V17.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V3z',
+          fill: color,
+        },
+      },
+    },
+  };
+}
+
+/**
+ * Create a Satori-compatible inline play triangle icon (▶).
+ */
+export function playIcon(size: number, color: string, style?: Record<string, any>) {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      style: {
+        ...(style || {}),
+      },
+      children: {
+        type: 'path',
+        props: {
+          d: 'M8 5v14l11-7z',
+          fill: color,
+        },
+      },
+    },
+  };
+}
+
+/**
+ * Create a Satori-compatible inline lightning bolt icon (⚡).
+ */
+export function boltIcon(size: number, color: string) {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      children: {
+        type: 'path',
+        props: {
+          d: 'M13 2L3 14h9l-1 8 10-12h-9l1-8z',
+          fill: color,
+        },
+      },
+    },
+  };
+}
+
+/**
+ * Create a Satori-compatible inline hexagon icon (⬡).
+ */
+export function hexagonIcon(size: number, color: string) {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      fill: 'none',
+      stroke: color,
+      strokeWidth: '2',
+      strokeLinejoin: 'round',
+      children: {
+        type: 'path',
+        props: {
+          d: 'M12 2l9 5v10l-9 5-9-5V7l9-5z',
+        },
+      },
+    },
+  };
+}
+
+/**
+ * Create a Satori-compatible inline git fork icon (⑂).
+ */
+export function forkIcon(size: number, color: string) {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      fill: 'none',
+      stroke: color,
+      strokeWidth: '2',
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round',
+      children: [
+        { type: 'circle', props: { cx: 12, cy: 18, r: 3 } },
+        { type: 'circle', props: { cx: 6, cy: 6, r: 3 } },
+        { type: 'circle', props: { cx: 18, cy: 6, r: 3 } },
+        { type: 'path', props: { d: 'M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9' } },
+        { type: 'path', props: { d: 'M12 12v3' } },
+      ],
+    },
+  };
+}
+
+/**
+ * Create a Satori-compatible inline alembic/flask icon (⚗).
+ */
+export function flaskIcon(size: number, color: string) {
+  return {
+    type: 'svg',
+    props: {
+      width: size,
+      height: size,
+      viewBox: '0 0 24 24',
+      fill: 'none',
+      stroke: color,
+      strokeWidth: '2',
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round',
+      children: [
+        { type: 'path', props: { d: 'M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2' } },
+        { type: 'path', props: { d: 'M8.5 2h7' } },
+        { type: 'path', props: { d: 'M7 16h10' } },
+      ],
+    },
+  };
+}
+
+/**
  * Truncate text to a max length with ellipsis.
  */
 export function truncate(text: string, maxLength: number): string {

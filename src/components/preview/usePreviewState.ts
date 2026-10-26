@@ -10,6 +10,63 @@ export interface PreviewData {
   platforms: PlatformPreview[];
 }
 
+export function isValidPreviewUrl(rawUrl: string): boolean {
+  if (!rawUrl || typeof rawUrl !== 'string') return false;
+  const trimmed = rawUrl.trim();
+  if (!trimmed) return false;
+
+  // Disallow non-http/https protocols like javascript:, data:, file:, mailto:, ftp:
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed)) {
+    if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+      return false;
+    }
+  }
+
+  const normalized =
+    trimmed.startsWith('http://') || trimmed.startsWith('https://')
+      ? trimmed
+      : `https://${trimmed}`;
+
+  try {
+    const parsed = new URL(normalized);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return false;
+    }
+
+    const host = parsed.hostname;
+    if (!host || host.includes(' ') || host.includes('..')) {
+      return false;
+    }
+
+    if (host !== 'localhost' && !host.includes('.')) {
+      return false;
+    }
+
+    if (host.startsWith('.') || host.endsWith('.')) {
+      return false;
+    }
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function parsePreviewQueryParams(search: string | URLSearchParams): string | null {
+  try {
+    const searchParams = typeof search === 'string' ? new URLSearchParams(search) : search;
+    const url = searchParams.get('url');
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (!trimmed || !isValidPreviewUrl(trimmed)) {
+      return null;
+    }
+    return trimmed;
+  } catch {
+    return null;
+  }
+}
+
 export function usePreviewState() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,12 +90,18 @@ export function usePreviewState() {
       const json = await res.json();
 
       if (!res.ok) {
+        setData(null);
         setError(json.error || 'Failed to check URL');
         return;
       }
 
       setData(json);
+
+      if (typeof window !== 'undefined' && window.history?.replaceState) {
+        window.history.replaceState(window.history.state, '', `/preview?url=${encodeURIComponent(normalizedUrl)}`);
+      }
     } catch (err) {
+      setData(null);
       setError(err instanceof Error ? err.message : 'Network error');
     } finally {
       setLoading(false);

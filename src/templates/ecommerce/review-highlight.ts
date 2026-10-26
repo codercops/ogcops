@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, starIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'ecommerce-review-highlight',
@@ -43,16 +43,7 @@ const template: TemplateDefinition = {
       { maxLen: 220, size: 22 },
     ]);
 
-    const stars = Array.from({ length: 5 }, (_, i) => ({
-      type: 'span',
-      props: {
-        style: {
-          fontSize: '32px',
-          color: i < rating ? '#F5C518' : '#333333',
-        },
-        children: '\u2605',
-      },
-    }));
+    const stars = Array.from({ length: 5 }, (_, i) => starIcon(32, i < rating ? '#F5C518' : '#333333'));
 
     return {
       type: 'div',

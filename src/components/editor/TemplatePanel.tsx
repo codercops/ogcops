@@ -47,6 +47,7 @@ export function TemplatePanel({
           type="search"
           className="template-search"
           placeholder="Search templates..."
+          aria-label="Search templates"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
         />
@@ -57,6 +58,7 @@ export function TemplatePanel({
           type="button"
           className={`template-cat-pill ${category === 'all' ? 'active' : ''}`}
           onClick={() => onCategoryChange('all')}
+          aria-pressed={category === 'all'}
         >
           All
         </button>
@@ -66,8 +68,9 @@ export function TemplatePanel({
             type="button"
             className={`template-cat-pill ${category === cat ? 'active' : ''}`}
             onClick={() => onCategoryChange(cat)}
+            aria-pressed={category === cat}
           >
-            {CATEGORY_META[cat].icon} {CATEGORY_META[cat].label}
+            <span aria-hidden="true">{CATEGORY_META[cat].icon}</span> {CATEGORY_META[cat].label}
           </button>
         ))}
       </div>

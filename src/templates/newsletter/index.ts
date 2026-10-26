@@ -6,3 +6,4 @@ export { default as newsletterCuratedLinks } from './curated-links';
 export { default as newsletterMinimalNumber } from './minimal-number';
 export { default as newsletterNewspaperFold } from './newspaper-fold';
 export { default as newsletterSubscriberCount } from './subscriber-count';
+export { default as newsletterSubscribeCard } from './subscribe-card';

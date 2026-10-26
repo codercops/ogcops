@@ -6,3 +6,4 @@ export { default as tutorialPlatformBranded } from './platform-branded';
 export { default as tutorialCodeTutorial } from './code-tutorial';
 export { default as tutorialWorkshopBanner } from './workshop-banner';
 export { default as tutorialCertification } from './certification';
+export { default as tutorialQuizCard } from './quiz-card';

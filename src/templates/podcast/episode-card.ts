@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, musicNoteIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'podcast-episode-card',
@@ -83,13 +83,7 @@ const template: TemplateDefinition = {
                       borderRadius: '12px',
                       background: accentColor,
                     },
-                    children: {
-                      type: 'span',
-                      props: {
-                        style: { fontSize: '22px', color: '#FFFFFF' },
-                        children: '\u266A',
-                      },
-                    },
+                    children: musicNoteIcon(22, '#FFFFFF'),
                   },
                 },
                 ...(showName

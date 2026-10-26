@@ -30,7 +30,7 @@ OGCOPS is different:
 - **Free REST API**: Generate OG images via URL. CORS-enabled. No API key required.
 - **Social Preview Checker**: Paste any URL to analyze its meta tags and see platform previews
 - **Client-side Rendering**: Satori runs in the browser for instant preview during editing. Zero server calls while editing.
-- **URL-based State**: All editor state is encoded in URL params — share or bookmark any configuration
+- **Prefill from the URL**: Links like `/create?template=quote-centered-serif&quote=Hello` open the editor with that template and text filled in
 
 ## Quick Start
 

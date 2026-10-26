@@ -10,6 +10,7 @@ export function TemplateThumbnail({ id, name, isActive, onClick }: TemplateThumb
     <button
       type="button"
       className={`template-thumb ${isActive ? 'active' : ''}`}
+      aria-pressed={isActive}
       onClick={onClick}
       title={name}
     >

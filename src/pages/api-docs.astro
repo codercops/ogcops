@@ -114,14 +114,14 @@ import '@/styles/api-docs.css';
               <code class="param-name">width</code>
               <span class="param-type">number</span>
             </div>
-            <p class="param-desc">Image width, 200–2400 (default: 1200)</p>
+            <p class="param-desc">Image width in pixels, 200–2400 (default: 1200). Templates always render at 1200×630 and scale to fit. If <code>height</code> is omitted, it is derived automatically to preserve the 1200:630 aspect ratio.</p>
           </div>
           <div class="param-item">
             <div class="param-head">
               <code class="param-name">height</code>
               <span class="param-type">number</span>
             </div>
-            <p class="param-desc">Image height, 200–2400 (default: 630)</p>
+            <p class="param-desc">Image height in pixels, 105–1260 (default: 630). If <code>width</code> is omitted, it is derived automatically to preserve the 1200:630 aspect ratio. If both dimensions are provided, their aspect ratio must match 1200:630 (returns 400 Bad Request otherwise).</p>
           </div>
         </div>
 
@@ -497,20 +497,29 @@ const { content } = await res.json();`}</code></pre>
 </Layout>
 
 <script is:inline>
-  document.querySelectorAll('[data-copy]').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var codeBlock = this.closest('.code-block');
-      var code = codeBlock ? (codeBlock.querySelector('code')?.textContent || '') : '';
-      navigator.clipboard.writeText(code).then(function() {
-        btn.textContent = 'Copied!';
-        if (window.showToast) window.showToast('Copied to clipboard!', 'success');
-        setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+  // ClientRouter runs this script once. The buttons and the sidebar are new elements
+  // after every navigation, so they are set up on every page load, and the one scroll
+  // listener uses the sidebar and sections of the page that is showing.
+  var sidebarLinks = [];
+  var sections = [];
+
+  function initApiDocs() {
+    document.querySelectorAll('[data-copy]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var codeBlock = this.closest('.code-block');
+        var code = codeBlock ? (codeBlock.querySelector('code')?.textContent || '') : '';
+        navigator.clipboard.writeText(code).then(function() {
+          btn.textContent = 'Copied!';
+          if (window.showToast) window.showToast('Copied to clipboard!', 'success');
+          setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+        });
       });
     });
-  });
 
-  var sidebarLinks = document.querySelectorAll('.api-sidebar-link');
-  var sections = document.querySelectorAll('.endpoint-card[id]');
+    sidebarLinks = document.querySelectorAll('.api-sidebar-link');
+    sections = document.querySelectorAll('.endpoint-card[id]');
+    updateSidebar();
+  }
 
   function updateSidebar() {
     var current = '';
@@ -528,5 +537,5 @@ const { content } = await res.json();`}</code></pre>
   }
 
   window.addEventListener('scroll', updateSidebar, { passive: true });
-  updateSidebar();
+  document.addEventListener('astro:page-load', initApiDocs);
 </script>

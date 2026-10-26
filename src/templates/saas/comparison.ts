@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, arrowRightIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'saas-comparison',
@@ -229,13 +229,7 @@ const template: TemplateDefinition = {
                           background: `${accentColor}22`,
                           border: `1px solid ${accentColor}44`,
                         },
-                        children: {
-                          type: 'span',
-                          props: {
-                            style: { fontSize: '18px', color: accentColor, fontWeight: 700 },
-                            children: '\u2192',
-                          },
-                        },
+                        children: arrowRightIcon(18, accentColor),
                       },
                     },
                   },

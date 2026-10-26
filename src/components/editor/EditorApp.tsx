@@ -49,6 +49,70 @@ function AISettingsWrapper() {
   return <AISettingsModal open={settingsOpen} onClose={closeSettings} />;
 }
 
+export interface ParsedEditorQueryParams {
+  template: TemplateDefinition | null;
+  params: Record<string, any>;
+  autofillUrl: string | null;
+}
+
+export function parseEditorQueryParams(
+  search: string | URLSearchParams,
+  defaultTemplate: TemplateDefinition
+): ParsedEditorQueryParams {
+  const searchParams = typeof search === 'string' ? new URLSearchParams(search) : search;
+  const templateId = searchParams.get('template');
+  let targetTemplate = defaultTemplate;
+  let templateToApply: TemplateDefinition | null = null;
+
+  if (templateId) {
+    const found = getTemplate(templateId);
+    if (found) {
+      targetTemplate = found;
+      templateToApply = found;
+    }
+  }
+
+  const fieldMap = new Map(targetTemplate.fields.map((f) => [f.key, f]));
+  const params: Record<string, any> = {};
+
+  searchParams.forEach((value, key) => {
+    if (key === 'template' || key === 'autofill') return;
+    if (fieldMap.has(key)) {
+      const field = fieldMap.get(key)!;
+      if (field.type === 'toggle') {
+        params[key] = value === 'true' || value === '1';
+      } else if (field.type === 'number') {
+        const num = Number(value);
+        if (Number.isFinite(num)) {
+          params[key] = num;
+        }
+      } else {
+        params[key] = value;
+      }
+    } else if (key in targetTemplate.defaults) {
+      const defaultVal = targetTemplate.defaults[key];
+      if (typeof defaultVal === 'boolean') {
+        params[key] = value === 'true' || value === '1';
+      } else if (typeof defaultVal === 'number') {
+        const num = Number(value);
+        if (Number.isFinite(num)) {
+          params[key] = num;
+        }
+      } else {
+        params[key] = value;
+      }
+    }
+  });
+
+  const autofillUrl = searchParams.get('autofill');
+
+  return {
+    template: templateToApply,
+    params,
+    autofillUrl,
+  };
+}
+
 function EditorAppInner({ initialCategory }: EditorAppProps) {
   // Import templates directly — functions can't cross the Astro→React serialization boundary
   const templates = useMemo(() => getAllTemplates(), []);
@@ -68,6 +132,7 @@ function EditorAppInner({ initialCategory }: EditorAppProps) {
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth <= 768 : false
   );
+  const [autofillUrl, setAutofillUrl] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)');
@@ -102,6 +167,23 @@ function EditorAppInner({ initialCategory }: EditorAppProps) {
       setCategory(initialCategory);
     }
   }, [initialCategory, setCategory]);
+
+  // Parse query parameters after mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const parsed = parseEditorQueryParams(window.location.search, defaultTemplate);
+    if (parsed.template) {
+      setTemplate(parsed.template);
+      setCategory(parsed.template.category);
+    }
+    if (Object.keys(parsed.params).length > 0) {
+      setParams(parsed.params);
+    }
+    if (parsed.autofillUrl) {
+      setAutofillUrl(parsed.autofillUrl);
+    }
+  }, [defaultTemplate, setTemplate, setCategory, setParams]);
 
   const handleTemplateSelect = useCallback(
     (template: TemplateDefinition) => {
@@ -212,7 +294,7 @@ function EditorAppInner({ initialCategory }: EditorAppProps) {
               onParamChange={setParam}
               onReset={handleReset}
               category={currentTemplate.category}
-              autofill={<AIAutofill onAutofill={handleAutofill} />}
+              autofill={<AIAutofill onAutofill={handleAutofill} initialUrl={autofillUrl} />}
             />
             </>
           )}

@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, boltIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'saas-feature-spotlight',
@@ -10,7 +10,7 @@ const template: TemplateDefinition = {
   fields: [
     commonFields.title,
     commonFields.description,
-    { key: 'featureIcon', label: 'Icon Symbol', type: 'text', defaultValue: '\u26A1', placeholder: 'Emoji or symbol', group: 'Content' },
+    { key: 'featureIcon', label: 'Icon Symbol', type: 'text', defaultValue: '\u26A1', placeholder: 'Symbol or text', group: 'Content' },
     { key: 'featureLabel', label: 'Feature Label', type: 'text', defaultValue: 'NEW FEATURE', placeholder: 'Label above title', group: 'Content' },
     commonFields.siteName,
     commonFields.bgColor,
@@ -96,13 +96,15 @@ const template: TemplateDefinition = {
                     background: `linear-gradient(135deg, ${accentColor}25 0%, ${accentColor}08 100%)`,
                     border: `1px solid ${accentColor}33`,
                   },
-                  children: {
-                    type: 'span',
-                    props: {
-                      style: { fontSize: '72px' },
-                      children: featureIcon,
-                    },
-                  },
+                  children: featureIcon === '\u26A1'
+                    ? boltIcon(72, accentColor)
+                    : {
+                        type: 'span',
+                        props: {
+                          style: { fontSize: '72px' },
+                          children: featureIcon,
+                        },
+                      },
                 },
               },
             },

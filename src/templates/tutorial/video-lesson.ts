@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields } from '../utils';
+import { truncate, autoFontSize, commonFields, playIcon } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'tutorial-video-lesson',
@@ -92,17 +92,7 @@ const template: TemplateDefinition = {
                             borderRadius: '50%',
                             backgroundColor: accentColor,
                           },
-                          children: {
-                            type: 'span',
-                            props: {
-                              style: {
-                                fontSize: '32px',
-                                color: '#FFFFFF',
-                                marginLeft: '4px',
-                              },
-                              children: '\u25B6',
-                            },
-                          },
+                          children: playIcon(32, '#FFFFFF', { marginLeft: '4px' }),
                         },
                       },
                     ],

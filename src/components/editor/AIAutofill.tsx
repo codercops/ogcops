@@ -1,20 +1,28 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useAI } from './AIContext';
 import { getApiKey, getSelectedProvider, getSelectedModel } from '@/lib/ai/storage';
 import { getDefaultModel } from '@/lib/ai/providers';
 
 interface AIAutofillProps {
   onAutofill: (result: { templateId: string; fields: Record<string, string>; colors?: Record<string, string> }) => void;
+  initialUrl?: string;
 }
 
 type Step = 'idle' | 'fetching' | 'analyzing' | 'generating' | 'done' | 'error';
 
-export function AIAutofill({ onAutofill }: AIAutofillProps) {
+export function AIAutofill({ onAutofill, initialUrl }: AIAutofillProps) {
   const { isConfigured, openSettings } = useAI();
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState(initialUrl || '');
   const [step, setStep] = useState<Step>('idle');
   const [error, setError] = useState<string | null>(null);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(Boolean(initialUrl));
+
+  useEffect(() => {
+    if (initialUrl) {
+      setUrl(initialUrl);
+      setExpanded(true);
+    }
+  }, [initialUrl]);
 
   const handleAutofill = useCallback(async () => {
     if (!url.trim()) return;
