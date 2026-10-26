@@ -38,7 +38,7 @@ function luminance(hex: string) {
 function serverParams(query: URLSearchParams) {
   const parsed = parseSearchParams(query, ogQuerySchema);
   if (!parsed.success) throw new Error(parsed.error);
-  return mergeOgParams(parsed.data, apiEndpoint.defaults, query);
+  return mergeOgParams(parsed.data, apiEndpoint.defaults, query, apiEndpoint.fields);
 }
 
 function downloadParams(params: Record<string, string | number | boolean>) {
@@ -174,16 +174,16 @@ describe('saas-api-endpoint', () => {
       expect(apiEndpoint.render(download.params)).toEqual(apiEndpoint.render(state.params));
     });
 
-    it('preserves supplied status text and the existing cleared-status fallback', () => {
+    it('preserves supplied status text and keeps a cleared status empty, like the preview', () => {
       const supplied = downloadParams({ ...apiEndpoint.defaults, responseStatus: '201 Created' });
       expect(supplied.params.responseStatus).toBe('201 Created');
       expect(apiEndpoint.render(supplied.params)).toEqual(tree({ responseStatus: '201 Created' }));
 
       const cleared = downloadParams({ ...apiEndpoint.defaults, responseStatus: '' });
-      expect(cleared.query.has('responseStatus')).toBe(false);
-      expect(cleared.params.responseStatus).toBe('200 OK');
-      // Existing templates restore omitted status defaults on download too.
-      expect(apiEndpoint.render(cleared.params)).toEqual(tree());
+      expect(cleared.query.get('responseStatus')).toBe('');
+      expect(cleared.params.responseStatus).toBe('');
+      // A status cleared in the editor stays empty in the download, the same as in the preview.
+      expect(apiEndpoint.render(cleared.params)).toEqual(tree({ responseStatus: '' }));
     });
   });
 });
