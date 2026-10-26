@@ -12,3 +12,4 @@ export { default as saasIntegration } from './integration';
 export { default as saasUptimeStatus } from './uptime-status';
 export { default as saasApiEndpoint } from './api-endpoint';
 export { default as saasRoadmap } from './roadmap';
+export { default as saasMaintenance } from './maintenance';
