@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { autoFontSize, commonFields, contrastText, truncate } from '../utils';
+import { autoFontSize, commonFields, contrastText, isLightColor, mixColors, truncate } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'podcast-listen-on',
@@ -39,6 +39,7 @@ const template: TemplateDefinition = {
     const bgColor = String(params.bgColor || '#0d1117');
     const accentColor = String(params.accentColor || '#E07A5F');
     const textColor = String(params.textColor || '#FFFFFF');
+    const accentTextColor = isLightColor(bgColor) ? mixColors(accentColor, '#000000', 0.45) : accentColor;
     const platformTextColor = contrastText(accentColor);
     const platforms = ['platform1', 'platform2', 'platform3']
       .map((key) => String(params[key] ?? '').trim())
@@ -88,7 +89,7 @@ const template: TemplateDefinition = {
                   ? [{
                       type: 'span',
                       props: {
-                        style: { fontSize: '20px', fontWeight: 600, color: accentColor },
+                        style: { fontSize: '20px', fontWeight: 600, color: accentTextColor },
                         children: '·',
                       },
                     }]
@@ -149,7 +150,7 @@ const template: TemplateDefinition = {
                             style: {
                               fontSize: '20px',
                               fontWeight: 700,
-                              color: accentColor,
+                              color: accentTextColor,
                               flexShrink: 0,
                             },
                             children: truncate(tagline, 32),

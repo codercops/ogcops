@@ -36,6 +36,22 @@ function findPillWithText(node: unknown, text: string): TestNode | undefined {
   return undefined;
 }
 
+function findTextWithColor(node: unknown, text: string): TestNode | undefined {
+  if (node === null || typeof node !== 'object') return undefined;
+
+  const candidate = node as TestNode;
+  if (candidate.props?.children === text && candidate.props.style?.color) return candidate;
+
+  const children = candidate.props?.children;
+  const nested = Array.isArray(children) ? children : [children];
+  for (const child of nested) {
+    const found = findTextWithColor(child, text);
+    if (found) return found;
+  }
+
+  return undefined;
+}
+
 describe('podcast-listen-on', () => {
   it('hides whitespace-only optional fields and empty platforms', () => {
     const element = template.render({
@@ -78,5 +94,20 @@ describe('podcast-listen-on', () => {
     const pill = findPillWithText(element, 'Spotify');
 
     expect(pill?.props?.style?.color).toBe(expectedTextColor);
+  });
+
+  it('darkens accent text on light backgrounds without changing pill contrast', () => {
+    const element = template.render({
+      ...template.defaults,
+      bgColor: '#ffffff',
+      accentColor: '#fde047',
+    });
+    const tagline = findTextWithColor(element, 'Out now');
+    const separator = findTextWithColor(element, '·');
+    const pill = findPillWithText(element, 'Spotify');
+
+    expect(tagline?.props?.style?.color).toBe('#8b7b27');
+    expect(separator?.props?.style?.color).toBe('#8b7b27');
+    expect(pill?.props?.style?.color).toBe('#000000');
   });
 });
