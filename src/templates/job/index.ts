@@ -9,3 +9,4 @@ export { default as jobDeveloperRole } from './developer-role';
 export { default as jobOpenRoles } from './open-roles';
 export { default as jobInterviewProcess } from './interview-process';
 export { default as jobBenefits } from './benefits';
+export { default as jobInternship } from './internship';
