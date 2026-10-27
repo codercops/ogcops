@@ -14,3 +14,4 @@ export { default as saasApiEndpoint } from './api-endpoint';
 export { default as saasRoadmap } from './roadmap';
 export { default as saasMaintenance } from './maintenance';
 export { default as saasDeprecation } from './deprecation';
+export { default as saasIncident } from './incident';

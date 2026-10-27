@@ -114,6 +114,7 @@ import saasApiEndpoint from './saas/api-endpoint';
 import saasRoadmap from './saas/roadmap';
 import saasMaintenance from './saas/maintenance';
 import saasDeprecation from './saas/deprecation';
+import saasIncident from './saas/incident';
 
 [
   saasDashboardPreview, saasPricingHighlight, saasMetricShowcase, saasTestimonialBanner,
@@ -125,6 +126,7 @@ import saasDeprecation from './saas/deprecation';
   saasRoadmap,
   saasMaintenance,
   saasDeprecation,
+  saasIncident,
 ].forEach(registerTemplate);
 
 // GitHub
