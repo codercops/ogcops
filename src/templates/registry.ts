@@ -113,6 +113,7 @@ import saasUptimeStatus from './saas/uptime-status';
 import saasApiEndpoint from './saas/api-endpoint';
 import saasRoadmap from './saas/roadmap';
 import saasMaintenance from './saas/maintenance';
+import saasDeprecation from './saas/deprecation';
 
 [
   saasDashboardPreview, saasPricingHighlight, saasMetricShowcase, saasTestimonialBanner,
@@ -123,6 +124,7 @@ import saasMaintenance from './saas/maintenance';
   saasApiEndpoint,
   saasRoadmap,
   saasMaintenance,
+  saasDeprecation,
 ].forEach(registerTemplate);
 
 // GitHub
