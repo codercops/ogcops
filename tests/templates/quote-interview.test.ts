@@ -49,6 +49,31 @@ describe('quote-interview', () => {
     expect(textContent(tree)).toEqual(['A', 'Ship the small version first, then listen.']);
   });
 
+  it('removes the answer divider when the question is blank', () => {
+    const answer = elements(render({ question: ' ' })).find((element) =>
+      element.type === 'div' && element.props.style?.flex === 1
+    );
+
+    expect(answer?.props.style.borderTop).toBe('none');
+  });
+
+  it('lets a long site name shrink and truncate in the footer', () => {
+    const tree = render({
+      author: 'A'.repeat(48),
+      role: 'R'.repeat(64),
+      siteName: 'S'.repeat(48),
+    });
+    const siteName = elements(tree).find((element) => textContent(element)[0] === 'S'.repeat(48));
+
+    expect(siteName?.props.style).toMatchObject({
+      flex: 1,
+      minWidth: 0,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    });
+  });
+
   it('shrinks long questions and answers before truncating them', () => {
     const tree = render({
       question: 'What would you tell yourself on day one? '.repeat(5),

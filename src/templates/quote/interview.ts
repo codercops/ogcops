@@ -105,7 +105,8 @@ const template: TemplateDefinition = {
             props: {
               style: {
                 display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1,
-                minHeight: 0, marginTop: question ? '20px' : 0, borderTop: `1px solid ${mutedColor}55`,
+                minHeight: 0, marginTop: question ? '20px' : 0,
+                borderTop: question ? `1px solid ${mutedColor}55` : 'none',
               },
               children: [
                 { type: 'span', props: { style: { display: 'flex', fontSize: '22px', lineHeight: 1, fontWeight: 700, color: accentInk, marginBottom: '18px' }, children: 'A' } },
@@ -131,7 +132,7 @@ const template: TemplateDefinition = {
                     ],
                   },
                 }] : []),
-                ...(siteName ? [{ type: 'span', props: { style: { display: 'flex', flexShrink: 0, fontSize: '18px', fontWeight: 600, color: mutedColor, letterSpacing: '0.06em' }, children: siteName } }] : []),
+                ...(siteName ? [{ type: 'span', props: { style: { display: 'flex', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', justifyContent: 'flex-end', fontSize: '18px', fontWeight: 600, color: mutedColor, letterSpacing: '0.06em' }, children: siteName } }] : []),
               ],
             },
           }] : []),
