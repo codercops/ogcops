@@ -88,6 +88,18 @@ describe('saas-incident', () => {
     expect(filled('RESOLVED')).toEqual([true, true, true, true]);
   });
 
+  it('falls back for names every object inherits instead of filling nothing', () => {
+    const filled = (status: string) => markers(render({ status })).map((marker) =>
+      marker.props.style?.backgroundColor !== 'transparent');
+
+    // `STATUS_INDEX['constructor']` finds Object.prototype.constructor without the
+    // own-property guard, which used to render a card with no steps filled at all.
+    expect(filled('constructor')).toEqual([true, true, false, false]);
+    expect(filled('toString')).toEqual([true, true, false, false]);
+    expect(filled('hasOwnProperty')).toEqual([true, true, false, false]);
+    expect(filled('__proto__')).toEqual([true, true, false, false]);
+  });
+
   it('shrinks a long title with autoFontSize and then truncates it', () => {
     const heading = elements(render({
       title: 'Elevated API error rates across the EU and US regions affecting uploads and webhooks',

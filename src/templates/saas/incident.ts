@@ -57,8 +57,12 @@ const template: TemplateDefinition = {
     ]);
     const title = truncate(rawTitle, 60);
     const rawStatus = String(params.status || 'identified').trim().toLowerCase();
-    // An unknown or blank status falls back to the default step.
-    const statusIndex = STATUS_INDEX[rawStatus] ?? STATUS_INDEX.identified;
+    // An unknown or blank status falls back to the default step. `Object.hasOwn` is
+    // needed here: a name every object inherits, like `constructor`, would otherwise
+    // resolve to a built-in function and slip past the fallback.
+    const statusIndex = Object.hasOwn(STATUS_INDEX, rawStatus)
+      ? STATUS_INDEX[rawStatus]
+      : STATUS_INDEX.identified;
     const update = truncate(String(params.update || '').trim(), 90);
     const started = truncate(String(params.started || '').trim(), 40);
     const siteName = truncate(String(params.siteName || '').trim(), 40);
