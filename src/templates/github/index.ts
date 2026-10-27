@@ -14,3 +14,4 @@ export { default as githubPullRequest } from './pull-request';
 export { default as githubGoodFirstIssues } from './good-first-issues';
 export { default as githubMilestone } from './milestone';
 export { default as githubSponsorsGoal } from './sponsors-goal';
+export { default as githubSecurityAdvisory } from './security-advisory';

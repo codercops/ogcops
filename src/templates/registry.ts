@@ -146,6 +146,7 @@ import githubPullRequest from './github/pull-request';
 import githubGoodFirstIssues from './github/good-first-issues';
 import githubMilestone from './github/milestone';
 import githubSponsorsGoal from './github/sponsors-goal';
+import githubSecurityAdvisory from './github/security-advisory';
 
 [
   githubRepoCard, githubContributionGraph, githubReadmeHero, githubReleaseNotes,
@@ -156,6 +157,7 @@ import githubSponsorsGoal from './github/sponsors-goal';
   githubGoodFirstIssues,
   githubMilestone,
   githubSponsorsGoal,
+  githubSecurityAdvisory,
 ].forEach(registerTemplate);
 
 // Event
