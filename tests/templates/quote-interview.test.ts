@@ -57,13 +57,14 @@ describe('quote-interview', () => {
     expect(answer?.props.style.borderTop).toBe('none');
   });
 
-  it('lets a long site name shrink and truncate in the footer', () => {
+  it('keeps the start of a long site name visible beside long author and role fields', () => {
+    const longSiteName = 'THE WONDERFUL WEEKLY BUILDER NOTES MAGAZINE OK';
     const tree = render({
       author: 'A'.repeat(48),
       role: 'R'.repeat(64),
-      siteName: 'S'.repeat(48),
+      siteName: longSiteName,
     });
-    const siteName = elements(tree).find((element) => textContent(element)[0] === 'S'.repeat(48));
+    const siteName = elements(tree).find((element) => textContent(element)[0] === 'THE WONDERFUL WEEKLY…');
 
     expect(siteName?.props.style).toMatchObject({
       flex: 1,
@@ -71,7 +72,9 @@ describe('quote-interview', () => {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
+      textAlign: 'right',
     });
+    expect(siteName?.props.style.justifyContent).not.toBe('flex-end');
   });
 
   it('shrinks long questions and answers before truncating them', () => {
