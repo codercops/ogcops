@@ -257,11 +257,12 @@ import quoteStickyNote from './quote/sticky-note';
 import quoteCodeComment from './quote/code-comment';
 import quoteSubtitle from './quote/subtitle';
 import quoteArticleExcerpt from './quote/article-excerpt';
+import quoteInterview from './quote/interview';
 
 [
   quoteCenteredSerif, quoteGradientCard, quoteSpeechBubble, quoteTwitterStyle,
   quoteBookPage, quoteBoldHighlight, quoteMinimalDash, quotePhotoBackground, quoteStickyNote,
-  quoteCodeComment, quoteSubtitle, quoteArticleExcerpt,
+  quoteCodeComment, quoteSubtitle, quoteArticleExcerpt, quoteInterview,
 ].forEach(registerTemplate);
 
 // E-commerce
