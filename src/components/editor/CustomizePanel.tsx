@@ -113,7 +113,7 @@ function renderField(
         <ColorPicker
           key={field.key}
           label={field.label}
-          value={String(value || '#000000')}
+          value={String(value ?? '')}
           onChange={(v) => onChange(field.key, v)}
         />
       );
