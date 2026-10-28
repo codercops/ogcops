@@ -51,7 +51,6 @@ const template: TemplateDefinition = {
     const author = cleanText(params.author, 48);
     const role = cleanText(params.role, 64);
     const siteName = cleanText(params.siteName, 48);
-    const displaySiteName = truncate(siteName, 21);
     const bgColor = String(params.bgColor || '#0a0a0a');
     const accentColor = String(params.accentColor || '#E07A5F');
     const textColor = String(params.textColor || '#FFFFFF');
@@ -126,14 +125,14 @@ const template: TemplateDefinition = {
                 ...(author || role ? [{
                   type: 'div',
                   props: {
-                    style: { display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 0 },
+                    style: { display: 'flex', flex: '1 1 auto', flexDirection: 'column', gap: '4px', minWidth: 0 },
                     children: [
                       ...(author ? [{ type: 'span', props: { style: { fontSize: '20px', fontWeight: 700, color: answerColor }, children: author } }] : []),
                       ...(role ? [{ type: 'span', props: { style: { fontSize: '16px', color: mutedColor }, children: role } }] : []),
                     ],
                   },
                 }] : []),
-                ...(siteName ? [{ type: 'span', props: { style: { display: 'flex', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'right', fontSize: '18px', fontWeight: 600, color: mutedColor, letterSpacing: '0.06em' }, children: displaySiteName } }] : []),
+                ...(siteName ? [{ type: 'span', props: { style: { display: 'flex', flexShrink: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '18px', fontWeight: 600, color: mutedColor, letterSpacing: '0.06em' }, children: siteName } }] : []),
               ],
             },
           }] : []),

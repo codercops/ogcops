@@ -57,24 +57,40 @@ describe('quote-interview', () => {
     expect(answer?.props.style.borderTop).toBe('none');
   });
 
-  it('keeps the start of a long site name visible beside long author and role fields', () => {
+  it('keeps normal site names intact and lets the footer columns shrink when all are long', () => {
     const longSiteName = 'THE WONDERFUL WEEKLY BUILDER NOTES MAGAZINE OK';
-    const tree = render({
+    const longFooter = render({
       author: 'A'.repeat(48),
       role: 'R'.repeat(64),
       siteName: longSiteName,
     });
-    const siteName = elements(tree).find((element) => textContent(element)[0] === 'THE WONDERFUL WEEKLY…');
+    const domain = 'newsletter.codercops.com';
+    const regularSiteNames = [
+      { value: 'THE BUILDER NOTES', tree: render() },
+      { value: domain, tree: render({ siteName: domain }) },
+    ];
+    const siteName = elements(longFooter).find((element) => textContent(element)[0] === longSiteName);
+    const author = elements(longFooter).find((element) =>
+      element.type === 'div' && element.props.style?.flexDirection === 'column'
+      && textContent(element)[0] === 'A'.repeat(48) && textContent(element).length === 2
+    );
 
+    for (const { value, tree } of regularSiteNames) {
+      expect(textContent(tree)).toContain(value);
+    }
+    expect(author?.props.style).toMatchObject({ flex: '1 1 auto', minWidth: 0 });
     expect(siteName?.props.style).toMatchObject({
-      flex: 1,
+      flexShrink: 1,
       minWidth: 0,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      textAlign: 'right',
     });
-    expect(siteName?.props.style.justifyContent).not.toBe('flex-end');
+    expect(siteName?.props.style.flex).toBeUndefined();
+    const footer = elements(longFooter).find((element) =>
+      element.type === 'div' && element.props.style?.justifyContent === 'space-between'
+    );
+    expect(footer).toBeDefined();
   });
 
   it('shrinks long questions and answers before truncating them', () => {
