@@ -86,6 +86,14 @@ const template: TemplateDefinition = {
       const fillColor = index === largestIndex ? accentInk : mixColors(bgColor, foregroundColor, lightBg ? 0.3 : 0.36);
       const width = maxValue > 0 ? (value / maxValue) * 100 : 0;
       const formattedValue = new Intl.NumberFormat('en-US', { maximumFractionDigits: 3 }).format(value);
+      const valueLabel = `${formattedValue}${unit ? ` ${unit}` : ''}`;
+      const displayValue = truncate(valueLabel, 36);
+      const valueSize = autoFontSize(displayValue, [
+        { maxLen: 18, size: 20 },
+        { maxLen: 26, size: 17 },
+        { maxLen: 36, size: 14 },
+      ]);
+      const valueColumnWidth = Math.min(360, Math.max(220, displayValue.length * 9));
 
       return {
         type: 'div',
@@ -121,8 +129,12 @@ const template: TemplateDefinition = {
             {
               type: 'span',
               props: {
-                style: { display: 'flex', justifyContent: 'flex-end', flexShrink: 0, width: '220px', fontSize: '20px', fontWeight: 700, color: foregroundColor, whiteSpace: 'nowrap' },
-                children: `${formattedValue}${unit ? ` ${unit}` : ''}`,
+                style: {
+                  display: 'flex', justifyContent: 'flex-end', flexShrink: 0, width: `${valueColumnWidth}px`, minWidth: 0,
+                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  fontSize: `${valueSize}px`, fontWeight: 700, color: foregroundColor,
+                },
+                children: displayValue,
               },
             },
           ],

@@ -138,4 +138,18 @@ describe('blog-benchmark', () => {
     expect(textContent(rows(tree)[0])).toContain('1,000');
     expect(textContent(rows(tree)[0])).not.toContain('1,000 ');
   });
+
+  it('sizes and truncates long value labels so they stay inside their column', () => {
+    const tree = render({ value1: '123456789.125', unit: 'requests per second '.repeat(5) });
+    const value = rows(tree)[0].props.children[2] as SatoriElement;
+
+    expect(textContent(value)[0]).toMatch(/^123,456,789\.125 requests per second/);
+    expect(textContent(value)[0]).toMatch(/…$/);
+    expect(textContent(value)[0]).toHaveLength(36);
+    expect(value.props.style.width).toBe('324px');
+    expect(value.props.style.fontSize).toBe('14px');
+    expect(value.props.style.overflow).toBe('hidden');
+    expect(value.props.style.textOverflow).toBe('ellipsis');
+    expect(value.props.style.whiteSpace).toBe('nowrap');
+  });
 });
