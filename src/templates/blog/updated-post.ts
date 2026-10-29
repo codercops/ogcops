@@ -56,10 +56,20 @@ const template: TemplateDefinition = {
 
     const titleSize = autoFontSize(title, [
       { maxLen: 24, size: 72 },
-      { maxLen: 40, size: 60 },
-      { maxLen: 56, size: 52 },
-      { maxLen: 72, size: 46 },
-      { maxLen: 84, size: 40 },
+      { maxLen: 36, size: 62 },
+      { maxLen: 48, size: 54 },
+      { maxLen: 60, size: 46 },
+      { maxLen: 72, size: 40 },
+      { maxLen: 84, size: 34 },
+    ]);
+
+    // Both dates share one line, so size them together for the room they share.
+    const datesLength = published.length + updated.length + (published && updated ? 3 : 0);
+    // Both dates are capped at 40 characters, so 83 is the longest line they can make.
+    const dateSize = autoFontSize('x'.repeat(datesLength), [
+      { maxLen: 54, size: 22 },
+      { maxLen: 68, size: 20 },
+      { maxLen: Number.MAX_SAFE_INTEGER, size: 18 },
     ]);
 
     // Neutral colors are mixed from the background and text colors, so the card reads the
@@ -79,7 +89,16 @@ const template: TemplateDefinition = {
             {
               type: 'span',
               props: {
-                style: { fontSize: '22px', fontWeight: 500, color: secondaryText, whiteSpace: 'nowrap' },
+                style: {
+                  display: 'flex',
+                  minWidth: 0,
+                  fontSize: `${dateSize}px`,
+                  fontWeight: 500,
+                  color: secondaryText,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                },
                 children: published,
               },
             },
@@ -94,7 +113,7 @@ const template: TemplateDefinition = {
                 children: {
                   type: 'span',
                   props: {
-                    style: { fontSize: '22px', fontWeight: 500, color: secondaryText },
+                    style: { fontSize: `${dateSize}px`, fontWeight: 500, color: secondaryText },
                     children: '·',
                   },
                 },
@@ -107,7 +126,16 @@ const template: TemplateDefinition = {
             {
               type: 'span',
               props: {
-                style: { fontSize: '22px', fontWeight: 600, color: accentText, whiteSpace: 'nowrap' },
+                style: {
+                  display: 'flex',
+                  minWidth: 0,
+                  fontSize: `${dateSize}px`,
+                  fontWeight: 600,
+                  color: accentText,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                },
                 children: updated,
               },
             },
@@ -121,7 +149,7 @@ const template: TemplateDefinition = {
         style: {
           display: 'flex',
           alignItems: 'center',
-          marginBottom: index < changes.length - 1 ? '14px' : '0px',
+          marginBottom: index < changes.length - 1 ? '12px' : '0px',
         },
         children: [
           {
@@ -144,10 +172,15 @@ const template: TemplateDefinition = {
             props: {
               style: {
                 display: 'flex',
-                fontSize: '26px',
+                flex: 1,
+                minWidth: 0,
+                fontSize: '24px',
                 fontWeight: 500,
                 color: textColor,
                 lineHeight: 1.3,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
               },
               children: change,
             },
@@ -173,8 +206,12 @@ const template: TemplateDefinition = {
                 color: textColor,
                 lineHeight: 1.12,
                 letterSpacing: '-0.03em',
+                overflowWrap: 'anywhere',
+                // Satori does not break a single unbroken word on overflowWrap alone, so a
+                // title with no spaces at all is broken by character instead.
+                ...(title.includes(' ') ? {} : { wordBreak: 'break-all' as const }),
                 margin: 0,
-                marginBottom: '20px',
+                marginBottom: '16px',
               },
               children: title,
             },
@@ -184,7 +221,12 @@ const template: TemplateDefinition = {
                 type: 'div',
                 props: {
                   // No trailing gap when there is no change list underneath.
-                  style: { display: 'flex', alignItems: 'center', marginBottom: changes.length > 0 ? '40px' : '0px' },
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
+                    marginBottom: changes.length > 0 ? '32px' : '0px',
+                  },
                   children: dates,
                 },
               }]
@@ -205,7 +247,7 @@ const template: TemplateDefinition = {
                             color: accentText,
                             letterSpacing: '0.14em',
                             textTransform: 'uppercase',
-                            marginBottom: '18px',
+                            marginBottom: '16px',
                           },
                           children: 'What changed',
                         },

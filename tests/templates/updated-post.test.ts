@@ -143,7 +143,7 @@ describe('blog-updated-post', () => {
   it('keeps a gap only between the lines that are rendered', () => {
     const rows = bulletRows(tree({ change2: '   ' }));
     expect(rows).toHaveLength(2);
-    expect(rows[0].marginBottom).toBe('14px');
+    expect(rows[0].marginBottom).toBe('12px');
     expect(rows[1].marginBottom).toBe('0px');
   });
 
@@ -211,7 +211,7 @@ describe('blog-updated-post', () => {
     expect(title.length).toBeLessThanOrEqual(84);
     expect(title.endsWith('…')).toBe(true);
     // Once truncated it sits at the smallest step rather than overflowing.
-    expect(styleOf(tree({ title: long }), title)?.fontSize).toBe('40px');
+    expect(styleOf(tree({ title: long }), title)?.fontSize).toBe('34px');
   });
 
   it('truncates long change lines and the site name', () => {
@@ -225,6 +225,49 @@ describe('blog-updated-post', () => {
     const site = out[out.length - 1];
     expect(site.length).toBeLessThanOrEqual(36);
     expect(site.endsWith('…')).toBe(true);
+  });
+
+  it('keeps the longest values on one line instead of overflowing the card', () => {
+    const maxed = tree({
+      title: 'M'.repeat(84),
+      published: 'W'.repeat(40),
+      updated: 'W'.repeat(40),
+      change1: 'M'.repeat(64),
+      change2: 'M'.repeat(64),
+      change3: 'M'.repeat(64),
+    });
+
+    // Each change line is clipped with an ellipsis rather than wrapping into the footer.
+    const out = textContent(maxed);
+    const changes = out.filter((line) => line.length === 64);
+    expect(changes).toHaveLength(3);
+    for (const change of changes) {
+      const style = styleOf(maxed, change);
+      expect(style?.whiteSpace).toBe('nowrap');
+      expect(style?.overflow).toBe('hidden');
+      expect(style?.textOverflow).toBe('ellipsis');
+    }
+
+    // Both dates shrink together and clip, so neither runs past the right edge.
+    const updatedStyle = styleOf(maxed, 'W'.repeat(40));
+    expect(updatedStyle?.fontSize).toBe('18px');
+    expect(updatedStyle?.textOverflow).toBe('ellipsis');
+    expect(updatedStyle?.minWidth).toBe(0);
+
+    // A single unbroken word wraps instead of running off the card.
+    expect(styleOf(maxed, 'M'.repeat(84))?.overflowWrap).toBe('anywhere');
+  });
+
+  it('sizes the dates down as the line gets longer', () => {
+    const size = (published: string, updated: string) =>
+      styleOf(tree({ published, updated }), updated)?.fontSize;
+
+    // Both dates share one line, so the size follows their combined length.
+    expect(size('First published Mar 3, 2024', 'Updated Oct 27, 2026')).toBe('22px');
+    expect(size('P'.repeat(40), 'U'.repeat(15))).toBe('20px');
+    expect(size('P'.repeat(40), 'U'.repeat(40))).toBe('18px');
+    // A single date is never pushed below the floor.
+    expect(size('', 'U'.repeat(40))).toBe('22px');
   });
 
   it('keeps the label and accent text readable on a light background', () => {
