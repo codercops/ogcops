@@ -141,15 +141,30 @@ describe('blog-benchmark', () => {
 
   it('sizes and truncates long value labels so they stay inside their column', () => {
     const tree = render({ value1: '123456789.125', unit: 'requests per second '.repeat(5) });
-    const value = rows(tree)[0].props.children[2] as SatoriElement;
+    const values = rows(tree).map((row) => row.props.children[2] as SatoriElement);
 
-    expect(textContent(value)[0]).toMatch(/^123,456,789\.125 requests per second/);
-    expect(textContent(value)[0]).toMatch(/…$/);
-    expect(textContent(value)[0]).toHaveLength(36);
-    expect(value.props.style.width).toBe('324px');
-    expect(value.props.style.fontSize).toBe('14px');
-    expect(value.props.style.overflow).toBe('hidden');
-    expect(value.props.style.textOverflow).toBe('ellipsis');
-    expect(value.props.style.whiteSpace).toBe('nowrap');
+    expect(textContent(values[0])[0]).toMatch(/^123,456,789\.125 requests per second/);
+    expect(textContent(values[0])[0]).toMatch(/…$/);
+    expect(textContent(values[0])[0]).toHaveLength(36);
+    expect(values.map(({ props }) => props.style.width)).toEqual(['360px', '360px', '360px']);
+    expect(values.map(({ props }) => props.style.fontSize)).toEqual(['14px', '14px', '14px']);
+    for (const value of values) {
+      expect(value.props.style.overflow).toBe('hidden');
+      expect(value.props.style.textOverflow).toBe('ellipsis');
+      expect(value.props.style.whiteSpace).toBe('nowrap');
+    }
+  });
+
+  it('uses the longest value label to size one shared column without truncating shorter rows', () => {
+    const tree = render({ unit: 'requests per second' });
+    const values = rows(tree).map((row) => row.props.children[2] as SatoriElement);
+
+    expect(values.map(({ props }) => props.style.width)).toEqual(['353px', '353px', '353px']);
+    expect(values.map(({ props }) => props.style.fontSize)).toEqual(['14px', '14px', '14px']);
+    expect(values.map((value) => textContent(value)[0])).toEqual([
+      '112,000 requests per second',
+      '71,000 requests per second',
+      '48,000 requests per second',
+    ]);
   });
 });

@@ -31,6 +31,8 @@ const template: TemplateDefinition = {
       label: 'Closed Issues',
       type: 'number' as const,
       defaultValue: 34,
+      min: 0,
+      max: 1000,
       group: 'Content' as const,
     },
     {
@@ -38,6 +40,8 @@ const template: TemplateDefinition = {
       label: 'Total Issues',
       type: 'number' as const,
       defaultValue: 42,
+      min: 0,
+      max: 1000,
       group: 'Content' as const,
     },
     {

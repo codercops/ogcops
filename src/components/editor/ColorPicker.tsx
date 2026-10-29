@@ -1,4 +1,5 @@
-import { useId } from 'react';
+import { useId, useRef } from 'react';
+import { normalizeHexColor } from '@/templates/utils';
 
 interface ColorPickerProps {
   label: string;
@@ -10,7 +11,9 @@ export function ColorPicker({ label, value, onChange }: ColorPickerProps) {
   const id = useId();
   const colorId = `${id}-color`;
   const hexId = `${id}-hex`;
-  const displayValue = value.startsWith('#') ? value : `#${value}`;
+  const displayValue = value && !value.startsWith('#') ? `#${value}` : value;
+  const lastValid = useRef('#000000');
+  lastValid.current = normalizeHexColor(value, lastValid.current);
 
   return (
     <div className="editor-field">
@@ -23,7 +26,7 @@ export function ColorPicker({ label, value, onChange }: ColorPickerProps) {
           id={colorId}
           type="color"
           className="editor-color-swatch"
-          value={displayValue}
+          value={lastValid.current}
           onChange={(e) => onChange(e.target.value)}
         />
 

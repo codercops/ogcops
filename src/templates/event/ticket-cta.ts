@@ -35,7 +35,7 @@ const template: TemplateDefinition = {
     const title = truncate(String(params.title || 'Event'), 50);
     const date = String(params.date || '');
     const location = String(params.location || '');
-    const price = String(params.price || '');
+    const price = truncate(String(params.price || ''), 24);
     const priceLabel = String(params.priceLabel || '');
     const ctaText = String(params.ctaText || 'Get Tickets');
     const siteName = String(params.siteName || '');
@@ -47,6 +47,13 @@ const template: TemplateDefinition = {
       { maxLen: 35, size: 46 },
       { maxLen: 50, size: 38 },
       { maxLen: 70, size: 32 },
+    ]);
+    const priceSize = autoFontSize(price, [
+      { maxLen: 4, size: 64 },
+      { maxLen: 6, size: 48 },
+      { maxLen: 9, size: 40 },
+      { maxLen: 12, size: 32 },
+      { maxLen: 24, size: 24 },
     ]);
 
     return {
@@ -230,7 +237,7 @@ const template: TemplateDefinition = {
                               type: 'span',
                               props: {
                                 style: {
-                                  fontSize: '64px',
+                                  fontSize: `${priceSize}px`,
                                   fontWeight: 800,
                                   color: textColor,
                                   lineHeight: 1,

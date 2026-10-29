@@ -66,6 +66,19 @@ const template: TemplateDefinition = {
     const maxValue = rows.reduce((max, row) => Math.max(max, row.value), 0);
     const largestIndex = rows.findIndex(({ value }) => value === maxValue);
     const unit = String(params.unit ?? 'req/s').replace(/\s+/g, ' ').trim();
+    const valueLabels = rows.map(({ value }) => {
+      const formattedValue = new Intl.NumberFormat('en-US', { maximumFractionDigits: 3 }).format(value);
+      return `${formattedValue}${unit ? ` ${unit}` : ''}`;
+    });
+    const longestValueLabel = valueLabels.reduce((longest, label) =>
+      label.length > longest.length ? label : longest, '');
+    const displayLongestValueLabel = truncate(longestValueLabel, 36);
+    const valueSize = autoFontSize(displayLongestValueLabel, [
+      { maxLen: 18, size: 20 },
+      { maxLen: 26, size: 17 },
+      { maxLen: 36, size: 14 },
+    ]);
+    const valueColumnWidth = Math.min(360, Math.max(220, Math.ceil(displayLongestValueLabel.length * valueSize * 0.9 + 12)));
     const siteName = String(params.siteName ?? '').replace(/\s+/g, ' ').trim();
     const bgColor = String(params.bgColor || '#0a0a0a');
     const accentColor = String(params.accentColor || '#E07A5F');
@@ -85,15 +98,7 @@ const template: TemplateDefinition = {
       ]);
       const fillColor = index === largestIndex ? accentInk : mixColors(bgColor, foregroundColor, lightBg ? 0.3 : 0.36);
       const width = maxValue > 0 ? (value / maxValue) * 100 : 0;
-      const formattedValue = new Intl.NumberFormat('en-US', { maximumFractionDigits: 3 }).format(value);
-      const valueLabel = `${formattedValue}${unit ? ` ${unit}` : ''}`;
-      const displayValue = truncate(valueLabel, 36);
-      const valueSize = autoFontSize(displayValue, [
-        { maxLen: 18, size: 20 },
-        { maxLen: 26, size: 17 },
-        { maxLen: 36, size: 14 },
-      ]);
-      const valueColumnWidth = Math.min(360, Math.max(220, displayValue.length * 9));
+      const displayValue = truncate(valueLabels[index], 36);
 
       return {
         type: 'div',

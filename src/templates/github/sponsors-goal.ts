@@ -33,6 +33,8 @@ const template: TemplateDefinition = {
       label: 'Raised',
       type: 'number' as const,
       defaultValue: 420,
+      min: 0,
+      max: 10000,
       group: 'Content' as const,
     },
     {
@@ -40,6 +42,8 @@ const template: TemplateDefinition = {
       label: 'Goal',
       type: 'number' as const,
       defaultValue: 1000,
+      min: 0,
+      max: 10000,
       group: 'Content' as const,
     },
     {
