@@ -4,6 +4,25 @@ import { fetchMetaTags, parseMetaTags } from '@/lib/meta-fetcher';
 describe('parseMetaTags', () => {
   const base = 'https://example.com/page';
 
+  it.each([
+    ['1200', '630', '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'],
+    [undefined, undefined, ''],
+    ['1200', undefined, '<meta property="og:image:width" content="1200">'],
+  ])('keeps the first image with only its own dimensions (%s, %s)', (width, height, dimensions) => {
+    const tags = parseMetaTags(`
+      <meta property="og:image:width" content="999">
+      <meta property="og:image:height" content="999">
+      <meta property="og:image" content="/first.png">
+      ${dimensions}
+      <meta property="og:image" content="/second.png">
+      <meta property="og:image:width" content="400">
+      <meta property="og:image:height" content="300">
+    `, base);
+    expect(tags.ogImage).toBe('https://example.com/first.png');
+    expect(tags.ogImageWidth).toBe(width);
+    expect(tags.ogImageHeight).toBe(height);
+  });
+
   it('keeps an apostrophe inside a double-quoted value', () => {
     const tags = parseMetaTags('<meta property="og:title" content="Don\'t Panic">', base);
     expect(tags.ogTitle).toBe("Don't Panic");

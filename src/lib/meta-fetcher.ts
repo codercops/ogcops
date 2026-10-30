@@ -44,6 +44,7 @@ export async function fetchMetaTags(url: string): Promise<MetaTags> {
 
 export function parseMetaTags(html: string, baseUrl: string): MetaTags {
   const tags: MetaTags = {};
+  let inFirstImageGroup = false;
 
   // Extract <title>
   const titleMatch = html.match(/<title[^>]*>(.*?)<\/title>/is);
@@ -52,6 +53,12 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
   // Extract meta tags
   for (const tag of findTags(html, 'meta')) {
     const attrs = parseAttributes(tag);
+
+    // Every image tag starts a new group, even if its content is empty.
+    // Dimensions before an image or belonging to later images are ignored.
+    if (attrs.property?.toLowerCase() === 'og:image') {
+      inFirstImageGroup = tags.ogImage === undefined && !!attrs.content;
+    }
 
     // Standard meta (name/content)
     if (attrs.name && attrs.content) {
@@ -71,9 +78,9 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
       const prop = attrs.property.toLowerCase();
       if (prop === 'og:title') tags.ogTitle = attrs.content;
       if (prop === 'og:description') tags.ogDescription = attrs.content;
-      if (prop === 'og:image') tags.ogImage = resolveUrl(attrs.content, baseUrl);
-      if (prop === 'og:image:width') tags.ogImageWidth = attrs.content;
-      if (prop === 'og:image:height') tags.ogImageHeight = attrs.content;
+      if (prop === 'og:image' && inFirstImageGroup) tags.ogImage = resolveUrl(attrs.content, baseUrl);
+      if (prop === 'og:image:width' && inFirstImageGroup) tags.ogImageWidth = attrs.content;
+      if (prop === 'og:image:height' && inFirstImageGroup) tags.ogImageHeight = attrs.content;
       if (prop === 'og:url') tags.ogUrl = attrs.content;
       if (prop === 'og:type') tags.ogType = attrs.content;
       if (prop === 'og:site_name') tags.ogSiteName = attrs.content;
