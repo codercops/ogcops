@@ -13,8 +13,12 @@ export function svgToPngBlob(svg: string, width = 1200, height = 630): Promise<B
       canvas.height = height;
       const context = canvas.getContext('2d');
       if (!context) return reject(new Error('Canvas is not supported'));
-      context.drawImage(image, 0, 0, width, height);
-      canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error('Could not create PNG'))), 'image/png');
+      try {
+        context.drawImage(image, 0, 0, width, height);
+        canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error('Could not create PNG'))), 'image/png');
+      } catch (error) {
+        reject(error);
+      }
     };
     image.onerror = () => reject(new Error('Could not render SVG'));
     image.src = `data:image/svg+xml,${encodeURIComponent(svg)}`;

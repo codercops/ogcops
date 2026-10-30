@@ -45,7 +45,8 @@ export function ExportBar({
     try {
       let blob: Blob;
       if (hasLocalImage) {
-        blob = await svgToPngBlob(svgRef.current || '');
+        if (!svgRef.current) throw new Error('Preview is not ready');
+        blob = await svgToPngBlob(svgRef.current);
       } else {
         const res = await fetch(downloadRef.current);
         if (!res.ok) throw new Error('Download failed');

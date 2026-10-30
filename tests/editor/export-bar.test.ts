@@ -9,7 +9,7 @@ const { ExportBar } = await import('@/components/editor/ExportBar');
 
 function metaTagParams(params: Record<string, unknown>) {
   renderToString(
-    React.createElement(ExportBar, { apiUrl: '/api/og?x=1', downloadUrl: '/api/og?x=1', params, templateId: 'saas-maintenance' }),
+    React.createElement(ExportBar, { apiUrl: '/api/og?x=1', downloadUrl: '/api/og?x=1', params, templateId: 'saas-maintenance', svg: null }),
   );
   return generateMetaTags.mock.calls.at(-1)![0];
 }
