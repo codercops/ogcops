@@ -47,6 +47,22 @@ describe('parseMetaTags', () => {
     expect(tags.title).toBe("Tom & Jerry's");
   });
 
+  it('decodes uppercase named entities &AMP;, &LT;, &GT;, and &QUOT;', () => {
+    const tags = parseMetaTags(
+      '<title>&LT;Tom &AMP; Jerry &QUOT;Show&QUOT;&GT;</title>',
+      base,
+    );
+    expect(tags.title).toBe('<Tom & Jerry "Show">');
+  });
+
+  it('does not decode uppercase or mixed-case entities that are not valid in HTML', () => {
+    const tags = parseMetaTags(
+      '<meta name="description" content="&APOS; &NBSP; &Amp;">',
+      base,
+    );
+    expect(tags.description).toBe('&APOS; &NBSP; &Amp;');
+  });
+
   it('parses unquoted meta attributes', () => {
     const tags = parseMetaTags('<meta name=twitter:card content="summary_large_image">', base);
     expect(tags.twitterCard).toBe('summary_large_image');

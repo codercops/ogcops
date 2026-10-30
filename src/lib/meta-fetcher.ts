@@ -181,6 +181,10 @@ const NAMED_ENTITIES: Record<string, string> = {
   quot: '"',
   apos: "'",
   nbsp: '\u00a0',
+  AMP: '&',
+  LT: '<',
+  GT: '>',
+  QUOT: '"',
 };
 
 function decodeEntities(str: string): string {
