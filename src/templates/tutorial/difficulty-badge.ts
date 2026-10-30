@@ -13,7 +13,6 @@ const template: TemplateDefinition = {
     { key: 'difficulty', label: 'Difficulty', type: 'select', defaultValue: 'Intermediate', options: [{ label: 'Beginner', value: 'Beginner' }, { label: 'Intermediate', value: 'Intermediate' }, { label: 'Advanced', value: 'Advanced' }], required: true, group: 'Content' },
     { key: 'duration', label: 'Duration', type: 'text', defaultValue: '6 hours', placeholder: '6 hours', group: 'Content' },
     commonFields.bgColor,
-    commonFields.accentColor,
     commonFields.textColor,
   ],
   defaults: {
@@ -22,7 +21,6 @@ const template: TemplateDefinition = {
     difficulty: 'Advanced',
     duration: '6 hours',
     bgColor: '#0a0a0a',
-    accentColor: '#E07A5F',
     textColor: '#FFFFFF',
   },
   render: (params) => {
