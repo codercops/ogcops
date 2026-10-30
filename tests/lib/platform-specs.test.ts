@@ -3,6 +3,13 @@ import { PLATFORMS, resolvePlatformPreviews } from '@/lib/platform-specs';
 import type { MetaTags } from '@/lib/meta-fetcher';
 
 describe('resolvePlatformPreviews', () => {
+  it('cuts titles and descriptions by complete Unicode code points on every platform', () => {
+    const previews = resolvePlatformPreviews({ ogTitle: '😀'.repeat(501), ogDescription: '𠮷'.repeat(501) }, 'https://example.com');
+    previews.forEach((preview, index) => {
+      expect(preview.title).toBe('😀'.repeat(PLATFORMS[index].maxTitleLength));
+      expect(preview.description).toBe('𠮷'.repeat(PLATFORMS[index].maxDescLength));
+    });
+  });
   it('returns one preview per platform, in PLATFORMS order', () => {
     const previews = resolvePlatformPreviews({}, 'https://example.com');
     expect(previews).toHaveLength(8);

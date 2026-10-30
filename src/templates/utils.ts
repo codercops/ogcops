@@ -208,11 +208,12 @@ export function flaskIcon(size: number, color: string) {
 }
 
 /**
- * Truncate text to a max length with ellipsis.
+ * Truncate text to a maximum number of Unicode code points, including ellipsis.
  */
 export function truncate(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength - 1).trimEnd() + '…';
+  const characters = Array.from(text);
+  if (characters.length <= maxLength) return text;
+  return characters.slice(0, maxLength - 1).join('').trimEnd() + '…';
 }
 
 /**
