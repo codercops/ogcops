@@ -65,6 +65,17 @@ describe('Template Registry', () => {
     }
   });
 
+  it('every number field default fits inside its slider range', () => {
+    for (const t of getAllTemplates()) {
+      for (const field of t.fields.filter((f) => f.type === 'number')) {
+        const value = Number(t.defaults[field.key] ?? field.defaultValue);
+        const where = `${t.id}.${field.key}`;
+        expect(value, where).toBeGreaterThanOrEqual(field.min ?? 0);
+        expect(value, where).toBeLessThanOrEqual(field.max ?? 100);
+      }
+    }
+  });
+
   it('template IDs should be unique', () => {
     const templates = getAllTemplates();
     const ids = templates.map((t) => t.id);

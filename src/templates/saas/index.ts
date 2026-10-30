@@ -10,3 +10,8 @@ export { default as saasFeatureSpotlight } from './feature-spotlight';
 export { default as saasSocialProof } from './social-proof';
 export { default as saasIntegration } from './integration';
 export { default as saasUptimeStatus } from './uptime-status';
+export { default as saasApiEndpoint } from './api-endpoint';
+export { default as saasRoadmap } from './roadmap';
+export { default as saasMaintenance } from './maintenance';
+export { default as saasDeprecation } from './deprecation';
+export { default as saasIncident } from './incident';

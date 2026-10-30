@@ -9,3 +9,4 @@ export { default as productAnnouncement } from './announcement';
 export { default as productMinimalBadge } from './minimal-badge';
 export { default as productDarkPremium } from './dark-premium';
 export { default as productShortcutTip } from './shortcut-tip';
+export { default as productWaitlist } from './waitlist';

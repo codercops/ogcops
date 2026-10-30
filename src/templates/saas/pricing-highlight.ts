@@ -38,7 +38,7 @@ const template: TemplateDefinition = {
   render: (params) => {
     const title = truncate(String(params.title || 'Simple, transparent pricing'), 60);
     const planName = String(params.planName || 'Pro');
-    const price = String(params.price || '$29');
+    const price = truncate(String(params.price || '$29'), 12);
     const period = String(params.period || '/month');
     const features = [
       String(params.feature1 || 'Unlimited projects'),
@@ -54,6 +54,11 @@ const template: TemplateDefinition = {
       { maxLen: 25, size: 44 },
       { maxLen: 40, size: 38 },
       { maxLen: 60, size: 32 },
+    ]);
+    const priceSize = autoFontSize(price, [
+      { maxLen: 6, size: 56 },
+      { maxLen: 9, size: 44 },
+      { maxLen: 12, size: 36 },
     ]);
 
     return {
@@ -181,10 +186,11 @@ const template: TemplateDefinition = {
                             type: 'span',
                             props: {
                               style: {
-                                fontSize: '56px',
+                                fontSize: `${priceSize}px`,
                                 fontWeight: 800,
                                 color: textColor,
                                 lineHeight: 1,
+                                flexShrink: 0,
                               },
                               children: price,
                             },

@@ -124,6 +124,7 @@ import '@/styles/api-docs.css';
             <p class="param-desc">Image height in pixels, 105–1260 (default: 630). If <code>width</code> is omitted, it is derived automatically to preserve the 1200:630 aspect ratio. If both dimensions are provided, their aspect ratio must match 1200:630 (returns 400 Bad Request otherwise).</p>
           </div>
         </div>
+        <p class="endpoint-desc">Each template also takes its own fields as parameters (see <code>/api/templates</code>). Leave a parameter out to get the template's default. An optional text field sent empty, like <code>subscriberCount=</code>, stays empty, so it's hidden.</p>
 
         <h4>Examples</h4>
         <div class="code-block">

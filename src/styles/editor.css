@@ -273,7 +273,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  flex: 1 0 auto;
   min-height: 300px;
   position: relative;
   background-image: radial-gradient(circle, var(--border-muted) 1px, transparent 1px);

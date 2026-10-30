@@ -107,6 +107,7 @@ export function ExportBar({
   const metaTags = generateMetaTags({
     title: params.title ? String(params.title) : undefined,
     description: params.description ? String(params.description) : undefined,
+    siteName: params.siteName ? String(params.siteName) : undefined,
     imageUrl: apiUrl,
   });
 
