@@ -68,6 +68,12 @@ describe('Preview URL Validation (isValidPreviewUrl)', () => {
     expect(isValidPreviewUrl('https://sub.domain.co.uk')).toBe(true);
   });
 
+  it('accepts HTTP and HTTPS schemes regardless of letter casing', () => {
+    expect(isValidPreviewUrl('HTTP://example.com')).toBe(true);
+    expect(isValidPreviewUrl('HTTPS://example.com')).toBe(true);
+    expect(parsePreviewQueryParams('?url=HTTPS%3A%2F%2Fexample.com')).toBe('HTTPS://example.com');
+  });
+
   it('validates bare domain names', () => {
     expect(isValidPreviewUrl('example.com')).toBe(true);
     expect(isValidPreviewUrl('og.codercops.com/preview')).toBe(true);
@@ -195,6 +201,35 @@ describe('usePreviewState Address Bar Synchronization', () => {
       mockState,
       '',
       '/preview?url=https%3A%2F%2Fexample.com%2Ftest%3Fa%3D1%26b%3D2'
+    );
+  });
+
+  it('preserves an uppercase HTTP or HTTPS scheme when checking a URL', async () => {
+    const mockState = { astro: { index: 3 } };
+    (window.history as any).state = mockState;
+
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ url: 'HTTPS://example.com' }),
+    });
+
+    let hookInstance!: ReturnType<typeof usePreviewState>;
+    function TestHook() {
+      hookInstance = usePreviewState();
+      return null;
+    }
+
+    renderToString(React.createElement(TestHook));
+
+    await hookInstance.checkUrl('HTTPS://example.com');
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/preview?url=HTTPS%3A%2F%2Fexample.com'
+    );
+    expect(replaceStateMock).toHaveBeenCalledWith(
+      mockState,
+      '',
+      '/preview?url=HTTPS%3A%2F%2Fexample.com'
     );
   });
 
