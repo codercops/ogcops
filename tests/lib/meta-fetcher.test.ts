@@ -140,6 +140,19 @@ describe('parseMetaTags', () => {
 });
 
 describe('canonical and favicon attribute order', () => {
+  it.each(['alternate icon', 'icon alternate', 'ALTERNATE ICON', '  alternate\ticon\n ', 'shortcut  icon'])('detects the icon token in rel=%j', (rel) => {
+    const tags = parseMetaTags(`<link rel="${rel}" href="/favicon.png">`, 'https://example.com/page');
+    expect(tags.favicon).toBe('https://example.com/favicon.png');
+  });
+
+  it('keeps the first favicon when later links also contain an icon token', () => {
+    const tags = parseMetaTags('<link rel="alternate icon" href="/first.png"><link rel="icon" href="/second.png">', 'https://example.com');
+    expect(tags.favicon).toBe('https://example.com/first.png');
+  });
+
+  it.each(['alternate apple-touch-icon', 'iconic', 'mask-icon'])('does not match icon substrings in rel=%j', (rel) => {
+    expect(parseMetaTags(`<link rel="${rel}" href="/other.png">`, 'https://example.com').favicon).toBeUndefined();
+  });
   const html = (body: string) =>
     new Response(body, { status: 200, headers: { 'content-type': 'text/html' } });
 

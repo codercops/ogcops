@@ -99,8 +99,9 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
       // Resolve like the favicon does, so a relative canonical is stored absolute.
       tags.canonical = resolveUrl(attrs.href, baseUrl);
     }
-    // Exact rel match, so `apple-touch-icon` is not picked up as the favicon.
-    if ((rel === 'icon' || rel === 'shortcut icon') && !tags.favicon && attrs.href) {
+    // Match a complete relationship token, keeping `apple-touch-icon` excluded.
+    const relTokens = rel.split(/\s+/);
+    if (relTokens.includes('icon') && !tags.favicon && attrs.href) {
       tags.favicon = resolveUrl(attrs.href, baseUrl);
     }
   }
