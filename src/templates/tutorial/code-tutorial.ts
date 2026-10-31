@@ -215,6 +215,7 @@ const template: TemplateDefinition = {
                                       fontSize: '16px',
                                       fontFamily: 'JetBrains Mono, monospace',
                                       color: '#D4D4D4',
+                                      whiteSpace: 'pre' as const,
                                     },
                                     children: line,
                                   },
