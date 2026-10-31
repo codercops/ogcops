@@ -153,6 +153,7 @@ import githubSponsorsGoal from './github/sponsors-goal';
 import githubSecurityAdvisory from './github/security-advisory';
 import githubMaintainersWanted from './github/maintainers-wanted';
 import githubPackageCard from './github/package-card';
+import githubDiscussion from './github/discussion';
 
 [
   githubRepoCard, githubContributionGraph, githubReadmeHero, githubReleaseNotes,
@@ -166,6 +167,7 @@ import githubPackageCard from './github/package-card';
   githubSecurityAdvisory,
   githubMaintainersWanted,
   githubPackageCard,
+  githubDiscussion,
 ].forEach(registerTemplate);
 
 // Event
@@ -184,6 +186,7 @@ import eventOfficeHours from './event/office-hours';
 import eventWinners from './event/winners';
 import eventCallForSpeakers from './event/call-for-speakers';
 import eventRescheduled from './event/rescheduled';
+import eventRecap from './event/recap';
 
 [
   eventConference, eventMeetup, eventWebinar, eventWorkshop, eventHackathon,
@@ -191,6 +194,7 @@ import eventRescheduled from './event/rescheduled';
   eventAgenda, eventOfficeHours, eventWinners,
   eventCallForSpeakers,
   eventRescheduled,
+  eventRecap,
 ].forEach(registerTemplate);
 
 // Podcast

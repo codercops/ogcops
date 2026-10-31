@@ -1,11 +1,13 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { generateMetaTags } from '@/lib/meta-tag-generator';
+import { containsLocalImage, svgToPngBlob } from './export-utils';
 
 interface ExportBarProps {
   apiUrl: string;
   downloadUrl: string;
   params: Record<string, any>;
   templateId: string;
+  svg: string | null;
   /**
    * Whether this bar owns the keyboard shortcuts. Pass false on a second
    * ExportBar so Ctrl/Cmd+S and Ctrl/Cmd+Shift+C fire once, not once per bar.
@@ -24,22 +26,32 @@ export function ExportBar({
   downloadUrl,
   params,
   templateId,
+  svg,
   shortcuts = true,
 }: ExportBarProps) {
   const [downloading, setDownloading] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const downloadRef = useRef(downloadUrl);
   const apiUrlRef = useRef(apiUrl);
+  const svgRef = useRef(svg);
+  const hasLocalImage = containsLocalImage(params);
 
   downloadRef.current = downloadUrl;
   apiUrlRef.current = apiUrl;
+  svgRef.current = svg;
 
   const handleDownload = useCallback(async () => {
     setDownloading(true);
     try {
-      const res = await fetch(downloadRef.current);
-      if (!res.ok) throw new Error('Download failed');
-      const blob = await res.blob();
+      let blob: Blob;
+      if (hasLocalImage) {
+        if (!svgRef.current) throw new Error('Preview is not ready');
+        blob = await svgToPngBlob(svgRef.current);
+      } else {
+        const res = await fetch(downloadRef.current);
+        if (!res.ok) throw new Error('Download failed');
+        blob = await res.blob();
+      }
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -55,7 +67,11 @@ export function ExportBar({
     } finally {
       setDownloading(false);
     }
-  }, [templateId]);
+  }, [hasLocalImage, templateId]);
+
+  const showLocalImageWarning = useCallback(() => {
+    window.showToast?.('Local images cannot be included in a shareable URL.', 'error');
+  }, []);
 
   const copyToClipboard = useCallback(async (text: string, label: string) => {
     try {
@@ -96,13 +112,14 @@ export function ExportBar({
       // Ctrl/Cmd+Shift+C → Copy API URL
       if (e.key === 'C' && e.shiftKey) {
         e.preventDefault();
-        copyToClipboard(apiUrlRef.current, 'url');
+        if (hasLocalImage) showLocalImageWarning();
+        else copyToClipboard(apiUrlRef.current, 'url');
       }
     }
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleDownload, copyToClipboard, shortcuts]);
+  }, [handleDownload, copyToClipboard, hasLocalImage, showLocalImageWarning, shortcuts]);
 
   const metaTags = generateMetaTags({
     title: params.title ? String(params.title) : undefined,
@@ -126,7 +143,7 @@ export function ExportBar({
         <button
           type="button"
           className="export-btn export-btn-ghost"
-          onClick={() => copyToClipboard(apiUrl, 'url')}
+          onClick={() => hasLocalImage ? showLocalImageWarning() : copyToClipboard(apiUrl, 'url')}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
           {copied === 'url' ? 'Copied!' : 'Copy Image URL'}
@@ -134,7 +151,7 @@ export function ExportBar({
         <button
           type="button"
           className="export-btn export-btn-ghost"
-          onClick={() => copyToClipboard(metaTags, 'meta')}
+          onClick={() => hasLocalImage ? showLocalImageWarning() : copyToClipboard(metaTags, 'meta')}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
           {copied === 'meta' ? 'Copied!' : 'Copy Meta Tags'}

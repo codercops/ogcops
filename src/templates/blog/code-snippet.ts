@@ -180,6 +180,7 @@ const template: TemplateDefinition = {
                       flexDirection: 'column',
                       padding: '36px 32px',
                       gap: '12px',
+                      whiteSpace: 'pre-wrap',
                     },
                     children: [
                       // Line: comment with category

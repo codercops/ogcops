@@ -92,14 +92,26 @@
 
 /* Empty State */
 .preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   padding: var(--space-4xl) 0;
   color: var(--text-subtle);
 }
 
 .preview-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: var(--space-md);
   opacity: 0.4;
+}
+
+.preview-empty-icon svg {
+  display: block;
+  margin: 0 auto;
 }
 
 .preview-empty p {

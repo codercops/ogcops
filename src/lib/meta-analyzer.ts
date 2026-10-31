@@ -18,11 +18,12 @@ export function analyzeMeta(tags: MetaTags): AnalysisResult {
   let score = 100;
 
   // Title checks
-  if (!tags.title && !tags.ogTitle) {
+  const effectiveTitle = tags.title || tags.ogTitle;
+  if (!effectiveTitle) {
     issues.push({ severity: 'error', tag: 'title', message: 'No page title found' });
     score -= 20;
-  } else if (tags.title && tags.title.length > 70) {
-    issues.push({ severity: 'warning', tag: 'title', message: `Title is ${tags.title.length} chars (recommended: under 70)` });
+  } else if (effectiveTitle.length > 70) {
+    issues.push({ severity: 'warning', tag: 'title', message: `Title is ${effectiveTitle.length} chars (recommended: under 70)` });
     score -= 5;
   }
 
@@ -59,11 +60,21 @@ export function analyzeMeta(tags: MetaTags): AnalysisResult {
     if (!tags.ogImageWidth || !tags.ogImageHeight) {
       issues.push({ severity: 'info', tag: 'og:image:width/height', message: 'Image dimensions not specified — platforms may crop unexpectedly' });
       score -= 3;
+    } else {
+      const width = Number(tags.ogImageWidth);
+      const height = Number(tags.ogImageHeight);
+      if (!Number.isInteger(width) || width <= 0 || !Number.isInteger(height) || height <= 0) {
+        issues.push({ severity: 'warning', tag: 'og:image:width/height', message: 'Image dimensions must be positive whole numbers' });
+        score -= 3;
+      }
     }
   }
 
   if (!tags.ogUrl) {
     issues.push({ severity: 'info', tag: 'og:url', message: 'Missing og:url tag' });
+    score -= 2;
+  } else if (!isAbsoluteHttpUrl(tags.ogUrl)) {
+    issues.push({ severity: 'warning', tag: 'og:url', message: 'og:url must be an absolute HTTP or HTTPS URL' });
     score -= 2;
   }
 
@@ -113,4 +124,14 @@ export function analyzeMeta(tags: MetaTags): AnalysisResult {
           : `Needs work — ${issueCount} critical issue${issueCount !== 1 ? 's' : ''} affecting social previews.`;
 
   return { score, grade, issues, summary };
+}
+
+function isAbsoluteHttpUrl(value: string): boolean {
+  if (!/^https?:\/\//i.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }

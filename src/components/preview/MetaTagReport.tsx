@@ -1,5 +1,6 @@
 import type { AnalysisResult } from '@/lib/meta-analyzer';
 import type { MetaTags } from '@/lib/meta-fetcher';
+import { truncateMetaValue } from '@/lib/meta-value';
 
 interface MetaTagReportProps {
   analysis: AnalysisResult;
@@ -60,7 +61,7 @@ export function MetaTagReport({ analysis, meta }: MetaTagReportProps) {
               .map(([key, value]) => (
                 <tr key={key}>
                   <td className="meta-tag-key">{key}</td>
-                  <td className="meta-tag-value">{String(value).slice(0, 200)}</td>
+                  <td className="meta-tag-value">{truncateMetaValue(value)}</td>
                 </tr>
               ))}
           </tbody>

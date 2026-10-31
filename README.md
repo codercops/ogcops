@@ -129,6 +129,10 @@ git checkout -b your-feature-branch
 - [Join the Discord](https://discord.gg/mpGdJyjaRQ) to chat with other contributors
 - [Start a discussion](https://github.com/codercops/ogcops/discussions) — questions, ideas, show & tell
 
+## Maintainers and funding
+
+OGCOPS is maintained by CODERCOPS together with contributors who have Triage access. [GOVERNANCE.md](https://github.com/codercops/.github/blob/main/GOVERNANCE.md) lists who they are and how to become one. The project is free and MIT licensed, and CODERCOPS doesn't sell it or a hosted version of it. If it's useful to you, you can [sponsor the maintainers](https://github.com/sponsors/anurag629). The money pays for review time and hosting.
+
 ## License
 
 [MIT](LICENSE)
