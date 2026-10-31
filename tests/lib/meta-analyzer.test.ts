@@ -108,6 +108,38 @@ describe('analyzeMeta', () => {
   const longDescription = 'A'.repeat(170);
 
   it.each([
+    ['abc', '630'], ['1200', '-100'], ['0', '630'], ['1200', '0'],
+    ['12.5', '630'], ['1200', '630.5'], ['Infinity', '630'], ['1200', 'NaN'],
+    ['1200px', '630'], [' ', '630'],
+  ])('warns about invalid image dimensions %s x %s', (ogImageWidth, ogImageHeight) => {
+    const result = analyzeMeta({ ...full, ogImageWidth, ogImageHeight });
+    expect(result.issues).toEqual([
+      { severity: 'warning', tag: 'og:image:width/height', message: 'Image dimensions must be positive whole numbers' },
+    ]);
+    expect(result.score).toBe(97);
+  });
+
+  it.each([['1200', '630'], ['1', '1']])('accepts positive whole image dimensions %s x %s', (ogImageWidth, ogImageHeight) => {
+    const result = analyzeMeta({ ...full, ogImageWidth, ogImageHeight });
+    expect(result.issues).toEqual([]);
+    expect(result.score).toBe(100);
+  });
+
+  it.each([[undefined, '630'], ['1200', undefined], ['', '630'], [undefined, undefined]])('retains the missing-dimensions message for %s x %s', (ogImageWidth, ogImageHeight) => {
+    const result = analyzeMeta({ ...full, ogImageWidth, ogImageHeight });
+    expect(result.issues).toEqual([
+      { severity: 'info', tag: 'og:image:width/height', message: 'Image dimensions not specified — platforms may crop unexpectedly' },
+    ]);
+    expect(result.score).toBe(97);
+  });
+
+  it('does not validate dimensions when og:image is missing', () => {
+    const result = analyzeMeta({ ...full, ogImage: undefined, ogImageWidth: 'abc', ogImageHeight: '-100' });
+    expect(result.issues.some((issue) => issue.tag === 'og:image:width/height')).toBe(false);
+    expect(result.issues).toContainEqual(expect.objectContaining({ tag: 'og:image', severity: 'error' }));
+  });
+
+  it.each([
     '/articles/example', './article', '//example.com/article', 'example.com',
     'ftp://example.com', 'javascript:alert(1)', 'https://', 'https://exa mple.com',
     'https:example.com',

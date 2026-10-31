@@ -60,6 +60,13 @@ export function analyzeMeta(tags: MetaTags): AnalysisResult {
     if (!tags.ogImageWidth || !tags.ogImageHeight) {
       issues.push({ severity: 'info', tag: 'og:image:width/height', message: 'Image dimensions not specified — platforms may crop unexpectedly' });
       score -= 3;
+    } else {
+      const width = Number(tags.ogImageWidth);
+      const height = Number(tags.ogImageHeight);
+      if (!Number.isInteger(width) || width <= 0 || !Number.isInteger(height) || height <= 0) {
+        issues.push({ severity: 'warning', tag: 'og:image:width/height', message: 'Image dimensions must be positive whole numbers' });
+        score -= 3;
+      }
     }
   }
 
