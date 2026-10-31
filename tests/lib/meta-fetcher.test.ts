@@ -140,6 +140,15 @@ describe('parseMetaTags', () => {
 });
 
 describe('canonical and favicon attribute order', () => {
+  it.each(['alternate canonical', 'canonical alternate', 'ALTERNATE CANONICAL', ' alternate\tcanonical\n'])('detects the canonical token in rel=%j', (rel) => {
+    const tags = parseMetaTags(`<link href="/preferred" rel="${rel}"><link rel="canonical" href="/later">`, 'https://example.com/page');
+    expect(tags.canonical).toBe('https://example.com/preferred');
+  });
+
+  it('does not match canonical as part of another token', () => {
+    expect(parseMetaTags('<link rel="not-canonical" href="/other">', 'https://example.com').canonical).toBeUndefined();
+  });
+
   it.each(['alternate icon', 'icon alternate', 'ALTERNATE ICON', '  alternate\ticon\n ', 'shortcut  icon'])('detects the icon token in rel=%j', (rel) => {
     const tags = parseMetaTags(`<link rel="${rel}" href="/favicon.png">`, 'https://example.com/page');
     expect(tags.favicon).toBe('https://example.com/favicon.png');

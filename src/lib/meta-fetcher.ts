@@ -94,13 +94,13 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
     const attrs = parseAttributes(tag);
     if (!attrs.rel) continue;
     const rel = attrs.rel.toLowerCase();
+    const relTokens = rel.split(/\s+/);
 
-    if (rel === 'canonical' && !tags.canonical && attrs.href) {
+    if (relTokens.includes('canonical') && !tags.canonical && attrs.href) {
       // Resolve like the favicon does, so a relative canonical is stored absolute.
       tags.canonical = resolveUrl(attrs.href, baseUrl);
     }
     // Match a complete relationship token, keeping `apple-touch-icon` excluded.
-    const relTokens = rel.split(/\s+/);
     if (relTokens.includes('icon') && !tags.favicon && attrs.href) {
       tags.favicon = resolveUrl(attrs.href, baseUrl);
     }
