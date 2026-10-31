@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useAI } from './AIContext';
 import { getApiKey, getSelectedProvider, getSelectedModel } from '@/lib/ai/storage';
 import { getDefaultModel } from '@/lib/ai/providers';
+import { normalizeAutofillUrl } from '@/lib/ai/normalize-autofill-url';
 
 interface AIAutofillProps {
   onAutofill: (result: { templateId: string; fields: Record<string, string>; colors?: Record<string, string> }) => void;
@@ -54,7 +55,7 @@ export function AIAutofill({ onAutofill, initialUrl }: AIAutofillProps) {
           provider,
           apiKey,
           model,
-          url: url.trim().startsWith('http') ? url.trim() : `https://${url.trim()}`,
+          url: normalizeAutofillUrl(url),
         }),
       });
 
