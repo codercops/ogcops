@@ -60,7 +60,7 @@ export function MetaTagReport({ analysis, meta }: MetaTagReportProps) {
               .map(([key, value]) => (
                 <tr key={key}>
                   <td className="meta-tag-key">{key}</td>
-                  <td className="meta-tag-value">{String(value).slice(0, 200)}</td>
+                  <td className="meta-tag-value">{Array.from(String(value)).slice(0, 200).join('')}</td>
                 </tr>
               ))}
           </tbody>
