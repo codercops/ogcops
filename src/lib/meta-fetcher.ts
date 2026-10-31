@@ -53,6 +53,7 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
   // Extract meta tags
   for (const tag of findTags(html, 'meta')) {
     const attrs = parseAttributes(tag);
+    if (attrs.content !== undefined) attrs.content = attrs.content.trim();
 
     // Every image tag starts a new group, even if its content is empty.
     // Dimensions before an image or belonging to later images are ignored.

@@ -1,8 +1,44 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { fetchMetaTags, parseMetaTags } from '@/lib/meta-fetcher';
+import { analyzeMeta } from '@/lib/meta-analyzer';
 
 describe('parseMetaTags', () => {
   const base = 'https://example.com/page';
+
+  it.each(['', '   ', '\t\n ', '&nbsp;&#32;'])('treats blank meta content %j as missing', (content) => {
+    const tags = parseMetaTags(`
+      <title>   </title>
+      <meta property="og:title" content="${content}">
+      <meta name="description" content="${content}">
+      <meta property="og:description" content="${content}">
+      <meta property="og:image" content="${content}">
+      <meta name="twitter:card" content="${content}">
+    `, base);
+
+    expect(tags.ogTitle).toBeUndefined();
+    expect(tags.description).toBeUndefined();
+    expect(tags.ogDescription).toBeUndefined();
+    expect(tags.ogImage).toBeUndefined();
+    expect(tags.twitterCard).toBeUndefined();
+    expect(analyzeMeta(tags).issues).toEqual(expect.arrayContaining([
+      { severity: 'error', tag: 'title', message: 'No page title found' },
+      { severity: 'error', tag: 'description', message: 'No meta description found' },
+    ]));
+  });
+
+  it('trims decoded meta content while preserving internal whitespace', () => {
+    const tags = parseMetaTags(`
+      <meta property="og:title" content="&nbsp; Hello  world &#32;">
+      <meta name="description" content="  A useful description.  ">
+      <meta property="og:image" content="  /cover.png  ">
+      <meta name="twitter:card" content="  summary_large_image  ">
+    `, base);
+
+    expect(tags.ogTitle).toBe('Hello  world');
+    expect(tags.description).toBe('A useful description.');
+    expect(tags.ogImage).toBe('https://example.com/cover.png');
+    expect(tags.twitterCard).toBe('summary_large_image');
+  });
 
   it.each([
     ['1200', '630', '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'],
