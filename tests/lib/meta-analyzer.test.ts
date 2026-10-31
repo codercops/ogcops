@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { analyzeMeta } from '@/lib/meta-analyzer';
 import type { MetaTags } from '@/lib/meta-fetcher';
+import { parseMetaTags } from '@/lib/meta-fetcher';
 
 describe('Meta Analyzer', () => {
   it('should give high score for complete meta tags', () => {
@@ -105,6 +106,41 @@ describe('analyzeMeta', () => {
   };
   const longTitle = 'A'.repeat(80);
   const longDescription = 'A'.repeat(170);
+
+  it.each([
+    '/articles/example', './article', '//example.com/article', 'example.com',
+    'ftp://example.com', 'javascript:alert(1)', 'https://', 'https://exa mple.com',
+    'https:example.com',
+  ])('warns when og:url is not an absolute HTTP(S) URL: %s', (ogUrl) => {
+    const tags = { ...full, ogUrl };
+    const result = analyzeMeta(tags);
+
+    expect(result.issues).toEqual([
+      { severity: 'warning', tag: 'og:url', message: 'og:url must be an absolute HTTP or HTTPS URL' },
+    ]);
+    expect(result.score).toBe(98);
+    expect(tags.ogUrl).toBe(ogUrl);
+  });
+
+  it.each(['https://example.com/article?x=1#top', 'http://example.com', 'HTTPS://example.com', 'HTTP://example.com'])('accepts absolute og:url %s', (ogUrl) => {
+    expect(analyzeMeta({ ...full, ogUrl }).issues).toEqual([]);
+  });
+
+  it.each([undefined, ''])('retains the existing missing og:url issue for %s', (ogUrl) => {
+    const result = analyzeMeta({ ...full, ogUrl });
+    expect(result.issues).toEqual([
+      { severity: 'info', tag: 'og:url', message: 'Missing og:url tag' },
+    ]);
+    expect(result.score).toBe(98);
+  });
+
+  it('preserves a parsed relative og:url and warns about it', () => {
+    const parsed = parseMetaTags('<meta property="og:url" content="/articles/example">', 'https://example.com/blog');
+    expect(parsed.ogUrl).toBe('/articles/example');
+    expect(analyzeMeta({ ...full, ...parsed }).issues).toEqual([
+      { severity: 'warning', tag: 'og:url', message: 'og:url must be an absolute HTTP or HTTPS URL' },
+    ]);
+  });
 
   it('warns and deducts five points for an overlong og:title without an HTML title', () => {
     const result = analyzeMeta({ ...full, title: undefined, ogTitle: longTitle });

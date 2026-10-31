@@ -66,6 +66,9 @@ export function analyzeMeta(tags: MetaTags): AnalysisResult {
   if (!tags.ogUrl) {
     issues.push({ severity: 'info', tag: 'og:url', message: 'Missing og:url tag' });
     score -= 2;
+  } else if (!isAbsoluteHttpUrl(tags.ogUrl)) {
+    issues.push({ severity: 'warning', tag: 'og:url', message: 'og:url must be an absolute HTTP or HTTPS URL' });
+    score -= 2;
   }
 
   if (!tags.ogType) {
@@ -114,4 +117,14 @@ export function analyzeMeta(tags: MetaTags): AnalysisResult {
           : `Needs work — ${issueCount} critical issue${issueCount !== 1 ? 's' : ''} affecting social previews.`;
 
   return { score, grade, issues, summary };
+}
+
+function isAbsoluteHttpUrl(value: string): boolean {
+  if (!/^https?:\/\//i.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
