@@ -17,13 +17,13 @@ export function isValidPreviewUrl(rawUrl: string): boolean {
 
   // Disallow non-http/https protocols like javascript:, data:, file:, mailto:, ftp:
   if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed)) {
-    if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+    if (!/^https?:\/\//i.test(trimmed)) {
       return false;
     }
   }
 
   const normalized =
-    trimmed.startsWith('http://') || trimmed.startsWith('https://')
+    /^https?:\/\//i.test(trimmed)
       ? trimmed
       : `https://${trimmed}`;
 
@@ -78,7 +78,7 @@ export function usePreviewState() {
 
     // Ensure URL has protocol
     let normalizedUrl = targetUrl.trim();
-    if (!normalizedUrl.startsWith('http://') && !normalizedUrl.startsWith('https://')) {
+    if (!/^https?:\/\//i.test(normalizedUrl)) {
       normalizedUrl = `https://${normalizedUrl}`;
     }
 

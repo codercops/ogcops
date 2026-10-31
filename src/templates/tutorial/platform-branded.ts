@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields, starIcon } from '../utils';
+import { truncate, autoFontSize, commonFields, starIcon, normalizeStarRating } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'tutorial-platform-branded',
@@ -31,7 +31,7 @@ const template: TemplateDefinition = {
     const title = truncate(String(params.title || 'The Complete Web Development Bootcamp'), 70);
     const platform = String(params.platform || 'LearnHub');
     const instructor = String(params.instructor || '');
-    const rating = Math.min(5, Math.max(1, Number(params.rating) || 5));
+    const rating = normalizeStarRating(params.rating, 5);
     const students = String(params.students || '');
     const bgColor = String(params.bgColor || '#0a0a0a');
     const accentColor = String(params.accentColor || '#E07A5F');

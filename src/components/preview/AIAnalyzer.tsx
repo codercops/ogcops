@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { MetaTags } from '@/lib/meta-fetcher';
+import { truncateMetaValue } from '@/lib/meta-value';
 import { getApiKey, getSelectedProvider, getSelectedModel, hasAnyKeyConfigured } from '@/lib/ai/storage';
 import { getProvider, getDefaultModel } from '@/lib/ai/providers';
 
@@ -38,7 +39,7 @@ export function AIAnalyzer({ meta, url }: AIAnalyzerProps) {
 
     const metaSummary = Object.entries(meta)
       .filter(([, v]) => v)
-      .map(([k, v]) => `${k}: ${String(v).slice(0, 200)}`)
+      .map(([k, v]) => `${k}: ${truncateMetaValue(v)}`)
       .join('\n');
 
     const systemPrompt = `You are an SEO and social media expert. Analyze meta tags for social sharing best practices. Return valid JSON only.`;

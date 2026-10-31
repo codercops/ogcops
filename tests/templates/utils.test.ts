@@ -12,6 +12,11 @@ import {
 } from '@/templates/utils';
 
 describe('truncate', () => {
+  it('counts and cuts supplementary characters as complete code points', () => {
+    expect(truncate('😀😀😀', 3)).toBe('😀😀😀');
+    expect(truncate('A😀BC', 3)).toBe('A😀…');
+    expect(truncate('A𠮷BC', 3)).toBe('A𠮷…');
+  });
   it('returns short text unchanged', () => {
     expect(truncate('hello', 10)).toBe('hello');
   });

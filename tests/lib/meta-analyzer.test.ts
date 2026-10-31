@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { analyzeMeta } from '@/lib/meta-analyzer';
 import type { MetaTags } from '@/lib/meta-fetcher';
+import { parseMetaTags } from '@/lib/meta-fetcher';
 
 describe('Meta Analyzer', () => {
   it('should give high score for complete meta tags', () => {
@@ -105,6 +106,96 @@ describe('analyzeMeta', () => {
   };
   const longTitle = 'A'.repeat(80);
   const longDescription = 'A'.repeat(170);
+
+  it.each([
+    ['abc', '630'], ['1200', '-100'], ['0', '630'], ['1200', '0'],
+    ['12.5', '630'], ['1200', '630.5'], ['Infinity', '630'], ['1200', 'NaN'],
+    ['1200px', '630'], [' ', '630'],
+  ])('warns about invalid image dimensions %s x %s', (ogImageWidth, ogImageHeight) => {
+    const result = analyzeMeta({ ...full, ogImageWidth, ogImageHeight });
+    expect(result.issues).toEqual([
+      { severity: 'warning', tag: 'og:image:width/height', message: 'Image dimensions must be positive whole numbers' },
+    ]);
+    expect(result.score).toBe(97);
+  });
+
+  it.each([['1200', '630'], ['1', '1']])('accepts positive whole image dimensions %s x %s', (ogImageWidth, ogImageHeight) => {
+    const result = analyzeMeta({ ...full, ogImageWidth, ogImageHeight });
+    expect(result.issues).toEqual([]);
+    expect(result.score).toBe(100);
+  });
+
+  it.each([[undefined, '630'], ['1200', undefined], ['', '630'], [undefined, undefined]])('retains the missing-dimensions message for %s x %s', (ogImageWidth, ogImageHeight) => {
+    const result = analyzeMeta({ ...full, ogImageWidth, ogImageHeight });
+    expect(result.issues).toEqual([
+      { severity: 'info', tag: 'og:image:width/height', message: 'Image dimensions not specified — platforms may crop unexpectedly' },
+    ]);
+    expect(result.score).toBe(97);
+  });
+
+  it('does not validate dimensions when og:image is missing', () => {
+    const result = analyzeMeta({ ...full, ogImage: undefined, ogImageWidth: 'abc', ogImageHeight: '-100' });
+    expect(result.issues.some((issue) => issue.tag === 'og:image:width/height')).toBe(false);
+    expect(result.issues).toContainEqual(expect.objectContaining({ tag: 'og:image', severity: 'error' }));
+  });
+
+  it.each([
+    '/articles/example', './article', '//example.com/article', 'example.com',
+    'ftp://example.com', 'javascript:alert(1)', 'https://', 'https://exa mple.com',
+    'https:example.com',
+  ])('warns when og:url is not an absolute HTTP(S) URL: %s', (ogUrl) => {
+    const tags = { ...full, ogUrl };
+    const result = analyzeMeta(tags);
+
+    expect(result.issues).toEqual([
+      { severity: 'warning', tag: 'og:url', message: 'og:url must be an absolute HTTP or HTTPS URL' },
+    ]);
+    expect(result.score).toBe(98);
+    expect(tags.ogUrl).toBe(ogUrl);
+  });
+
+  it.each(['https://example.com/article?x=1#top', 'http://example.com', 'HTTPS://example.com', 'HTTP://example.com'])('accepts absolute og:url %s', (ogUrl) => {
+    expect(analyzeMeta({ ...full, ogUrl }).issues).toEqual([]);
+  });
+
+  it.each([undefined, ''])('retains the existing missing og:url issue for %s', (ogUrl) => {
+    const result = analyzeMeta({ ...full, ogUrl });
+    expect(result.issues).toEqual([
+      { severity: 'info', tag: 'og:url', message: 'Missing og:url tag' },
+    ]);
+    expect(result.score).toBe(98);
+  });
+
+  it('preserves a parsed relative og:url and warns about it', () => {
+    const parsed = parseMetaTags('<meta property="og:url" content="/articles/example">', 'https://example.com/blog');
+    expect(parsed.ogUrl).toBe('/articles/example');
+    expect(analyzeMeta({ ...full, ...parsed }).issues).toEqual([
+      { severity: 'warning', tag: 'og:url', message: 'og:url must be an absolute HTTP or HTTPS URL' },
+    ]);
+  });
+
+  it('warns and deducts five points for an overlong og:title without an HTML title', () => {
+    const result = analyzeMeta({ ...full, title: undefined, ogTitle: longTitle });
+
+    expect(result.issues).toEqual([
+      { severity: 'warning', tag: 'title', message: 'Title is 80 chars (recommended: under 70)' },
+    ]);
+    expect(result.score).toBe(95);
+  });
+
+  it('accepts an og:title at the 70-character limit without an HTML title', () => {
+    const result = analyzeMeta({ ...full, title: undefined, ogTitle: 'A'.repeat(70) });
+
+    expect(result.issues).toEqual([]);
+    expect(result.score).toBe(100);
+  });
+
+  it('prefers the HTML title when both title sources are present', () => {
+    const result = analyzeMeta({ ...full, ogTitle: longTitle });
+
+    expect(result.issues).toEqual([]);
+    expect(result.score).toBe(100);
+  });
 
   it.each([
     [90, 'A', { ogUrl: undefined, ogImageWidth: undefined, ogDescription: undefined }],

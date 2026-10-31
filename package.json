@@ -36,10 +36,11 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.11",
+    "vitest": "^4.1.12",
     "wrangler": "^4.141.0"
   },
   "overrides": {
-    "sharp": "^0.35.5"
+    "sharp": "^0.35.5",
+    "undici@7": "^7.30.1"
   }
 }

@@ -1,7 +1,8 @@
 name: Accepted label
 
-# A merged PR counts on the leaderboard only with the hacktoberfest-accepted
-# label, and only for an issue that was assigned to its author (CONTRIBUTING.md).
+# A merged PR counts on the leaderboard (oss.codercops.com) only with the
+# codercops-accepted label, and only for an issue that was assigned to its
+# author (CONTRIBUTING.md). PRs merged in October also get hacktoberfest-accepted.
 # Maintainers add the label when they merge. This adds it when that was missed,
 # by the same rule as the claim check: every issue the PR closes is assigned to
 # the author. It runs once, at the merge, so removing the label later sticks.
@@ -20,12 +21,13 @@ permissions:
 jobs:
   label:
     name: Label a merged contributor PR
-    # Maintainers and bots don't claim issues, and spam never counts.
+    # Maintainers and bots don't claim issues, and spam never counts. Outside
+    # collaborators (contributors with Triage) are labeled like everyone else.
     if: >-
       github.event.pull_request.merged == true &&
       github.event.pull_request.user.type != 'Bot' &&
-      !contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association) &&
-      !contains(github.event.pull_request.labels.*.name, 'hacktoberfest-accepted') &&
+      !contains(fromJSON('["OWNER", "MEMBER"]'), github.event.pull_request.author_association) &&
+      !contains(github.event.pull_request.labels.*.name, 'codercops-accepted') &&
       !contains(github.event.pull_request.labels.*.name, 'spam')
     runs-on: ubuntu-latest
     steps:
@@ -34,6 +36,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
+          MERGED_AT: ${{ github.event.pull_request.merged_at }}
         run: |
           set -euo pipefail
 
@@ -70,7 +73,7 @@ jobs:
           fi
 
           if [ "$(jq length <<<"$linked")" -eq 0 ]; then
-            echo "::notice title=Not labeled::This PR isn't linked to an issue, so it doesn't get hacktoberfest-accepted."
+            echo "::notice title=Not labeled::This PR isn't linked to an issue, so it doesn't get codercops-accepted."
             exit 0
           fi
 
@@ -81,9 +84,12 @@ jobs:
             | join(", ")' <<<"$linked")
 
           if [ -n "$missing" ]; then
-            echo "::notice title=Not labeled::$missing isn't assigned to @$author, so this PR doesn't get hacktoberfest-accepted."
+            echo "::notice title=Not labeled::$missing isn't assigned to @$author, so this PR doesn't get codercops-accepted."
             exit 0
           fi
 
-          gh api -X POST "repos/$REPO/issues/$PR/labels" -f "labels[]=hacktoberfest-accepted" --silent
-          echo "Added hacktoberfest-accepted: $(jq -r '[.[].ref] | join(", ")' <<<"$linked") assigned to @$author"
+          labels=(-f "labels[]=codercops-accepted")
+          # Hacktoberfest only counts PRs merged in October (UTC).
+          if [ "${MERGED_AT:5:2}" = "10" ]; then labels+=(-f "labels[]=hacktoberfest-accepted"); fi
+          gh api -X POST "repos/$REPO/issues/$PR/labels" "${labels[@]}" --silent
+          echo "Labeled: $(jq -r '[.[].ref] | join(", ")' <<<"$linked") assigned to @$author"

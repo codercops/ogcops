@@ -204,4 +204,19 @@ describe('Preview and Template Links', () => {
       '/create?title=My%20Custom%20Page&amp;description=A%20great%20description'
     );
   });
+
+  it('FixItButton retains siteName query parameter in editor link when present', () => {
+    const html = renderToString(
+      React.createElement(FixItButton, {
+        meta: {
+          title: 'My Custom Page',
+          description: 'A great description',
+          ogSiteName: 'GitHub',
+        },
+      })
+    );
+    expect(html).toContain(
+      '/create?title=My%20Custom%20Page&amp;description=A%20great%20description&amp;siteName=GitHub'
+    );
+  });
 });

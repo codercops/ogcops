@@ -208,11 +208,12 @@ export function flaskIcon(size: number, color: string) {
 }
 
 /**
- * Truncate text to a max length with ellipsis.
+ * Truncate text to a maximum number of Unicode code points, including ellipsis.
  */
 export function truncate(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength - 1).trimEnd() + '…';
+  const characters = Array.from(text);
+  if (characters.length <= maxLength) return text;
+  return characters.slice(0, maxLength - 1).join('').trimEnd() + '…';
 }
 
 /**
@@ -226,6 +227,12 @@ export function autoFontSize(
     if (text.length <= bp.maxLen) return bp.size;
   }
   return breakpoints[breakpoints.length - 1].size;
+}
+
+/** Round and clamp a supplied star rating, preserving explicit zero values. */
+export function normalizeStarRating(value: unknown, fallback: number): number {
+  const parsed = value == null || String(value).trim() === '' ? fallback : Number(value);
+  return Math.min(5, Math.max(1, Math.round(Number.isNaN(parsed) ? fallback : parsed)));
 }
 
 /**

@@ -42,11 +42,11 @@ const template: TemplateDefinition = {
     const textColor = String(params.textColor || '#e6edf3');
 
     const langs = [
-      { name: String(params.lang1 || 'TypeScript'), pct: String(params.pct1 || '62.4%'), color: String(params.color1 || '#3178c6') },
-      { name: String(params.lang2 || 'Rust'), pct: String(params.pct2 || '24.1%'), color: String(params.color2 || '#dea584') },
-      { name: String(params.lang3 || 'CSS'), pct: String(params.pct3 || '8.3%'), color: String(params.color3 || '#563d7c') },
-      { name: String(params.lang4 || 'Other'), pct: String(params.pct4 || '5.2%'), color: String(params.color4 || '#6e7681') },
-    ];
+      { name: String(params.lang1 ?? 'TypeScript'), pct: String(params.pct1 ?? '62.4%'), color: String(params.color1 || '#3178c6') },
+      { name: String(params.lang2 ?? 'Rust'), pct: String(params.pct2 ?? '24.1%'), color: String(params.color2 || '#dea584') },
+      { name: String(params.lang3 ?? 'CSS'), pct: String(params.pct3 ?? '8.3%'), color: String(params.color3 || '#563d7c') },
+      { name: String(params.lang4 ?? 'Other'), pct: String(params.pct4 ?? '5.2%'), color: String(params.color4 || '#6e7681') },
+    ].filter((l) => l.name.trim());
 
     const repoSize = autoFontSize(repoName, [
       { maxLen: 15, size: 48 },

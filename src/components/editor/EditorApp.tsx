@@ -236,7 +236,7 @@ function EditorAppInner({ initialCategory }: EditorAppProps) {
           <span className="editor-topbar-name">{currentTemplate.name}</span>
         </div>
         <AITopbarButton />
-        <ExportBar apiUrl={apiUrl} downloadUrl={downloadUrl} params={state.params} templateId={state.templateId} />
+        <ExportBar apiUrl={apiUrl} downloadUrl={downloadUrl} params={state.params} templateId={state.templateId} svg={svg} />
       </div>
 
       {/* Mobile Tabs */}
@@ -278,7 +278,7 @@ function EditorAppInner({ initialCategory }: EditorAppProps) {
                 <Canvas svg={svg} loading={loading} error={error} />
               </div>
               {/* The topbar ExportBar always mounts and owns the shortcuts, so this second one opts out. */}
-              <ExportBar apiUrl={apiUrl} downloadUrl={downloadUrl} params={state.params} templateId={state.templateId} shortcuts={false} />
+              <ExportBar apiUrl={apiUrl} downloadUrl={downloadUrl} params={state.params} templateId={state.templateId} svg={svg} shortcuts={false} />
               <PlatformPreviewStrip
                 svg={svg}
                 title={String(state.params.title || '')}

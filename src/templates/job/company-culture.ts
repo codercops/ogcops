@@ -35,10 +35,10 @@ const template: TemplateDefinition = {
     const title = truncate(String(params.title || 'Product Designer'), 50);
     const company = String(params.company || '');
     const values = [
-      String(params.value1 || ''),
-      String(params.value2 || ''),
-      String(params.value3 || ''),
-      String(params.value4 || ''),
+      truncate(String(params.value1 || ''), 40),
+      truncate(String(params.value2 || ''), 40),
+      truncate(String(params.value3 || ''), 40),
+      truncate(String(params.value4 || ''), 40),
     ].filter(Boolean);
     const teamSize = String(params.teamSize || '');
     const bgColor = String(params.bgColor || '#0a0a0a');
@@ -152,6 +152,7 @@ const template: TemplateDefinition = {
                 props: {
                   style: {
                     display: 'flex',
+                    flexShrink: 0,
                     padding: '10px 24px',
                     border: `2px solid ${accentColor}55`,
                     borderRadius: '100px',

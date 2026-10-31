@@ -14,16 +14,18 @@ declare global {
 export function FixItButton({ meta }: FixItButtonProps) {
   const title = meta.ogTitle || meta.title || '';
   const description = meta.ogDescription || meta.description || '';
+  const siteName = meta.ogSiteName || '';
 
-  const editorUrl = `/create?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
+  const editorUrl = `/create?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}${siteName ? `&siteName=${encodeURIComponent(siteName)}` : ''}`;
+
+  const tags = generateMetaTags({
+    title,
+    description: description || undefined,
+    siteName: siteName || undefined,
+    imageUrl: 'YOUR_IMAGE_URL',
+  });
 
   const handleCopy = async () => {
-    const tags = generateMetaTags({
-      title,
-      description: description || undefined,
-      imageUrl: 'YOUR_IMAGE_URL',
-    });
-
     try {
       await navigator.clipboard.writeText(tags);
       window.showToast?.('Recommended meta tags copied!', 'success');

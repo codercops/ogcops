@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import {
   ogQuerySchema,
   parseSearchParams,
@@ -7,6 +7,7 @@ import {
 } from '@/lib/api-validation';
 import { getTemplate, getAllTemplates } from '@/templates/registry';
 import { normalizeColorFields } from '@/templates/utils';
+import type { TemplateField } from '@/templates/types';
 
 describe('OG API Validation', () => {
   it('should validate valid params', () => {
@@ -190,6 +191,19 @@ describe('resolveDimensions', () => {
     });
   });
 
+  it('rounds a fractional height to a whole number', () => {
+    expect(resolveDimensions(undefined, 315.6)).toEqual({
+      success: true,
+      width: 602,
+      height: 316,
+    });
+    expect(resolveDimensions(undefined, 175.2)).toEqual({
+      success: true,
+      width: 333,
+      height: 175,
+    });
+  });
+
   it('derives width when only height is supplied', () => {
     expect(resolveDimensions(undefined, 315)).toEqual({
       success: true,
@@ -223,6 +237,11 @@ describe('resolveDimensions', () => {
       success: true,
       width: 2400,
       height: 1260,
+    });
+    expect(resolveDimensions(600.4, 315.2)).toEqual({
+      success: true,
+      width: 600,
+      height: 315,
     });
   });
 
@@ -323,6 +342,47 @@ describe('mergeOgParams', () => {
     expect(merged.quote).toBe('Talk is cheap, show me the code.');
     expect(merged.author).toBe(template!.defaults.author);
   });
+
+  describe('with the template fields', () => {
+    const fieldDefaults: Record<string, string | number | boolean> = {
+      ...defaults,
+      title: 'Default title',
+      imageUrl: 'https://example.com/cover.png',
+    };
+    const fields: TemplateField[] = [
+      { key: 'title', label: 'Title', type: 'text', defaultValue: 'Default title', required: true, group: 'Content' },
+      { key: 'quote', label: 'Quote', type: 'textarea', defaultValue: 'Default quote', group: 'Content' },
+      { key: 'author', label: 'Author', type: 'text', defaultValue: 'Default Author', group: 'Content' },
+      { key: 'bgColor', label: 'Background', type: 'color', defaultValue: '#0a0a0a', group: 'Style' },
+      { key: 'imageUrl', label: 'Image', type: 'image', defaultValue: 'https://example.com/cover.png', group: 'Style' },
+    ];
+
+    function mergeWithFields(query: string) {
+      const searchParams = new URLSearchParams(query);
+      const parsed = parseSearchParams(searchParams, ogQuerySchema);
+      if (!parsed.success) throw new Error(parsed.error);
+      return mergeOgParams(parsed.data, fieldDefaults, searchParams, fields);
+    }
+
+    it('keeps an optional text field empty when it is sent empty', () => {
+      const merged = mergeWithFields('quote=&author=');
+      expect(merged.quote).toBe('');
+      expect(merged.author).toBe('');
+    });
+
+    it('still uses the default when the param is left out', () => {
+      const merged = mergeWithFields('');
+      expect(merged.quote).toBe('Default quote');
+      expect(merged.author).toBe('Default Author');
+    });
+
+    it('falls back to the default for empty required fields, colors and images', () => {
+      const merged = mergeWithFields('title=&bgColor=&imageUrl=');
+      expect(merged.title).toBe('Default title');
+      expect(merged.bgColor).toBe('#0a0a0a');
+      expect(merged.imageUrl).toBe('https://example.com/cover.png');
+    });
+  });
 });
 
 // og-engine pulls in the resvg wasm binary through a Vite-only `?module`
@@ -334,16 +394,21 @@ vi.mock('@/lib/og-engine', () => ({
 
 const { GET } = await import('@/pages/api/og');
 
-function makeContext(url: string) {
+function makeContext(url: string, locals: object = {}) {
   return {
     request: new Request(url),
-    locals: {},
+    locals,
   } as unknown as Parameters<NonNullable<typeof GET>>[0];
 }
 
 const BASE = 'http://localhost:4321/api/og';
 
 describe('OG API error caching', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
   it('does not cache a 404 for a template that does not exist', async () => {
     const res = await GET(makeContext(`${BASE}?template=does-not-exist&title=Hi`));
 
@@ -379,6 +444,51 @@ describe('OG API error caching', () => {
 
     expect(res.status).toBe(200);
     expect(res.headers.get('cache-control')).toBe('public, max-age=86400');
+  });
+
+  it('does not read or write the Cloudflare cache in development', async () => {
+    const cache = {
+      match: vi.fn().mockResolvedValue(undefined),
+      put: vi.fn().mockResolvedValue(undefined),
+    };
+    vi.stubEnv('DEV', true);
+    vi.stubGlobal('caches', { default: cache });
+
+    const res = await GET(
+      makeContext(`${BASE}?template=blog-minimal-dark&title=Hi`, {
+        cfContext: { waitUntil: vi.fn() },
+      })
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toBe('image/png');
+    expect(cache.match).not.toHaveBeenCalled();
+    expect(cache.put).not.toHaveBeenCalled();
+  });
+
+  it('looks up and caches a successful 200 response outside development', async () => {
+    const cache = {
+      match: vi.fn().mockResolvedValue(undefined),
+      put: vi.fn().mockResolvedValue(undefined),
+    };
+    const waitUntil = vi.fn();
+    vi.stubEnv('DEV', false);
+    vi.stubGlobal('caches', { default: cache });
+
+    const res = await GET(
+      makeContext(`${BASE}?template=blog-minimal-dark&title=Hi`, {
+        cfContext: { waitUntil },
+      })
+    );
+
+    expect(res.status).toBe(200);
+    expect(cache.match).toHaveBeenCalledWith(expect.any(Request));
+    expect(cache.put).toHaveBeenCalledOnce();
+    expect(cache.put).toHaveBeenCalledWith(
+      expect.any(Request),
+      expect.objectContaining({ status: 200 })
+    );
+    expect(waitUntil).toHaveBeenCalledOnce();
   });
 });
 
@@ -466,7 +576,7 @@ describe('OG API dimension resolution and scaling', () => {
     );
   });
 
-  it('scales down to 601 when height is fractional', async () => {
+  it('scales down to a whole-number width when height is fractional', async () => {
     const { renderToPng } = await import('@/lib/og-engine');
     vi.mocked(renderToPng).mockClear();
 
@@ -474,7 +584,7 @@ describe('OG API dimension resolution and scaling', () => {
     expect(res.status).toBe(200);
     expect(renderToPng).toHaveBeenCalledWith(
       expect.anything(),
-      { width: 1200, height: 630, scaleDown: 601 }
+      { width: 1200, height: 630, scaleDown: 602 }
     );
   });
 
@@ -546,5 +656,26 @@ describe('OG API empty parameters fall back to the defaults', () => {
   it('still returns 404 for a template that does not exist', async () => {
     const res = await GET(makeContext(`${BASE}?template=does-not-exist`));
     expect(res.status).toBe(404);
+  });
+});
+
+describe('OG API cleared fields', () => {
+  it('keeps an optional field the editor cleared empty, and uses the default when it is left out', async () => {
+    const template = getTemplate('newsletter-subscribe-card')!;
+    const render = vi.spyOn(template, 'render');
+
+    try {
+      const cleared = await GET(makeContext(`${BASE}?template=newsletter-subscribe-card&subscriberCount=`));
+      expect(cleared.status).toBe(200);
+      expect(render).toHaveBeenLastCalledWith(expect.objectContaining({ subscriberCount: '' }));
+
+      const omitted = await GET(makeContext(`${BASE}?template=newsletter-subscribe-card`));
+      expect(omitted.status).toBe(200);
+      expect(render).toHaveBeenLastCalledWith(
+        expect.objectContaining({ subscriberCount: template.defaults.subscriberCount })
+      );
+    } finally {
+      render.mockRestore();
+    }
   });
 });

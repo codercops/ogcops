@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { TemplateField } from '@/templates/types';
 
 // An empty value counts as missing, so `?imageUrl=` (a URL built from CMS data
 // for a post with no cover image) falls back to the default instead of failing.
@@ -52,6 +53,7 @@ export function resolveDimensions(
   height?: number
 ): DimensionResolution {
   if (width !== undefined) width = Math.round(width);
+  if (height !== undefined) height = Math.round(height);
 
   if (width !== undefined && (width < OG_MIN_WIDTH || width > OG_MAX_WIDTH)) {
     return {
@@ -130,7 +132,8 @@ const ogQuerySchemaKeys = new Set(Object.keys(ogQuerySchema.shape));
 export function mergeOgParams(
   params: OGQueryParams,
   defaults: Record<string, string | number | boolean>,
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
+  fields: TemplateField[] = []
 ): Record<string, string | number | boolean> {
   const merged: Record<string, string | number | boolean> = { ...defaults };
 
@@ -146,6 +149,17 @@ export function mergeOgParams(
       merged[key] = value;
     }
   });
+
+  // An optional text field sent empty (`?subscriberCount=`) stays empty instead
+  // of falling back to its default. The editor sends that when someone clears
+  // a field, so the image matches the preview. Leaving the param out still
+  // gives the default, and every other empty value (the template, image URLs,
+  // required fields, colors, numbers) falls back like before.
+  for (const field of fields) {
+    if ((field.type === 'text' || field.type === 'textarea') && !field.required && searchParams.get(field.key) === '') {
+      merged[field.key] = '';
+    }
+  }
 
   return merged;
 }
