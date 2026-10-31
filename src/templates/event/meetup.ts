@@ -36,6 +36,7 @@ const template: TemplateDefinition = {
     const description = params.description ? truncate(String(params.description), 120) : '';
     const topic = String(params.topic || '');
     const date = String(params.date || '');
+    const [month = '', day = ''] = date.trim().split(/\s+/);
     const time = String(params.time || '');
     const location = String(params.location || '');
     const groupName = String(params.groupName || '');
@@ -98,7 +99,7 @@ const template: TemplateDefinition = {
                                   color: '#FFFFFF',
                                   lineHeight: 1,
                                 },
-                                children: date.split(' ')[1] || date,
+                                children: day ? day.replace(/,$/, '') : date,
                               },
                             },
                             {
@@ -112,7 +113,7 @@ const template: TemplateDefinition = {
                                   letterSpacing: '0.1em',
                                   marginTop: '4px',
                                 },
-                                children: date.split(' ')[0] || '',
+                                children: day ? month : '',
                               },
                             },
                           ]
