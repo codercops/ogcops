@@ -18,11 +18,12 @@ export function analyzeMeta(tags: MetaTags): AnalysisResult {
   let score = 100;
 
   // Title checks
-  if (!tags.title && !tags.ogTitle) {
+  const effectiveTitle = tags.title || tags.ogTitle;
+  if (!effectiveTitle) {
     issues.push({ severity: 'error', tag: 'title', message: 'No page title found' });
     score -= 20;
-  } else if (tags.title && tags.title.length > 70) {
-    issues.push({ severity: 'warning', tag: 'title', message: `Title is ${tags.title.length} chars (recommended: under 70)` });
+  } else if (effectiveTitle.length > 70) {
+    issues.push({ severity: 'warning', tag: 'title', message: `Title is ${effectiveTitle.length} chars (recommended: under 70)` });
     score -= 5;
   }
 

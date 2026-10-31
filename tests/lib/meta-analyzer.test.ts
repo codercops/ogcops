@@ -106,6 +106,29 @@ describe('analyzeMeta', () => {
   const longTitle = 'A'.repeat(80);
   const longDescription = 'A'.repeat(170);
 
+  it('warns and deducts five points for an overlong og:title without an HTML title', () => {
+    const result = analyzeMeta({ ...full, title: undefined, ogTitle: longTitle });
+
+    expect(result.issues).toEqual([
+      { severity: 'warning', tag: 'title', message: 'Title is 80 chars (recommended: under 70)' },
+    ]);
+    expect(result.score).toBe(95);
+  });
+
+  it('accepts an og:title at the 70-character limit without an HTML title', () => {
+    const result = analyzeMeta({ ...full, title: undefined, ogTitle: 'A'.repeat(70) });
+
+    expect(result.issues).toEqual([]);
+    expect(result.score).toBe(100);
+  });
+
+  it('prefers the HTML title when both title sources are present', () => {
+    const result = analyzeMeta({ ...full, ogTitle: longTitle });
+
+    expect(result.issues).toEqual([]);
+    expect(result.score).toBe(100);
+  });
+
   it.each([
     [90, 'A', { ogUrl: undefined, ogImageWidth: undefined, ogDescription: undefined }],
     [89, 'B', { ogImageWidth: undefined, twitterCard: undefined }],
