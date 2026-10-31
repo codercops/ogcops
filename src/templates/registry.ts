@@ -153,6 +153,7 @@ import githubSponsorsGoal from './github/sponsors-goal';
 import githubSecurityAdvisory from './github/security-advisory';
 import githubMaintainersWanted from './github/maintainers-wanted';
 import githubPackageCard from './github/package-card';
+import githubDiscussion from './github/discussion';
 
 [
   githubRepoCard, githubContributionGraph, githubReadmeHero, githubReleaseNotes,
@@ -166,6 +167,7 @@ import githubPackageCard from './github/package-card';
   githubSecurityAdvisory,
   githubMaintainersWanted,
   githubPackageCard,
+  githubDiscussion,
 ].forEach(registerTemplate);
 
 // Event

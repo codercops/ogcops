@@ -17,3 +17,4 @@ export { default as githubSponsorsGoal } from './sponsors-goal';
 export { default as githubSecurityAdvisory } from './security-advisory';
 export { default as githubMaintainersWanted } from './maintainers-wanted';
 export { default as githubPackageCard } from './package-card';
+export { default as githubDiscussion } from './discussion';
