@@ -1,5 +1,5 @@
 import type { TemplateDefinition } from '../types';
-import { truncate, autoFontSize, commonFields, starIcon } from '../utils';
+import { truncate, autoFontSize, commonFields, starIcon, normalizeStarRating } from '../utils';
 
 const template: TemplateDefinition = {
   id: 'ecommerce-review-highlight',
@@ -31,7 +31,7 @@ const template: TemplateDefinition = {
     const review = truncate(String(params.review || 'Absolutely love this product!'), 180);
     const reviewer = String(params.reviewer || '');
     const title = String(params.title || '');
-    const rating = Math.min(5, Math.max(1, Math.round(Number(params.rating) || 5)));
+    const rating = normalizeStarRating(params.rating, 5);
     const siteName = String(params.siteName || '');
     const bgColor = String(params.bgColor || '#0a0a0a');
     const accentColor = String(params.accentColor || '#E07A5F');
