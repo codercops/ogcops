@@ -343,10 +343,11 @@ import tutorialGlossary from './tutorial/glossary';
 import tutorialPrerequisites from './tutorial/prerequisites';
 import tutorialErrorExplained from './tutorial/error-explained';
 import tutorialTil from './tutorial/til';
+import tutorialDoDont from './tutorial/do-dont';
 
 [
   tutorialCourseCard, tutorialStepByStep, tutorialVideoLesson, tutorialDifficultyBadge,
   tutorialPlatformBranded, tutorialCodeTutorial, tutorialWorkshopBanner, tutorialCertification,
   tutorialQuizCard, tutorialCheatSheet, tutorialBeforeAfter, tutorialGlossary, tutorialPrerequisites,
-  tutorialErrorExplained, tutorialTil,
+  tutorialErrorExplained, tutorialTil, tutorialDoDont,
 ].forEach(registerTemplate);
