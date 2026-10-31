@@ -20,6 +20,12 @@ describe('rating stars', () => {
     expect(filled(template, 4.6, gold)).toBe(5);
   });
 
+  it('product-card clamps an explicit rating of 0 to 1 star instead of falling back to 4', () => {
+    // rating=0 is falsy so `|| 4` previously returned 4 stars; now it must clamp to 1 (the minimum)
+    expect(filled(productCard, 0, '#F5C518')).toBe(1);
+    expect(filled(productCard, '0', '#F5C518')).toBe(1);
+  });
+
   it('testimonial-banner fills whole stars for a decimal rating', () => {
     const empty = (rating: unknown) => filled(testimonialBanner, rating, '#FFFFFF22');
     expect(empty(4.1)).toBe(1);

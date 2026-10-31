@@ -33,7 +33,8 @@ const template: TemplateDefinition = {
     const title = truncate(String(params.title || 'Wireless Noise-Cancelling Headphones'), 60);
     const description = params.description ? truncate(String(params.description), 100) : '';
     const price = String(params.price || '$99.99');
-    const rating = Math.min(5, Math.max(1, Math.round(Number(params.rating) || 4)));
+    const ratingInput = Number(params.rating);
+    const rating = Math.min(5, Math.max(1, Math.round(params.rating != null && params.rating !== '' ? ratingInput : 4)));
     const reviewCount = String(params.reviewCount || '');
     const siteName = String(params.siteName || '');
     const bgColor = String(params.bgColor || '#0a0a0a');
