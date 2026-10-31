@@ -229,6 +229,12 @@ export function autoFontSize(
   return breakpoints[breakpoints.length - 1].size;
 }
 
+/** Round and clamp a supplied star rating, preserving explicit zero values. */
+export function normalizeStarRating(value: unknown, fallback: number): number {
+  const parsed = value == null || String(value).trim() === '' ? fallback : Number(value);
+  return Math.min(5, Math.max(1, Math.round(Number.isNaN(parsed) ? fallback : parsed)));
+}
+
 /**
  * Parse hex color, supporting both with and without #.
  */
