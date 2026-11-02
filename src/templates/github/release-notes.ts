@@ -36,10 +36,10 @@ const template: TemplateDefinition = {
     const version = String(params.version || 'v3.0.0');
     const releaseTitle = String(params.releaseTitle || 'Major Release');
     const changes = [
-      String(params.change1 || 'New plugin system'),
-      String(params.change2 || 'Performance improvements'),
-      String(params.change3 || 'Breaking: Updated API'),
-    ];
+      String(params.change1 ?? 'New plugin system'),
+      String(params.change2 ?? 'Performance improvements'),
+      String(params.change3 ?? 'Breaking: Updated API'),
+    ].filter((change) => change.trim());
     const date = String(params.date || '');
     const bgColor = String(params.bgColor || '#0d1117');
     const accentColor = String(params.accentColor || '#58a6ff');
