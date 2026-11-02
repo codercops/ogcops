@@ -278,6 +278,7 @@ const template: TemplateDefinition = {
                             style: {
                               fontSize: '16px',
                               color: token.color,
+                              whiteSpace: 'pre',
                             },
                             children: token.text,
                           },

@@ -69,6 +69,7 @@ const template: TemplateDefinition = {
                       fontWeight: 300,
                       color: `${textColor}CC`,
                       lineHeight: 1.3,
+                      whiteSpace: 'pre-wrap',
                     },
                     children: `${quoteBefore} `,
                   },
@@ -81,8 +82,9 @@ const template: TemplateDefinition = {
                       fontWeight: 800,
                       color: accentColor,
                       lineHeight: 1.3,
+                      whiteSpace: 'pre-wrap',
                     },
-                    children: highlight,
+                    children: quoteAfter ? `${highlight} ` : highlight,
                   },
                 },
                 ...(quoteAfter
@@ -96,7 +98,7 @@ const template: TemplateDefinition = {
                             color: `${textColor}CC`,
                             lineHeight: 1.3,
                           },
-                          children: ` ${quoteAfter}`,
+                          children: quoteAfter,
                         },
                       },
                     ]
