@@ -35,11 +35,11 @@ const template: TemplateDefinition = {
     const title = truncate(String(params.title || 'Your Product'), 40);
     const tagline = String(params.tagline || '');
     const features = [
-      String(params.feature1 || 'Lightning Fast'),
-      String(params.feature2 || 'Secure by Default'),
-      String(params.feature3 || 'Easy Integration'),
-      String(params.feature4 || 'Real-time Sync'),
-    ];
+      String(params.feature1 ?? 'Lightning Fast'),
+      String(params.feature2 ?? 'Secure by Default'),
+      String(params.feature3 ?? 'Easy Integration'),
+      String(params.feature4 ?? 'Real-time Sync'),
+    ].filter((feature) => feature.trim());
     const siteName = String(params.siteName || '');
     const bgColor = String(params.bgColor || '#0f172a');
     const accentColor = String(params.accentColor || '#06b6d4');
@@ -201,6 +201,7 @@ const template: TemplateDefinition = {
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignItems: 'center',
+                alignContent: 'center',
                 justifyContent: 'center',
                 width: '660px',
                 gap: '16px',

@@ -39,12 +39,12 @@ const template: TemplateDefinition = {
     const title = truncate(String(params.title || 'Used by the Best Teams'), 50);
     const description = params.description ? truncate(String(params.description), 100) : '';
     const companies = [
-      String(params.company1 || 'Stripe'),
-      String(params.company2 || 'Vercel'),
-      String(params.company3 || 'Linear'),
-      String(params.company4 || 'Notion'),
-      String(params.company5 || 'Figma'),
-    ];
+      String(params.company1 ?? 'Stripe'),
+      String(params.company2 ?? 'Vercel'),
+      String(params.company3 ?? 'Linear'),
+      String(params.company4 ?? 'Notion'),
+      String(params.company5 ?? 'Figma'),
+    ].filter((company) => company.trim());
     const trustText = String(params.trustText || 'Trusted by 10,000+ teams worldwide');
     const siteName = String(params.siteName || '');
     const bgColor = String(params.bgColor || '#0f172a');
