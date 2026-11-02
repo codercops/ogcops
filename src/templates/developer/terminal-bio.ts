@@ -161,7 +161,7 @@ const template: TemplateDefinition = {
                           {
                             type: 'span',
                             props: {
-                              style: { fontSize: '18px', fontWeight: 700, color: promptColor },
+                              style: { fontSize: '18px', fontWeight: 700, color: promptColor, whiteSpace: 'pre' },
                               children: '$ ',
                             },
                           },
@@ -177,7 +177,7 @@ const template: TemplateDefinition = {
                           {
                             type: 'span',
                             props: {
-                              style: { fontSize: '17px', color: textColor, width: '120px' },
+                              style: { fontSize: '17px', color: textColor, width: '120px', whiteSpace: 'pre' },
                               children: `  ${line.key}:`,
                             },
                           },
@@ -204,7 +204,7 @@ const template: TemplateDefinition = {
                       {
                         type: 'span',
                         props: {
-                          style: { fontSize: '18px', fontWeight: 700, color: promptColor },
+                          style: { fontSize: '18px', fontWeight: 700, color: promptColor, whiteSpace: 'pre' },
                           children: '$ ',
                         },
                       },

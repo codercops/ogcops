@@ -176,6 +176,7 @@ const template: TemplateDefinition = {
                           style: {
                             fontSize: '16px',
                             color: `${textColor}44`,
+                            whiteSpace: 'pre',
                           },
                           children: `  |  ${date}`,
                         },
