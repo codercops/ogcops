@@ -43,6 +43,10 @@ export async function fetchMetaTags(url: string): Promise<MetaTags> {
 }
 
 export function parseMetaTags(html: string, baseUrl: string): MetaTags {
+  // Strip HTML comments before any extraction so that commented-out tags are
+  // not mistaken for active metadata (issue #389).
+  html = html.replace(/<!--[\s\S]*?-->/g, '');
+
   const tags: MetaTags = {};
   let inFirstImageGroup = false;
 

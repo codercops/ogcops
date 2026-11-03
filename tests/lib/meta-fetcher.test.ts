@@ -233,3 +233,96 @@ describe('canonical and favicon attribute order', () => {
     expect(tags.ogImage).toBe('https://example.com/posts/hello/cover.png');
   });
 });
+
+describe('parseMetaTags – HTML comment stripping (issue #389)', () => {
+  const base = 'https://example.com/page';
+
+  it('ignores a commented-out <title> before the live title', () => {
+    const html = `
+      <!-- <title>Wrong Title</title> -->
+      <title>Correct Title</title>
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.title).toBe('Correct Title');
+  });
+
+  it('does not overwrite a live og:title with a commented-out one that follows it', () => {
+    const html = `
+      <meta property="og:title" content="Real OG Title">
+      <!-- <meta property="og:title" content="Stale OG Title"> -->
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.ogTitle).toBe('Real OG Title');
+  });
+
+  it('does not overwrite live og:description with a later commented-out one', () => {
+    const html = `
+      <meta property="og:description" content="Live description">
+      <!-- <meta property="og:description" content="Commented description"> -->
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.ogDescription).toBe('Live description');
+  });
+
+  it('does not overwrite live og:image with a later commented-out one', () => {
+    const html = `
+      <meta property="og:image" content="https://example.com/live.png">
+      <!-- <meta property="og:image" content="https://example.com/stale.png"> -->
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.ogImage).toBe('https://example.com/live.png');
+  });
+
+  it('ignores a commented-out canonical link before the live one', () => {
+    const html = `
+      <!-- <link rel="canonical" href="https://example.com/old"> -->
+      <link rel="canonical" href="https://example.com/correct">
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.canonical).toBe('https://example.com/correct');
+  });
+
+  it('ignores a commented-out favicon link before the live one', () => {
+    const html = `
+      <!-- <link rel="icon" href="/wrong-favicon.ico"> -->
+      <link rel="icon" href="/correct-favicon.ico">
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.favicon).toBe('https://example.com/correct-favicon.ico');
+  });
+
+  it('still parses all normal active metadata when no comments are present', () => {
+    const html = `
+      <title>Page Title</title>
+      <meta name="description" content="Page description">
+      <meta property="og:title" content="OG Title">
+      <meta property="og:description" content="OG Description">
+      <meta property="og:image" content="https://example.com/image.png">
+      <link rel="canonical" href="https://example.com/page">
+      <link rel="icon" href="/favicon.ico">
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.title).toBe('Page Title');
+    expect(tags.description).toBe('Page description');
+    expect(tags.ogTitle).toBe('OG Title');
+    expect(tags.ogDescription).toBe('OG Description');
+    expect(tags.ogImage).toBe('https://example.com/image.png');
+    expect(tags.canonical).toBe('https://example.com/page');
+    expect(tags.favicon).toBe('https://example.com/favicon.ico');
+  });
+
+  it('handles multi-line HTML comments correctly', () => {
+    const html = `
+      <!--
+        <title>Multi-line
+        commented title</title>
+        <meta property="og:title" content="Commented OG">
+      -->
+      <title>Active Title</title>
+      <meta property="og:title" content="Active OG">
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.title).toBe('Active Title');
+    expect(tags.ogTitle).toBe('Active OG');
+  });
+});
