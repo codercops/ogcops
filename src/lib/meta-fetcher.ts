@@ -202,7 +202,7 @@ const NAMED_ENTITIES: Record<string, string> = {
 
 function decodeEntities(str: string): string {
   return str.replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, (entity, body: string) => {
-    if (body[0] !== '#') return NAMED_ENTITIES[body] ?? entity;
+    if (body[0] !== '#') return Object.hasOwn(NAMED_ENTITIES, body) ? NAMED_ENTITIES[body] : entity;
     const hex = body[1] === 'x' || body[1] === 'X';
     const code = parseInt(body.slice(hex ? 2 : 1), hex ? 16 : 10);
     return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : entity;

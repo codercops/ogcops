@@ -97,6 +97,15 @@ describe('parseMetaTags', () => {
     expect(tags.description).toBe('a &bogus; b');
   });
 
+  it('leaves prototype property names like &constructor;, &toString;, &hasOwnProperty;, and &valueOf; as they are', () => {
+    const tags = parseMetaTags(
+      '<title>a &constructor; b</title><meta name="description" content="&toString; &hasOwnProperty; &valueOf;">',
+      base,
+    );
+    expect(tags.title).toBe('a &constructor; b');
+    expect(tags.description).toBe('&toString; &hasOwnProperty; &valueOf;');
+  });
+
   it('decodes entities in the title', () => {
     const tags = parseMetaTags('<title>Tom &amp; Jerry&#039;s</title>', base);
     expect(tags.title).toBe("Tom & Jerry's");
