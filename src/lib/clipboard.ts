@@ -15,7 +15,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     }
   }
 
-  if (typeof document !== 'undefined' && typeof document.createElement === 'function' && document.body) {
+  if (typeof document !== 'undefined' && document.body) {
     let successful = false;
     const ta = document.createElement('textarea');
     ta.value = text;
@@ -26,16 +26,10 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     } catch {
       successful = false;
     } finally {
-      if (ta.parentNode) {
-        ta.parentNode.removeChild(ta);
-      } else if (typeof document.body.removeChild === 'function') {
-        document.body.removeChild(ta);
-      }
+      document.body.removeChild(ta);
     }
     return successful;
   }
 
   return false;
 }
-
-export { copyToClipboard as copyTextToClipboard };
