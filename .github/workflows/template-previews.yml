@@ -1,0 +1,83 @@
+name: Template previews
+
+# Renders every template a PR adds or changes to PNG (defaults, optional text
+# empty, long text, light background) and uploads them as the
+# "template-previews" artifact, so a review can look at the images without
+# running the PR's code locally.
+#
+# It uses pull_request, so a fork PR runs with a read-only token and no
+# secrets, the same as CI.
+on:
+  pull_request:
+    branches: [dev]
+    paths:
+      - 'src/templates/**'
+      - 'tests/templates/previews.test.ts'
+      - '.github/workflows/template-previews.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: template-previews-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  render:
+    name: Render changed templates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: List changed templates
+        id: changed
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          changed=$(git diff --name-only --diff-filter=AM "$BASE_SHA"...HEAD)
+          # Template files only: src/templates/<category>/<name>.ts, not the index files.
+          files=$(grep -E '^src/templates/[^/]+/[^/]+\.ts$' <<<"$changed" | grep -v '/index\.ts$' | head -n 20 | tr '\n' ' ' || true)
+          # A change to this setup itself renders the reference template, so it gets tested too.
+          if [ -z "$files" ] && grep -qE '^(tests/templates/previews\.test\.ts|\.github/workflows/template-previews\.yml)$' <<<"$changed"; then
+            files="src/templates/blog/minimal-dark.ts"
+          fi
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+          echo "Templates to render: ${files:-none}"
+
+      - uses: actions/setup-node@v4
+        if: steps.changed.outputs.files != ''
+        with:
+          node-version: 22
+          cache: npm
+
+      - if: steps.changed.outputs.files != ''
+        run: npm ci
+
+      - name: Render
+        if: steps.changed.outputs.files != ''
+        env:
+          PREVIEW_FILES: ${{ steps.changed.outputs.files }}
+          PREVIEW_OUT: previews
+        run: npx vitest run tests/templates/previews.test.ts
+
+      - uses: actions/upload-artifact@v4
+        if: steps.changed.outputs.files != ''
+        with:
+          name: template-previews
+          path: previews/
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Summary
+        if: steps.changed.outputs.files != ''
+        run: |
+          {
+            echo "### Template previews"
+            echo
+            echo "Download the \`template-previews\` artifact below to see these:"
+            echo
+            for f in previews/*.png; do echo "- \`$(basename "$f")\`"; done
+          } >> "$GITHUB_STEP_SUMMARY"
