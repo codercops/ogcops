@@ -52,7 +52,7 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
 
   // Extract <title>
   const titleMatch = html.match(/<title[^>]*>(.*?)<\/title>/is);
-  if (titleMatch) tags.title = decodeEntities(titleMatch[1].trim());
+  if (titleMatch) tags.title = decodeEntities(titleMatch[1]).replace(/[ \t\n\r\f]+/g, ' ').replace(/^ | $/g, '');
 
   // Extract meta tags
   for (const tag of findTags(html, 'meta')) {
