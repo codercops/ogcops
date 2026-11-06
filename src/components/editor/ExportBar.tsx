@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { generateMetaTags } from '@/lib/meta-tag-generator';
+import { copyToClipboard as copyTextToClipboard } from '@/lib/clipboard';
 import { containsLocalImage, svgToPngBlob } from './export-utils';
 
 interface ExportBarProps {
@@ -74,22 +75,13 @@ export function ExportBar({
   }, []);
 
   const copyToClipboard = useCallback(async (text: string, label: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
+    const success = await copyTextToClipboard(text);
+    if (success) {
       setCopied(label);
       window.showToast?.(label === 'url' ? 'URL copied to clipboard!' : 'Meta tags copied!', 'success');
       setTimeout(() => setCopied(null), 2000);
-    } catch {
-      // Fallback
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      setCopied(label);
-      window.showToast?.(label === 'url' ? 'URL copied to clipboard!' : 'Meta tags copied!', 'success');
-      setTimeout(() => setCopied(null), 2000);
+    } else {
+      window.showToast?.(label === 'url' ? 'Could not copy URL' : 'Could not copy meta tags', 'error');
     }
   }, []);
 
