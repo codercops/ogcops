@@ -47,6 +47,10 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
   // not mistaken for active metadata (issue #389).
   html = html.replace(/<!--[\s\S]*?-->/g, '');
 
+  // Strip script elements before any extraction so that tags inside scripts
+  // or JSON-LD do not affect metadata (issue #394).
+  html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+
   const tags: MetaTags = {};
   let inFirstImageGroup = false;
 
