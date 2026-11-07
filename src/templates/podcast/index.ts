@@ -10,3 +10,4 @@ export { default as podcastShowNotes } from './show-notes';
 export { default as podcastListenOn } from './listen-on';
 export { default as podcastTopEpisodes } from './top-episodes';
 export { default as podcastLiveRecording } from './live-recording';
+export { default as podcastTranscript } from './transcript';
