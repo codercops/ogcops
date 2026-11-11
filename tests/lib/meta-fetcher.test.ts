@@ -349,3 +349,145 @@ describe('parseMetaTags – HTML comment stripping (issue #389)', () => {
     expect(tags.ogTitle).toBe('Active OG');
   });
 });
+
+describe('parseMetaTags – script element stripping (issue #394)', () => {
+  const base = 'https://example.com/page';
+
+  it('ignores fake <title>, <meta>, and <link rel="canonical"> inside scripts before real tags', () => {
+    const html = `
+      <script>
+        const fakeTitle = '<title>Script Title</title>';
+        const fakeDesc = '<meta name="description" content="Script Description">';
+        const fakeOgTitle = '<meta property="og:title" content="Script OG Title">';
+        const fakeCanonical = '<link rel="canonical" href="https://example.com/fake">';
+      </script>
+      <title>Real Title</title>
+      <meta name="description" content="Real Description">
+      <meta property="og:title" content="Real OG Title">
+      <link rel="canonical" href="https://example.com/real">
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.title).toBe('Real Title');
+    expect(tags.description).toBe('Real Description');
+    expect(tags.ogTitle).toBe('Real OG Title');
+    expect(tags.canonical).toBe('https://example.com/real');
+  });
+
+  it('does not allow fake metadata inside scripts after real tags to overwrite real metadata', () => {
+    const html = `
+      <title>Real Title</title>
+      <meta property="og:title" content="Real OG Title">
+      <meta property="og:description" content="Real OG Description">
+      <meta property="og:image" content="https://example.com/real.png">
+      <meta name="twitter:card" content="summary_large_image">
+      <link rel="canonical" href="https://example.com/real">
+      <script>
+        const fake = \`
+          <title>Fake After Title</title>
+          <meta property="og:title" content="Fake After OG Title">
+          <meta property="og:description" content="Fake After OG Description">
+          <meta property="og:image" content="https://example.com/fake.png">
+          <meta name="twitter:card" content="summary">
+          <link rel="canonical" href="https://example.com/fake">
+        \`;
+      </script>
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.title).toBe('Real Title');
+    expect(tags.ogTitle).toBe('Real OG Title');
+    expect(tags.ogDescription).toBe('Real OG Description');
+    expect(tags.ogImage).toBe('https://example.com/real.png');
+    expect(tags.twitterCard).toBe('summary_large_image');
+    expect(tags.canonical).toBe('https://example.com/real');
+  });
+
+  it('extracts nothing when metadata tags only appear inside scripts', () => {
+    const html = `
+      <script>
+        const s = '<title>Fake</title><meta property="og:title" content="Fake"><link rel="canonical" href="/fake">';
+      </script>
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.title).toBeUndefined();
+    expect(tags.ogTitle).toBeUndefined();
+    expect(tags.canonical).toBeUndefined();
+  });
+
+  it('handles multiple scripts, scripts with attributes, mixed-case tags, and application/ld+json', () => {
+    const html = `
+      <script type="text/javascript" data-custom="123">
+        var title = "<title>Script 1 Title</title>";
+      </script>
+      <title>Real Page Title</title>
+      <SCRIPT async defer src="/app.js">
+        var og = "<meta property=\\"og:title\\" content=\\"Script 2 OG\\">";
+      </SCRIPT>
+      <meta property="og:title" content="Real Page OG">
+      <sCrIpT id="json-ld" type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "description": "<meta name=\\"description\\" content=\\"JSON-LD Desc\\">",
+          "url": "<link rel=\\"canonical\\" href=\\"/json-ld-url\\">"
+        }
+      </sCrIpT>
+      <meta name="description" content="Real Page Description">
+      <link rel="canonical" href="/real-url">
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.title).toBe('Real Page Title');
+    expect(tags.ogTitle).toBe('Real Page OG');
+    expect(tags.description).toBe('Real Page Description');
+    expect(tags.canonical).toBe('https://example.com/real-url');
+  });
+
+  it('handles multiline script elements with arbitrary attributes', () => {
+    const html = `
+      <script
+        type="module"
+        crossorigin="anonymous"
+      >
+        // Multiline script body
+        const template = \`
+          <title>Fake Multiline Title</title>
+          <meta property="og:title" content="Fake Multiline OG">
+          <meta name="twitter:title" content="Fake Multiline Twitter">
+          <link rel="canonical" href="https://example.com/fake-multiline">
+        \`;
+      </script>
+      <title>Actual Title</title>
+      <meta property="og:title" content="Actual OG">
+      <meta name="twitter:title" content="Actual Twitter">
+      <link rel="canonical" href="https://example.com/actual">
+    `;
+    const tags = parseMetaTags(html, base);
+    expect(tags.title).toBe('Actual Title');
+    expect(tags.ogTitle).toBe('Actual OG');
+    expect(tags.twitterTitle).toBe('Actual Twitter');
+    expect(tags.canonical).toBe('https://example.com/actual');
+  });
+
+  it('preserves existing parsing behavior and precedence for tags outside scripts', () => {
+    const html = `
+      <script>var a = "<title>Script Title</title>";</script>
+      <title>First Real Title</title>
+      <script>var b = "<title>Script Title 2</title>";</script>
+      <title>Second Real Title</title>
+      <script>var c = "<meta property='og:title' content='Script OG 1'>";</script>
+      <meta property="og:title" content="First OG Title">
+      <script>var d = "<meta property='og:title' content='Script OG 2'>";</script>
+      <meta property="og:title" content="Second OG Title">
+      <script>var e = "<link rel='canonical' href='/script-canon-1'>";</script>
+      <link rel="canonical" href="/first-real-canon">
+      <script>var f = "<link rel='canonical' href='/script-canon-2'>";</script>
+      <link rel="canonical" href="/second-real-canon">
+    `;
+    const tags = parseMetaTags(html, base);
+    // First title wins outside scripts
+    expect(tags.title).toBe('First Real Title');
+    // Later meta tags overwrite earlier ones outside scripts
+    expect(tags.ogTitle).toBe('Second OG Title');
+    // First canonical wins outside scripts
+    expect(tags.canonical).toBe('https://example.com/first-real-canon');
+  });
+});
