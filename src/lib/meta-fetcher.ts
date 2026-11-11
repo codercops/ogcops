@@ -1,3 +1,4 @@
+import { HTML_ENTITIES } from './html-entities';
 export interface MetaTags {
   title?: string;
   description?: string;
@@ -20,7 +21,6 @@ export interface MetaTags {
   themeColor?: string;
   [key: string]: string | undefined;
 }
-import { HTML_ENTITIES } from './html-entities';
 
 /**
  * Fetch and parse meta tags from a URL.

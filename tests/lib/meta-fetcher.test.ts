@@ -98,7 +98,7 @@ describe('parseMetaTags', () => {
     expect(tags.description).toBe('a &bogus; b');
   });
 
-    it('decodes typographic named entities in a title and keeps it under the length limit', () => {
+  it('decodes typographic named entities in a title and keeps it under the length limit', () => {
     const tags = parseMetaTags(
       '<title>Don&rsquo;t ship on Fridays &mdash; notes from 200 releases | Acme Blog</title>',
       base,
