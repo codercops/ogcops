@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { fetchMetaTags, parseMetaTags } from '@/lib/meta-fetcher';
 import { analyzeMeta } from '@/lib/meta-analyzer';
+import { HTML_ENTITIES } from '@/lib/html-entities';
 
 describe('parseMetaTags', () => {
   const base = 'https://example.com/page';
@@ -95,6 +96,44 @@ describe('parseMetaTags', () => {
   it('leaves unknown entities as they are', () => {
     const tags = parseMetaTags('<meta name="description" content="a &bogus; b">', base);
     expect(tags.description).toBe('a &bogus; b');
+  });
+
+  it('decodes typographic named entities in a title and keeps it under the length limit', () => {
+    const tags = parseMetaTags(
+      '<title>Don&rsquo;t ship on Fridays &mdash; notes from 200 releases | Acme Blog</title>',
+      base,
+    );
+    expect(tags.title).toBe('Don\u2019t ship on Fridays \u2014 notes from 200 releases | Acme Blog');
+    expect(analyzeMeta(tags).issues.some((issue) => issue.tag === 'title')).toBe(false);
+  });
+
+  it.each([
+    ['&hellip;', '\u2026'], ['&ldquo;', '\u201c'], ['&rdquo;', '\u201d'],
+    ['&eacute;', '\u00e9'], ['&Eacute;', '\u00c9'], ['&copy;', '\u00a9'],
+    ['&trade;', '\u2122'], ['&euro;', '\u20ac'],
+    ['&frac12;', '\u00bd'], ['&sup2;', '\u00b2'], ['&there4;', '\u2234'],
+    ['&lang;', '\u27e8'], ['&rang;', '\u27e9'],
+  ])('decodes %s in attribute values', (entity, character) => {
+    const tags = parseMetaTags(`<meta name="description" content="a ${entity} b">`, base);
+    expect(tags.description).toBe(`a ${character} b`);
+  });
+
+  it('decodes every table entry in titles and attribute values', () => {
+    for (const [name, character] of Object.entries(HTML_ENTITIES)) {
+      const title = parseMetaTags(`<title>[&${name};]</title>`, base).title;
+      const description = parseMetaTags(`<meta name="description" content="[&${name};]">`, base).description;
+      expect(title, name).toBe(`[${character}]`);
+      expect(description, name).toBe(`[${character}]`);
+    }
+  });
+
+  it('covers the 252 HTML 4 names plus apos and the four uppercase names', () => {
+    expect(Object.keys(HTML_ENTITIES)).toHaveLength(257);
+  });
+
+  it('keeps entity names case-sensitive', () => {
+    const tags = parseMetaTags('<meta name="description" content="&eacute; &Eacute; &EACUTE; &Frac12;">', base);
+    expect(tags.description).toBe('\u00e9 \u00c9 &EACUTE; &Frac12;');
   });
 
   it('leaves prototype property names like &constructor;, &toString;, &hasOwnProperty;, and &valueOf; as they are', () => {
