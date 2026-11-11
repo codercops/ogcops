@@ -119,6 +119,20 @@ describe('parseMetaTags', () => {
     expect(tags.title).toBe('<Tom & Jerry "Show">');
   });
 
+  it('collapses multiline indentation, internal tabs, and double spaces in title while preserving non-ASCII whitespace', () => {
+    const tags = parseMetaTags(
+      `<title>
+             Cutting\t\tcold  starts in&nbsp;half with Fluid   Compute
+             | Acme Blog
+     </title>`,
+      base,
+    );
+    expect(tags.title).toBe('Cutting cold starts in\u00a0half with Fluid Compute | Acme Blog');
+
+    const boundaryTags = parseMetaTags('<title>&nbsp;Hello world&nbsp;</title>', base);
+    expect(boundaryTags.title).toBe('\u00A0Hello world\u00A0');
+  });
+
   it('does not decode uppercase or mixed-case entities that are not valid in HTML', () => {
     const tags = parseMetaTags(
       '<meta name="description" content="&APOS; &NBSP; &Amp;">',
