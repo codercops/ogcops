@@ -117,9 +117,8 @@ const template: TemplateDefinition = {
                         border: `1px solid ${textColor}16`,
                       },
                       children: [
-                        // Fixed-width columns always render (even when blank) so text x stays aligned
-                        { type: 'span', props: { style: { display: 'flex', width: '84px', flexShrink: 0, fontFamily: 'JetBrains Mono', fontSize: '20px', lineHeight: '34px', color: mutedColor, whiteSpace: 'nowrap' }, children: truncate(row.time, 8) } },
-                        { type: 'span', props: { style: { display: 'flex', width: '130px', flexShrink: 0, overflow: 'hidden', whiteSpace: 'nowrap', fontSize: '22px', lineHeight: '34px', fontWeight: 700, color: accentInk }, children: truncate(row.speaker, 12) } },
+                        { type: 'span', props: { style: { display: 'flex', width: '96px', flexShrink: 0, fontFamily: 'JetBrains Mono', fontSize: '20px', lineHeight: '34px', color: mutedColor, whiteSpace: 'nowrap' }, children: truncate(row.time, 8) } },
+                        { type: 'span', props: { style: { display: 'block', width: '130px', flexShrink: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: '22px', lineHeight: '34px', fontWeight: 700, color: accentInk }, children: truncate(row.speaker, 12) } },
                         { type: 'span', props: { style: { display: 'block', flex: 1, minWidth: 0, overflow: 'hidden', lineClamp: 2, fontSize: '26px', lineHeight: '34px', fontWeight: 500, color: textColor }, children: truncate(row.line, 110) } },
                       ],
                     },
