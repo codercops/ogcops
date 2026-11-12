@@ -56,7 +56,8 @@ const template: TemplateDefinition = {
     const weighted = counts.reduce((sum, { stars, value }) => sum + stars * value, 0);
     const hasReviews = total > 0;
     const scoreText = hasReviews ? (weighted / total).toFixed(1) : '';
-    const starCount = hasReviews ? normalizeStarRating(weighted / total, 5) : 0;
+    // Derive the stars from the score actually displayed so the two can never disagree.
+    const starCount = hasReviews ? normalizeStarRating(Number(scoreText), 5) : 0;
     const reviewText = hasReviews
       ? `${new Intl.NumberFormat('en-US').format(total)} ${total === 1 ? 'review' : 'reviews'}`
       : '';

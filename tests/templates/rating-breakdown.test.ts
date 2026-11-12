@@ -100,6 +100,21 @@ describe('ecommerce-rating-breakdown', () => {
     expect(JSON.stringify(tree)).not.toContain('NaN');
   });
 
+  it('keeps the stars in step with the displayed score when the raw average rounds up', () => {
+    const tree = render({ count5: 47, count4: 53, count3: 0, count2: 0, count1: 0 });
+    const text = textContent(tree);
+
+    // 47 five-star + 53 four-star reviews average 4.47, which displays as 4.5.
+    expect(text).toContain('4.5');
+    expect(text).toContain('100 reviews');
+    const stars = starFills(tree);
+    expect(stars).toHaveLength(5);
+    expect(stars.filter((color) => color === '#F5C518')).toHaveLength(5);
+    expect(fills(tree).map(({ props }) => props.style.width))
+      .toEqual(['47%', '53%', '0%', '0%', '0%']);
+    expect(JSON.stringify(tree)).not.toContain('NaN');
+  });
+
   it('replaces the score and stars with "No reviews yet" and empties every bar when all counts are 0', () => {
     const tree = render({ count5: 0, count4: '0', count3: '', count2: null, count1: -5 });
     const text = textContent(tree);
