@@ -299,12 +299,14 @@ import ecommerceBundleDeal from './ecommerce/bundle-deal';
 import ecommerceOrderStatus from './ecommerce/order-status';
 import ecommerceGiftCard from './ecommerce/gift-card';
 import ecommerceBackInStock from './ecommerce/back-in-stock';
+import ecommerceRatingBreakdown from './ecommerce/rating-breakdown';
 
 [
   ecommerceProductCard, ecommerceSaleBanner, ecommerceCollection, ecommerceReviewHighlight,
   ecommercePriceDrop, ecommerceNewArrival, ecommerceComparisonGrid, ecommerceBrandStory,
   ecommerceCouponCode, ecommerceOrderStatus, ecommerceBundleDeal, ecommerceGiftCard,
   ecommerceBackInStock,
+  ecommerceRatingBreakdown,
 ].forEach(registerTemplate);
 
 // Job
