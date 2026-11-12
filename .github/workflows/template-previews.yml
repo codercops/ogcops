@@ -33,11 +33,12 @@ jobs:
 
       - name: List changed templates
         id: changed
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          changed=$(git diff --name-only --diff-filter=AM "$BASE_SHA"...HEAD)
+          # HEAD is GitHub's test merge of the PR into dev, so HEAD^1 is the dev
+          # commit it was merged onto. pull_request.base.sha can be the dev commit
+          # from when the PR was opened, which pulls in everything merged since.
+          changed=$(git diff --name-only --diff-filter=AM HEAD^1 HEAD)
           # Template files only: src/templates/<category>/<name>.ts, not the index files.
           files=$(grep -E '^src/templates/[^/]+/[^/]+\.ts$' <<<"$changed" | grep -v '/index\.ts$' | head -n 20 | tr '\n' ' ' || true)
           # A change to this setup itself renders the reference template, so it gets tested too.
