@@ -233,6 +233,7 @@ import developerOpenToWork from './developer/open-to-work';
 import developerDayStreak from './developer/day-streak';
 import developerNow from './developer/now';
 import developerYearReview from './developer/year-review';
+import developerBuildInPublic from './developer/build-in-public';
 
 [
   developerPortfolioCard, developerTechStack, developerTerminalBio, developerGradientProfile,
@@ -240,6 +241,7 @@ import developerYearReview from './developer/year-review';
   developerLinkTree, developerOpenToWork, developerDayStreak,
   developerNow,
   developerYearReview,
+  developerBuildInPublic,
 ].forEach(registerTemplate);
 
 // Newsletter
