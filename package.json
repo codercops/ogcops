@@ -24,7 +24,7 @@
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/playfair-display": "^5.2.8",
     "@resvg/resvg-wasm": "^2.6.2",
-    "astro": "^7.3.5",
+    "astro": "^7.4.12",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "satori": "^0.12.0",
