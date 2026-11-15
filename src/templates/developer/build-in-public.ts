@@ -34,7 +34,7 @@ const template: TemplateDefinition = {
   fields: [
     commonFields.title,
     { key: 'period', label: 'Period', type: 'text', defaultValue: 'Month 7', placeholder: 'Month 7', group: 'Content' },
-    { key: 'metricValue', label: 'Metric Value', type: 'text', defaultValue: '$2,480', placeholder: '$2,480', group: 'Content' },
+    { key: 'metricValue', label: 'Metric Value', type: 'text', defaultValue: '$2,480', placeholder: '$2,480', required: true, group: 'Content' },
     { key: 'metricLabel', label: 'Metric Label', type: 'text', defaultValue: 'MRR', placeholder: 'MRR', group: 'Content' },
     { key: 'change', label: 'Change', type: 'text', defaultValue: '+18% from last month', placeholder: '+18% from last month', group: 'Content' },
     { key: 'history', label: 'History (comma-separated)', type: 'text', defaultValue: '820, 1100, 1350, 1700, 2100, 2480', placeholder: '820, 1100, 1350, 1700, 2100, 2480', group: 'Content' },
@@ -68,7 +68,8 @@ const template: TemplateDefinition = {
     ]);
 
     const period = truncate(String(params.period ?? '').replace(/\s+/g, ' ').trim(), 20);
-    const metricValue = truncate(String(params.metricValue ?? template.defaults.metricValue).replace(/\s+/g, ' ').trim(), 24);
+    const rawMetricValue = String(params.metricValue ?? template.defaults.metricValue).replace(/\s+/g, ' ').trim();
+    const metricValue = truncate(rawMetricValue || String(template.defaults.metricValue), 24);
     const metricLabel = truncate(String(params.metricLabel ?? '').replace(/\s+/g, ' ').trim(), 30);
     const change = truncate(String(params.change ?? '').replace(/\s+/g, ' ').trim(), 40);
     const note = truncate(String(params.note ?? '').replace(/\s+/g, ' ').trim(), 70);
@@ -188,7 +189,7 @@ const template: TemplateDefinition = {
             props: {
               style: {
                 display: 'flex',
-                alignItems: 'flex-end',
+                alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: '48px',
                 flex: 1,
@@ -294,6 +295,9 @@ const template: TemplateDefinition = {
                                   fontWeight: 500,
                                   color: mutedColor,
                                   lineHeight: 1.4,
+                                  whiteSpace: 'nowrap',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
                                 },
                                 children: note,
                               },

@@ -131,6 +131,11 @@ describe('developer-build-in-public', () => {
     expect(chip?.props.style?.color).toBe('#15803d');
   });
 
+  it('falls back to default metric value when blank or cleared', () => {
+    const tree = render({ metricValue: '' });
+    expect(textContent(tree)).toContain('$2,480');
+  });
+
   it('handles long title, large metric value, and long note without breaking layout', () => {
     const tree = render({
       title: 'A Very Long Product Project Name That Exceeds Normal Limits',
@@ -139,5 +144,10 @@ describe('developer-build-in-public', () => {
     });
     const text = textContent(tree);
     expect(text.some((t) => t.includes('$1,250,000'))).toBe(true);
+    expect(text.some((t) => t.includes('A very long explanatory note describing customer growth and retention'))).toBe(true);
+
+    const noteEl = elements(tree).find((el) => el.props.style?.whiteSpace === 'nowrap' && el.props.style?.overflow === 'hidden');
+    expect(noteEl).toBeDefined();
+    expect(noteEl?.props.style?.textOverflow).toBe('ellipsis');
   });
 });
