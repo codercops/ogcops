@@ -54,7 +54,7 @@ const template: TemplateDefinition = {
       intermediate: '#FF9800',
       advanced: '#F44336',
     };
-    const levelColor = levelColors[skillLevel] || '#FF9800';
+    const levelColor = Object.hasOwn(levelColors, skillLevel) ? levelColors[skillLevel] : '#FF9800';
 
     return {
       type: 'div',

@@ -48,7 +48,7 @@ const template: TemplateDefinition = {
       alpha: '#ef4444',
       new: '#3b82f6',
     };
-    const statusColor = statusColors[status] || '#22c55e';
+    const statusColor = Object.hasOwn(statusColors, status) ? statusColors[status] : '#22c55e';
 
     return {
       type: 'div',
