@@ -103,8 +103,29 @@ export function resolveDimensions(
   };
 }
 
+export const httpUrlSchema = z
+  .string({
+    error: 'A valid URL is required',
+  })
+  .superRefine((val, ctx) => {
+    if (val === '') {
+      ctx.addIssue({ code: 'custom', message: 'A valid URL is required' });
+      return;
+    }
+    let parsed: URL;
+    try {
+      parsed = new URL(val);
+    } catch {
+      ctx.addIssue({ code: 'custom', message: 'A valid URL is required' });
+      return;
+    }
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      ctx.addIssue({ code: 'custom', message: 'Only http and https URLs are supported' });
+    }
+  });
+
 export const previewQuerySchema = z.object({
-  url: z.string().url('A valid URL is required'),
+  url: httpUrlSchema,
 });
 
 export type PreviewQueryParams = z.infer<typeof previewQuerySchema>;

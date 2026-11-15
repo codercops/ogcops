@@ -13,13 +13,19 @@ export const GET: APIRoute = async ({ request }) => {
     'Cache-Control': 'public, max-age=300',
   };
 
+  const noStoreHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-store',
+  };
+
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers });
   }
 
   const parsed = parseSearchParams(url.searchParams, previewQuerySchema);
   if (!parsed.success) {
-    return new Response(JSON.stringify({ error: parsed.error }), { status: 400, headers });
+    return new Response(JSON.stringify({ error: parsed.error }), { status: 400, headers: noStoreHeaders });
   }
 
   const targetUrl = parsed.data.url;
@@ -42,7 +48,7 @@ export const GET: APIRoute = async ({ request }) => {
     const message = err instanceof Error ? err.message : 'Failed to fetch URL';
     return new Response(
       JSON.stringify({ error: message }),
-      { status: 502, headers }
+      { status: 502, headers: noStoreHeaders }
     );
   }
 };
