@@ -11,3 +11,4 @@ export { default as quoteCodeComment } from './code-comment';
 export { default as quoteSubtitle } from './subtitle';
 export { default as quoteArticleExcerpt } from './article-excerpt';
 export { default as quoteInterview } from './interview';
+export { default as quoteTwoTakes } from './two-takes';

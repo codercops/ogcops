@@ -280,11 +280,12 @@ import quoteCodeComment from './quote/code-comment';
 import quoteSubtitle from './quote/subtitle';
 import quoteArticleExcerpt from './quote/article-excerpt';
 import quoteInterview from './quote/interview';
+import quoteTwoTakes from './quote/two-takes';
 
 [
   quoteCenteredSerif, quoteGradientCard, quoteSpeechBubble, quoteTwitterStyle,
   quoteBookPage, quoteBoldHighlight, quoteMinimalDash, quotePhotoBackground, quoteStickyNote,
-  quoteCodeComment, quoteSubtitle, quoteArticleExcerpt, quoteInterview,
+  quoteCodeComment, quoteSubtitle, quoteArticleExcerpt, quoteInterview, quoteTwoTakes,
 ].forEach(registerTemplate);
 
 // E-commerce
