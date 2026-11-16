@@ -679,3 +679,115 @@ describe('OG API cleared fields', () => {
     }
   });
 });
+
+describe('OG API image fallback', () => {
+  const PNG = new Uint8Array([137, 80, 78, 71]).buffer;
+
+  function containsImage(node: unknown): boolean {
+    if (!node || typeof node !== 'object') return false;
+    const element = node as { type?: string; props?: { children?: unknown } };
+    if (element.type === 'img') return true;
+    const children = element.props?.children;
+    const list = Array.isArray(children) ? children : [children];
+    return list.some(containsImage);
+  }
+
+  async function resetRenderer() {
+    const { renderToPng } = await import('@/lib/og-engine');
+    const mock = vi.mocked(renderToPng);
+    mock.mockReset();
+    mock.mockImplementation(async () => PNG);
+    return mock;
+  }
+
+  afterEach(async () => {
+    await resetRenderer();
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it('renders the gradient card when the image fails, without caching it', async () => {
+    const renderToPng = await resetRenderer();
+    renderToPng.mockImplementationOnce(async (element) => {
+      expect(containsImage(element)).toBe(true);
+      throw new Error('Image size cannot be determined.');
+    });
+    renderToPng.mockImplementationOnce(async (element) => {
+      expect(containsImage(element)).toBe(false);
+      return PNG;
+    });
+
+    const cache = {
+      match: vi.fn().mockResolvedValue(undefined),
+      put: vi.fn().mockResolvedValue(undefined),
+    };
+    const waitUntil = vi.fn();
+    vi.stubEnv('DEV', false);
+    vi.stubGlobal('caches', { default: cache });
+
+    const res = await GET(
+      makeContext(`${BASE}?template=blog-photo-overlay&title=Hi&imageUrl=https://example.com/missing.png`, {
+        cfContext: { waitUntil },
+      })
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toBe('image/png');
+    expect(res.headers.get('cache-control')).toBe('no-store');
+    expect(renderToPng).toHaveBeenCalledTimes(2);
+    expect(cache.put).not.toHaveBeenCalled();
+    expect(waitUntil).not.toHaveBeenCalled();
+  });
+
+  it('leaves a working image unchanged and cached', async () => {
+    const renderToPng = await resetRenderer();
+
+    const cache = {
+      match: vi.fn().mockResolvedValue(undefined),
+      put: vi.fn().mockResolvedValue(undefined),
+    };
+    vi.stubEnv('DEV', false);
+    vi.stubGlobal('caches', { default: cache });
+
+    const res = await GET(
+      makeContext(`${BASE}?template=blog-photo-overlay&title=Hi&imageUrl=https://example.com/cover.png`, {
+        cfContext: { waitUntil: vi.fn() },
+      })
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get('cache-control')).toBe('public, max-age=86400');
+    expect(renderToPng).toHaveBeenCalledOnce();
+    expect(containsImage(renderToPng.mock.calls[0]![0])).toBe(true);
+    expect(cache.put).toHaveBeenCalledOnce();
+  });
+
+  it('still returns a 500 for a failure with no image field set', async () => {
+    const renderToPng = await resetRenderer();
+    renderToPng.mockImplementation(async () => {
+      throw new Error('boom');
+    });
+
+    const res = await GET(makeContext(`${BASE}?template=blog-minimal-dark&title=Hi`));
+
+    expect(res.status).toBe(500);
+    expect(res.headers.get('cache-control')).toBe('no-store');
+    expect(renderToPng).toHaveBeenCalledOnce();
+  });
+
+  it('returns a 500 when the retry without images fails too', async () => {
+    const renderToPng = await resetRenderer();
+    renderToPng.mockImplementation(async () => {
+      throw new Error('boom');
+    });
+
+    const res = await GET(
+      makeContext(`${BASE}?template=blog-photo-overlay&title=Hi&imageUrl=https://example.com/missing.png`)
+    );
+
+    expect(res.status).toBe(500);
+    expect(res.headers.get('cache-control')).toBe('no-store');
+    expect(renderToPng).toHaveBeenCalledTimes(2);
+  });
+});
+

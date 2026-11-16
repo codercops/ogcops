@@ -79,12 +79,44 @@ export const GET: APIRoute = async ({ request, locals }) => {
     const mergedParams = mergeOgParams(params, template.defaults, url.searchParams, template.fields);
     const normalizedParams = normalizeColorFields(template, mergedParams);
 
-    const element = template.render(normalizedParams);
-    const png = await renderToPng(element, {
-      width: 1200,
-      height: 630,
-      scaleDown: dimensions.width !== 1200 ? dimensions.width : undefined,
-    });
+    const renderPng = (values: Record<string, unknown>) =>
+      renderToPng(template.render(values), {
+        width: 1200,
+        height: 630,
+        scaleDown: dimensions.width !== 1200 ? dimensions.width : undefined,
+      });
+
+    let png: ArrayBuffer;
+    try {
+      png = await renderPng(normalizedParams);
+    } catch (err) {
+      // Satori downloads image URLs while rendering, so a cover image that 404s
+      // (or is not an image at all) fails the whole render. Every image template
+      // already has a no-image layout, so render once more with its image fields
+      // blank instead of losing the card. The retry is never cached: the real
+      // image should come back once the URL works again.
+      const imageKeys = template.fields
+        .filter(
+          (field) =>
+            field.type === 'image' && String(normalizedParams[field.key] ?? '') !== ''
+        )
+        .map((field) => field.key);
+      if (imageKeys.length === 0) throw err;
+
+      console.warn('OG render failed, retrying without image fields:', err);
+      const withoutImages = { ...normalizedParams };
+      for (const key of imageKeys) withoutImages[key] = '';
+      png = await renderPng(withoutImages);
+
+      return new Response(png, {
+        status: 200,
+        headers: {
+          ...errorHeaders,
+          'Content-Type': 'image/png',
+          'Content-Length': String(png.byteLength),
+        },
+      });
+    }
 
     const response = new Response(png, {
       status: 200,
@@ -107,3 +139,4 @@ export const GET: APIRoute = async ({ request, locals }) => {
     );
   }
 };
+
