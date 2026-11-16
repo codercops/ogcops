@@ -9,6 +9,12 @@ function upstash(): { url: string; token: string } {
   return { url, token };
 }
 
+// Same per-call read as upstash(): routes check this to skip the counter
+// entirely on self-hosted copies that never set the secrets.
+export function hasUpstashCredentials(): boolean {
+  return Boolean(getSecret('UPSTASH_REDIS_REST_URL') && getSecret('UPSTASH_REDIS_REST_TOKEN'));
+}
+
 async function redis(command: string[]): Promise<any> {
   const { url, token } = upstash();
   const res = await fetch(url, {
