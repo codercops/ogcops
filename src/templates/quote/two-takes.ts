@@ -88,18 +88,18 @@ const template: TemplateDefinition = {
     // Font size driven by the longer of the two to keep both columns balanced
     const longerQuote = rawLeftQuote.length >= rawRightQuote.length ? rawLeftQuote : rawRightQuote;
     const quoteSize = autoFontSize(longerQuote, [
-      { maxLen: 60, size: 36 },
-      { maxLen: 110, size: 30 },
-      { maxLen: 160, size: 26 },
-      { maxLen: 220, size: 22 },
+      { maxLen: 70, size: 40 },
+      { maxLen: 120, size: 34 },
+      { maxLen: 170, size: 28 },
+      { maxLen: 220, size: 24 },
     ]);
 
     const leftQuote = truncate(rawLeftQuote, 220);
     const rightQuote = truncate(rawRightQuote, 220);
 
     // Labels and authors
-    const leftLabel = cleanText(params.leftLabel, 24) || 'Yes';
-    const rightLabel = cleanText(params.rightLabel, 24) || 'No';
+    const leftLabel = cleanText(params.leftLabel, 24);
+    const rightLabel = cleanText(params.rightLabel, 24);
     const leftAuthor = cleanText(params.leftAuthor, 56);
     const rightAuthor = cleanText(params.rightAuthor, 56);
     const siteName = cleanText(params.siteName, 48);
@@ -121,31 +121,35 @@ const template: TemplateDefinition = {
         },
         children: [
           // Label pill
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                marginBottom: '20px',
-              },
-              children: {
-                type: 'span',
-                props: {
-                  style: {
-                    fontSize: '13px',
-                    fontWeight: 700,
-                    color: labelColor,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    padding: '5px 12px',
-                    border: `1.5px solid ${labelColor}60`,
-                    borderRadius: '20px',
+          ...(label
+            ? [
+                {
+                  type: 'div',
+                  props: {
+                    style: {
+                      display: 'flex',
+                      marginBottom: '20px',
+                    },
+                    children: {
+                      type: 'span',
+                      props: {
+                        style: {
+                          fontSize: '13px',
+                          fontWeight: 700,
+                          color: labelColor,
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          padding: '5px 12px',
+                          border: `1.5px solid ${labelColor}60`,
+                          borderRadius: '20px',
+                        },
+                        children: label,
+                      },
+                    },
                   },
-                  children: label,
                 },
-              },
-            },
-          },
+              ]
+            : []),
           // Quote text — flex 1 so both columns grow equally
           {
             type: 'div',

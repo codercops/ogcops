@@ -66,6 +66,30 @@ describe('quote-two-takes', () => {
     expect(h1s).toHaveLength(0);
   });
 
+  it('omits label pill when leftLabel or rightLabel is blank, leaving no gap', () => {
+    const tree = render({ leftLabel: '', rightLabel: '' });
+    const text = textContent(tree);
+
+    expect(text).not.toContain('Yes');
+    expect(text).not.toContain('No');
+
+    // The uppercase pill spans should not exist
+    const pillSpans = elements(tree).filter(
+      (el) => el.type === 'span' && el.props.style?.textTransform === 'uppercase',
+    );
+    expect(pillSpans).toHaveLength(0);
+  });
+
+  it('renders default quotes at 40px font size', () => {
+    const tree = render();
+    const allEls = elements(tree);
+    const leftSpan = allEls.find(
+      (el) => el.type === 'span' && textContent(el).some((t) => t.includes('Writing it down')),
+    );
+    expect(leftSpan).toBeDefined();
+    expect(leftSpan!.props.style?.fontSize).toBe('40px');
+  });
+
   it('omits author byline when leftAuthor or rightAuthor is blank', () => {
     const tree = render({ leftAuthor: '', rightAuthor: '' });
     const text = textContent(tree);
