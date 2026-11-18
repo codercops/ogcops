@@ -34,8 +34,8 @@ const template: TemplateDefinition = {
     const request = String(params.request ?? '').trim();
     const votes = String(params.votes ?? '').trim();
     const voteLabel = String(params.voteLabel ?? '').trim();
-    const version = String(params.version ?? '').trim();
-    const siteName = String(params.siteName ?? '').trim();
+    const version = truncate(String(params.version ?? '').trim(), 24);
+    const siteName = truncate(String(params.siteName ?? '').trim(), 40);
     const bgInput = String(params.bgColor ?? '').trim();
     const accentInput = String(params.accentColor ?? '').trim();
     const textInput = String(params.textColor ?? '').trim();
@@ -118,11 +118,13 @@ const template: TemplateDefinition = {
                               marginTop: '8px',
                               maxWidth: '134px',
                               overflow: 'hidden',
+                              whiteSpace: 'nowrap',
+                              textOverflow: 'ellipsis',
                               fontSize: '17px',
                               lineHeight: 1.1,
                               color: `${textColor}99`,
                             },
-                            children: truncate(voteLabel, 18),
+                            children: truncate(voteLabel, 14),
                           },
                         }]
                       : []),
@@ -199,6 +201,8 @@ const template: TemplateDefinition = {
                     display: 'flex',
                     maxWidth: '1000px',
                     overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
                     fontSize: '18px',
                     fontWeight: 600,
                     color: accentInk,
@@ -233,6 +237,9 @@ const template: TemplateDefinition = {
                     marginTop: '22px',
                     fontSize: '18px',
                     color: `${textColor}88`,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
                   },
                   children: siteName,
                 },

@@ -1,8 +1,35 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import satori, { type SatoriNode } from 'satori';
 import youAsked from '@/templates/product/you-asked';
 import { productYouAsked } from '@/templates/product';
 import { getTemplate } from '@/templates/registry';
 import type { SatoriElement } from '@/templates/types';
+
+const fonts = [
+  {
+    name: 'Inter',
+    data: readFileSync(join(process.cwd(), 'public/fonts/Inter-Regular.woff')),
+    weight: 400 as const,
+    style: 'normal' as const,
+  },
+  {
+    name: 'Inter',
+    data: readFileSync(join(process.cwd(), 'public/fonts/Inter-Bold.woff')),
+    weight: 700 as const,
+    style: 'normal' as const,
+  },
+  {
+    name: 'JetBrains Mono',
+    data: readFileSync(join(process.cwd(), 'public/fonts/JetBrainsMono-Bold.woff')),
+    weight: 700 as const,
+    style: 'normal' as const,
+  },
+];
+
+const renderToSvg = (element: unknown) =>
+  satori(element as any, { width: 1200, height: 630, fonts });
 
 function textContent(node: unknown): string[] {
   if (typeof node === 'string') return [node];
@@ -90,4 +117,73 @@ describe('product-you-asked', () => {
     expect(() => JSON.stringify(element)).not.toThrow();
     expect(JSON.stringify(element)).toContain('#7b4334');
   });
+
+  it('truncates very long version and siteName and renders through Satori without throwing', async () => {
+    const longVersion = 'v2.4.0-experimental-preview-build-99999999';
+    const longSite = 'https://subdomain.verylongdomainnameforstatuspage.example.com/status';
+    const element = render({ version: longVersion, siteName: longSite });
+    const content = textContent(element);
+
+    const pill = content.find((text) => text.startsWith('Shipped')) ?? '';
+    expect(pill).toMatch(/…$/);
+    const versionInPill = pill.replace(/^Shipped in /, '');
+    expect(versionInPill.length).toBeLessThanOrEqual(24);
+    expect(versionInPill).toMatch(/…$/);
+
+    const site = content.find((text) => text.includes('subdomain') || text.endsWith('…')) ?? '';
+    expect(site.length).toBeLessThanOrEqual(40);
+    expect(site).toMatch(/…$/);
+
+    const pillSpan = elements(element).find(
+      (el) => el.type === 'span' && typeof el.props.children === 'string' && el.props.children.startsWith('Shipped'),
+    );
+    expect(pillSpan?.props.style?.whiteSpace).toBe('nowrap');
+    expect(pillSpan?.props.style?.overflow).toBe('hidden');
+    expect(pillSpan?.props.style?.textOverflow).toBe('ellipsis');
+
+    const siteSpan = elements(element).find(
+      (el) => el.type === 'span' && typeof el.props.children === 'string' && el.props.children.endsWith('…'),
+    );
+    expect(siteSpan?.props.style?.whiteSpace).toBe('nowrap');
+    expect(siteSpan?.props.style?.overflow).toBe('hidden');
+    expect(siteSpan?.props.style?.textOverflow).toBe('ellipsis');
+
+    const svg = await renderToSvg(element);
+    expect(svg).toMatch(/^<svg/);
+  }, 20000);
+
+  it('truncates a long voteLabel and keeps the vote box at fixed width', async () => {
+    const longLabel = 'community members who upvoted this feature';
+    const element = render({ voteLabel: longLabel });
+    const content = textContent(element);
+
+    const label = content.find((text) => text.includes('community') || text.endsWith('…')) ?? '';
+    expect(label).toMatch(/…$/);
+    expect(label.length).toBeLessThanOrEqual(14);
+
+    const voteBox = elements(element).find(
+      (el) => el.type === 'div' && el.props.style?.width === '170px' && el.props.style?.flexShrink === 0,
+    );
+    expect(voteBox).toBeDefined();
+    expect(voteBox?.props.style?.width).toBe('170px');
+
+    const labelSpan = elements(voteBox).find(
+      (el) => el.type === 'span' && typeof el.props.children === 'string' && el.props.children.includes('…'),
+    );
+    expect(labelSpan?.props.style?.whiteSpace).toBe('nowrap');
+    expect(labelSpan?.props.style?.overflow).toBe('hidden');
+    expect(labelSpan?.props.style?.textOverflow).toBe('ellipsis');
+    expect(labelSpan?.props.style?.maxWidth).toBe('134px');
+
+    const nodes: SatoriNode[] = [];
+    const svg = await satori(element as any, {
+      width: 1200,
+      height: 630,
+      fonts,
+      onNodeDetected: (node) => nodes.push(node),
+    });
+    expect(svg).toMatch(/^<svg/);
+    const renderedBox = nodes.find((node) => node.props?.style?.width === '170px');
+    expect(renderedBox?.width).toBe(170);
+  }, 20000);
 });
