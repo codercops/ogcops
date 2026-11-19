@@ -258,12 +258,13 @@ import newsletterSponsor from './newsletter/sponsor';
 import newsletterPoll from './newsletter/poll';
 import newsletterWelcome from './newsletter/welcome';
 import newsletterMembersOnly from './newsletter/members-only';
+import newsletterMailbag from './newsletter/mailbag';
 
 [
   newsletterIssueCard, newsletterDigestBanner, newsletterPreviewText, newsletterEditorial,
   newsletterCuratedLinks, newsletterMinimalNumber, newsletterNewspaperFold, newsletterSubscriberCount,
   newsletterSubscribeCard, newsletterSponsor, newsletterPoll,
-  newsletterWelcome, newsletterMembersOnly,
+  newsletterWelcome, newsletterMembersOnly, newsletterMailbag,
 ].forEach(registerTemplate);
 
 // Quote
