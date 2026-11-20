@@ -95,12 +95,12 @@ const template: TemplateDefinition = {
     const rawTitle = cleanText(params.title, 140);
     const titleSize = rawTitle
       ? autoFontSize(rawTitle, [
-          { maxLen: 40, size: 46 },
-          { maxLen: 65, size: 38 },
-          { maxLen: 95, size: 32 },
-          { maxLen: 140, size: 28 },
+          { maxLen: 36, size: 58 },
+          { maxLen: 64, size: 48 },
+          { maxLen: 96, size: 40 },
+          { maxLen: 140, size: 34 },
         ])
-      : 40;
+      : 58;
     const title = rawTitle;
 
     const siteName = cleanText(params.siteName, 42);
@@ -323,16 +323,14 @@ const template: TemplateDefinition = {
                   type: 'h1',
                   props: {
                     style: {
-                      display: 'flex',
-                      alignItems: 'center',
+                      display: 'block',
                       margin: '0 0 24px 0',
                       fontSize: `${titleSize}px`,
                       fontWeight: 700,
-                      lineHeight: 1.2,
+                      lineHeight: 1.15,
                       color: mainColor,
-                      whiteSpace: 'nowrap',
                       overflow: 'hidden',
-                      textOverflow: 'ellipsis',
+                      lineClamp: 2,
                     },
                     children: title,
                   },

@@ -131,7 +131,7 @@ describe('newsletter-mailbag', () => {
     expect(row1Children[1].props.style?.flex).toBe(1);
   });
 
-  it('shrinks a long title with autoFontSize() and truncates on one line', () => {
+  it('shrinks a long title with autoFontSize() and caps at two lines', () => {
     const longTitle = 'An Exceptionally Long Newsletter Mailbag Edition Title About Launching Your Solo Consulting Practice';
     const shortTitle = 'Mailbag';
 
@@ -146,8 +146,9 @@ describe('newsletter-mailbag', () => {
 
     expect(shortSize).toBeGreaterThan(longSize);
     expect(longH1?.props.style?.overflow).toBe('hidden');
-    expect(longH1?.props.style?.textOverflow).toBe('ellipsis');
-    expect(longH1?.props.style?.whiteSpace).toBe('nowrap');
+    expect(longH1?.props.style?.lineClamp).toBe(2);
+    expect(longH1?.props.style?.display).toBe('block');
+    expect(longH1?.props.style?.whiteSpace).toBeUndefined();
   });
 
   it('truncates a long question on one line with an ellipsis before reaching the asker', () => {
