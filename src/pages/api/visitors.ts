@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { incrementVisitors, getVisitors } from '../../lib/upstash';
+import { incrementVisitors, getVisitors, hasUpstashCredentials } from '../../lib/upstash';
 
 const SITE = 'ogcops';
 const HEADERS = {
@@ -8,6 +8,7 @@ const HEADERS = {
 };
 
 export const POST: APIRoute = async () => {
+  if (!hasUpstashCredentials()) return new Response(null, { status: 204 });
   try {
     const counts = await incrementVisitors(SITE);
     return new Response(JSON.stringify(counts), { headers: HEADERS });
@@ -17,6 +18,7 @@ export const POST: APIRoute = async () => {
 };
 
 export const GET: APIRoute = async () => {
+  if (!hasUpstashCredentials()) return new Response(null, { status: 204 });
   try {
     const counts = await getVisitors(SITE);
     return new Response(JSON.stringify(counts), { headers: HEADERS });

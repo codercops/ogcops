@@ -42,15 +42,15 @@ const template: TemplateDefinition = {
     const beforeLabel = String(params.beforeLabel || 'Before');
     const afterLabel = String(params.afterLabel || 'After');
     const beforeItems = [
-      String(params.beforeItem1 || 'Manual processes'),
-      String(params.beforeItem2 || 'Slow deployments'),
-      String(params.beforeItem3 || 'No visibility'),
-    ];
+      String(params.beforeItem1 ?? 'Manual processes'),
+      String(params.beforeItem2 ?? 'Slow deployments'),
+      String(params.beforeItem3 ?? 'No visibility'),
+    ].filter((item) => item.trim());
     const afterItems = [
-      String(params.afterItem1 || 'Fully automated'),
-      String(params.afterItem2 || '10x faster shipping'),
-      String(params.afterItem3 || 'Real-time insights'),
-    ];
+      String(params.afterItem1 ?? 'Fully automated'),
+      String(params.afterItem2 ?? '10x faster shipping'),
+      String(params.afterItem3 ?? 'Real-time insights'),
+    ].filter((item) => item.trim());
     const siteName = String(params.siteName || '');
     const bgColor = String(params.bgColor || '#0f172a');
     const accentColor = String(params.accentColor || '#10b981');

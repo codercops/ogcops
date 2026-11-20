@@ -5,11 +5,11 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Discord](https://img.shields.io/badge/chat-Discord-5865F2.svg?logo=discord&logoColor=white)](https://discord.gg/mpGdJyjaRQ)
 
-> Free, open-source OG image generator. 109 templates, 8 platform previews, free API. No login, no watermarks.
+> Free, open-source OG image generator. 175+ templates, 8 platform previews, free API. No login, no watermarks.
 
 **Live:** [og.codercops.com](https://og.codercops.com)
 
-![OGCOPS](https://og.codercops.com/api/og?template=github-readme-hero&title=OGCOPS&description=Free%2C+open-source+OG+image+generator.+109+templates.+8+platform+previews.+Free+API.&tagline=No+login+%E2%80%A2+No+watermarks+%E2%80%A2+No+limits&badges=MIT+License&accentColor=%23E07A5F)
+![OGCOPS](https://og.codercops.com/api/og?template=github-readme-hero&title=OGCOPS&description=Free%2C+open-source+OG+image+generator.+175%2B+templates.+8+platform+previews.+Free+API.&tagline=No+login+%E2%80%A2+No+watermarks+%E2%80%A2+No+limits&badges=MIT+License&accentColor=%23E07A5F)
 
 ## Why OGCOPS?
 
@@ -19,13 +19,13 @@ OGCOPS is different:
 
 - **Completely free** — no login, no watermarks, no rate limits
 - **Open source** — MIT licensed, self-hostable, fully transparent
-- **109 templates** — professional designs across 12 categories, ready to use
+- **175+ templates** — professional designs across 12 categories, ready to use
 - **Instant preview** — client-side Satori rendering, zero server calls while editing
 - **Developer-friendly API** — generate images via URL, CORS-enabled, no API key needed
 
 ## Features
 
-- **109 Templates** across 12 categories: Blog, Product, SaaS, GitHub, Event, Podcast, Developer, Newsletter, Quote, E-commerce, Job, Tutorial
+- **175+ Templates** across 12 categories: Blog, Product, SaaS, GitHub, Event, Podcast, Developer, Newsletter, Quote, E-commerce, Job, Tutorial
 - **8 Platform Previews**: Twitter/X, Facebook, LinkedIn, Discord, Slack, Reddit, WhatsApp, Google Search — see exactly how your image looks on each platform
 - **Free REST API**: Generate OG images via URL. CORS-enabled. No API key required.
 - **Social Preview Checker**: Paste any URL to analyze its meta tags and see platform previews

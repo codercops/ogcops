@@ -187,6 +187,8 @@ const year = new Date().getFullYear();
 (function() {
   // The router swaps the footer on every navigation and runs this script only
   // once. The numbers are fetched once, and every new footer is filled in from them.
+  // Counts once fetched, or false when the API has no counter to show
+  // (204 on self-hosted copies without Upstash, or any other error).
   var latest = null;
   var loading = false;
 
@@ -197,9 +199,19 @@ const year = new Date().getFullYear();
     if (total) total.textContent = (data.total || 0).toLocaleString();
   }
 
+  // Hide the Stats title and counters in whichever footer is on the page,
+  // keeping the MIT License and copyright line below them.
+  function hideStats() {
+    var title = document.querySelector('.footer-stats-col .footer-col-title');
+    var stats = document.querySelector('.footer-stats-col .footer-stats');
+    if (title) title.style.display = 'none';
+    if (stats) stats.style.display = 'none';
+  }
+
   function loadVisitors() {
-    if (latest) {
-      updateDOM(latest);
+    if (latest !== null) {
+      if (latest === false) hideStats();
+      else updateDOM(latest);
       return;
     }
     // A fetch is already on its way and will fill in whichever footer is on the page
@@ -212,8 +224,16 @@ const year = new Date().getFullYear();
       ? fetch('/api/visitors')
       : fetch('/api/visitors', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
     request
-      .then(function(r) { return r.json(); })
+      .then(function(r) {
+        if (r.status !== 200) return null;
+        return r.json();
+      })
       .then(function(data) {
+        if (data === null) {
+          latest = false;
+          hideStats();
+          return;
+        }
         if (!counted) sessionStorage.setItem('ogcops-counted', '1');
         latest = data;
         updateDOM(data);

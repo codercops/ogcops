@@ -210,11 +210,13 @@ import podcastShowNotes from './podcast/show-notes';
 import podcastListenOn from './podcast/listen-on';
 import podcastTopEpisodes from './podcast/top-episodes';
 import podcastLiveRecording from './podcast/live-recording';
+import podcastTranscript from './podcast/transcript';
 
 [
   podcastEpisodeCard, podcastWaveform, podcastGuestSpotlight, podcastConversation, podcastSeriesBanner,
   podcastMinimalPlayer, podcastVideoThumbnail, podcastAudiogram, podcastShowNotes, podcastTopEpisodes,
   podcastListenOn, podcastLiveRecording,
+  podcastTranscript,
 ].forEach(registerTemplate);
 
 // Developer
@@ -231,6 +233,7 @@ import developerOpenToWork from './developer/open-to-work';
 import developerDayStreak from './developer/day-streak';
 import developerNow from './developer/now';
 import developerYearReview from './developer/year-review';
+import developerBuildInPublic from './developer/build-in-public';
 
 [
   developerPortfolioCard, developerTechStack, developerTerminalBio, developerGradientProfile,
@@ -238,6 +241,7 @@ import developerYearReview from './developer/year-review';
   developerLinkTree, developerOpenToWork, developerDayStreak,
   developerNow,
   developerYearReview,
+  developerBuildInPublic,
 ].forEach(registerTemplate);
 
 // Newsletter
@@ -254,12 +258,13 @@ import newsletterSponsor from './newsletter/sponsor';
 import newsletterPoll from './newsletter/poll';
 import newsletterWelcome from './newsletter/welcome';
 import newsletterMembersOnly from './newsletter/members-only';
+import newsletterMailbag from './newsletter/mailbag';
 
 [
   newsletterIssueCard, newsletterDigestBanner, newsletterPreviewText, newsletterEditorial,
   newsletterCuratedLinks, newsletterMinimalNumber, newsletterNewspaperFold, newsletterSubscriberCount,
   newsletterSubscribeCard, newsletterSponsor, newsletterPoll,
-  newsletterWelcome, newsletterMembersOnly,
+  newsletterWelcome, newsletterMembersOnly, newsletterMailbag,
 ].forEach(registerTemplate);
 
 // Quote
@@ -276,11 +281,12 @@ import quoteCodeComment from './quote/code-comment';
 import quoteSubtitle from './quote/subtitle';
 import quoteArticleExcerpt from './quote/article-excerpt';
 import quoteInterview from './quote/interview';
+import quoteTwoTakes from './quote/two-takes';
 
 [
   quoteCenteredSerif, quoteGradientCard, quoteSpeechBubble, quoteTwitterStyle,
   quoteBookPage, quoteBoldHighlight, quoteMinimalDash, quotePhotoBackground, quoteStickyNote,
-  quoteCodeComment, quoteSubtitle, quoteArticleExcerpt, quoteInterview,
+  quoteCodeComment, quoteSubtitle, quoteArticleExcerpt, quoteInterview, quoteTwoTakes,
 ].forEach(registerTemplate);
 
 // E-commerce
@@ -297,12 +303,14 @@ import ecommerceBundleDeal from './ecommerce/bundle-deal';
 import ecommerceOrderStatus from './ecommerce/order-status';
 import ecommerceGiftCard from './ecommerce/gift-card';
 import ecommerceBackInStock from './ecommerce/back-in-stock';
+import ecommerceRatingBreakdown from './ecommerce/rating-breakdown';
 
 [
   ecommerceProductCard, ecommerceSaleBanner, ecommerceCollection, ecommerceReviewHighlight,
   ecommercePriceDrop, ecommerceNewArrival, ecommerceComparisonGrid, ecommerceBrandStory,
   ecommerceCouponCode, ecommerceOrderStatus, ecommerceBundleDeal, ecommerceGiftCard,
   ecommerceBackInStock,
+  ecommerceRatingBreakdown,
 ].forEach(registerTemplate);
 
 // Job

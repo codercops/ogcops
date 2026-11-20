@@ -41,11 +41,11 @@ const template: TemplateDefinition = {
     const price = truncate(String(params.price || '$29'), 12);
     const period = String(params.period || '/month');
     const features = [
-      String(params.feature1 || 'Unlimited projects'),
-      String(params.feature2 || 'Priority support'),
-      String(params.feature3 || 'Advanced analytics'),
-      String(params.feature4 || 'Custom integrations'),
-    ];
+      String(params.feature1 ?? 'Unlimited projects'),
+      String(params.feature2 ?? 'Priority support'),
+      String(params.feature3 ?? 'Advanced analytics'),
+      String(params.feature4 ?? 'Custom integrations'),
+    ].filter((feature) => feature.trim());
     const siteName = String(params.siteName || '');
     const bgColor = String(params.bgColor || '#0f172a');
     const accentColor = String(params.accentColor || '#6366f1');
