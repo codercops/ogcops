@@ -23,8 +23,10 @@ const META: MetaTags = {
   themeColor: '#123456',
 } as MetaTags;
 
+// Picks a real template that is not the fallback id, so the success test can
+// tell the AI's choice apart from the 'blog-minimal-dark' rewrite below.
 const AI_JSON = JSON.stringify({
-  templateId: 'blog-minimal-dark',
+  templateId: 'product-minimal-badge',
   fields: { title: 'Example', description: 'An example page' },
   colors: { bgColor: '#123456', accentColor: '#ffffff' },
 });
@@ -138,7 +140,7 @@ describe('POST /api/ai/autofill', () => {
 
     expect(res.status).toBe(200);
     const json = await res.json();
-    expect(json.templateId).toBe('blog-minimal-dark');
+    expect(json.templateId).toBe('product-minimal-badge');
     expect(json.fields).toEqual({ title: 'Example', description: 'An example page' });
     expect(json.colors).toEqual({ bgColor: '#123456', accentColor: '#ffffff' });
     expect(fetchMetaTags).toHaveBeenCalledWith('https://example.com');
@@ -158,8 +160,9 @@ describe('POST /api/ai/autofill', () => {
     const res = await post({ ...VALID, provider: 'google', model: 'gemini-2.0-flash' });
 
     expect(res.status).toBe(200);
-    const [calledUrl] = fetchSpy.mock.calls[0] as [string];
+    const [calledUrl, init] = fetchSpy.mock.calls[0] as [string, RequestInit];
     expect(calledUrl).toContain('?key=sk-test');
     expect(calledUrl).toContain('gemini-2.0-flash:generateContent');
+    expect(JSON.stringify(init.headers)).not.toContain('sk-test');
   });
 });
