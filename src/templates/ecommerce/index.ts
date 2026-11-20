@@ -11,3 +11,4 @@ export { default as ecommerceBundleDeal } from './bundle-deal';
 export { default as ecommerceOrderStatus } from './order-status';
 export { default as ecommerceGiftCard } from './gift-card';
 export { default as ecommerceBackInStock } from './back-in-stock';
+export { default as ecommerceRatingBreakdown } from './rating-breakdown';

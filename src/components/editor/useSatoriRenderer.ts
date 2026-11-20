@@ -69,6 +69,7 @@ export function useSatoriRenderer(): SatoriRendererResult {
   const [error, setError] = useState<string | null>(null);
   const readyRef = useRef(false);
   const queuedRef = useRef<any>(null);
+  const renderIdRef = useRef(0);
 
   // Initialize satori + fonts
   useEffect(() => {
@@ -93,15 +94,18 @@ export function useSatoriRenderer(): SatoriRendererResult {
 
   const doRender = useCallback(async (element: any) => {
     if (!satoriModule || !fontsLoaded) return;
+    const renderId = ++renderIdRef.current;
     try {
       const result = await satoriModule(element, {
         width: 1200,
         height: 630,
         fonts: fontsLoaded,
       });
+      if (renderId !== renderIdRef.current) return;
       setSvg(result);
       setError(null);
     } catch (e) {
+      if (renderId !== renderIdRef.current) return;
       setError(e instanceof Error ? e.message : 'Render failed');
     }
   }, []);

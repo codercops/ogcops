@@ -1,5 +1,6 @@
 import type { MetaTags } from '@/lib/meta-fetcher';
 import { generateMetaTags } from '@/lib/meta-tag-generator';
+import { copyToClipboard } from '@/lib/clipboard';
 
 interface FixItButtonProps {
   meta: MetaTags;
@@ -26,21 +27,11 @@ export function FixItButton({ meta }: FixItButtonProps) {
   });
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(tags);
+    const success = await copyToClipboard(tags);
+    if (success) {
       window.showToast?.('Recommended meta tags copied!', 'success');
-    } catch {
-      try {
-        const ta = document.createElement('textarea');
-        ta.value = tags;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        window.showToast?.('Recommended meta tags copied!', 'success');
-      } catch {
-        window.showToast?.('Could not copy meta tags', 'error');
-      }
+    } else {
+      window.showToast?.('Could not copy meta tags', 'error');
     }
   };
 

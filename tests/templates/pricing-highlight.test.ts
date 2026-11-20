@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import satori, { type SatoriNode } from 'satori';
 import pricingHighlight from '@/templates/saas/pricing-highlight';
+import type { SatoriElement } from '@/templates/types';
 
 const fonts = ['Inter-Regular', 'Inter-SemiBold', 'Inter-Bold'].map((file) => ({
   name: 'Inter',
@@ -21,6 +22,15 @@ async function layout(price: string) {
   return { priceNode, period, innerRight: card.left + card.width - 40 };
 }
 
+function textContent(node: unknown): string[] {
+  if (typeof node === 'string') return [node];
+  if (Array.isArray(node)) return node.flatMap(textContent);
+  if (node && typeof node === 'object' && 'props' in node) {
+    return textContent((node as SatoriElement).props.children);
+  }
+  return [];
+}
+
 describe('saas-pricing-highlight', () => {
   it('keeps the default price at 56px', async () => {
     expect((await layout('$29')).priceNode.props.style.fontSize).toBe('56px');
@@ -31,5 +41,15 @@ describe('saas-pricing-highlight', () => {
     expect(parseInt(priceNode.props.style.fontSize)).toBeLessThan(56);
     expect(period.left).toBeGreaterThanOrEqual(priceNode.left + priceNode.width);
     expect(period.left + period.width).toBeLessThanOrEqual(innerRight);
+  });
+
+  it('leaves out a cleared feature', () => {
+    const shown = textContent(
+      pricingHighlight.render({ ...pricingHighlight.defaults, feature1: '5 projects', feature2: 'Email support', feature3: '', feature4: '' }),
+    );
+
+    expect(shown).toEqual(expect.arrayContaining(['5 projects', 'Email support']));
+    expect(shown).not.toContain('Advanced analytics');
+    expect(shown).not.toContain('Custom integrations');
   });
 });

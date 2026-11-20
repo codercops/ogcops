@@ -1,3 +1,4 @@
+import { HTML_ENTITIES } from './html-entities';
 export interface MetaTags {
   title?: string;
   description?: string;
@@ -43,12 +44,20 @@ export async function fetchMetaTags(url: string): Promise<MetaTags> {
 }
 
 export function parseMetaTags(html: string, baseUrl: string): MetaTags {
+  // Strip HTML comments before any extraction so that commented-out tags are
+  // not mistaken for active metadata (issue #389).
+  html = html.replace(/<!--[\s\S]*?-->/g, '');
+
+  // Strip script elements before any extraction so that tags inside scripts
+  // or JSON-LD do not affect metadata (issue #394).
+  html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+
   const tags: MetaTags = {};
   let inFirstImageGroup = false;
 
   // Extract <title>
   const titleMatch = html.match(/<title[^>]*>(.*?)<\/title>/is);
-  if (titleMatch) tags.title = decodeEntities(titleMatch[1].trim());
+  if (titleMatch) tags.title = decodeEntities(titleMatch[1]).replace(/[ \t\n\r\f]+/g, ' ').replace(/^ | $/g, '');
 
   // Extract meta tags
   for (const tag of findTags(html, 'meta')) {
@@ -183,22 +192,9 @@ function findTags(html: string, tagName: 'meta' | 'link'): string[] {
   return tags;
 }
 
-const NAMED_ENTITIES: Record<string, string> = {
-  amp: '&',
-  lt: '<',
-  gt: '>',
-  quot: '"',
-  apos: "'",
-  nbsp: '\u00a0',
-  AMP: '&',
-  LT: '<',
-  GT: '>',
-  QUOT: '"',
-};
-
 function decodeEntities(str: string): string {
-  return str.replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, (entity, body: string) => {
-    if (body[0] !== '#') return NAMED_ENTITIES[body] ?? entity;
+  return str.replace(/&(#\d+|#x[0-9a-f]+|[a-z][a-z0-9]*);/gi, (entity, body: string) => {
+    if (body[0] !== '#') return Object.hasOwn(HTML_ENTITIES, body) ? HTML_ENTITIES[body] : entity;
     const hex = body[1] === 'x' || body[1] === 'X';
     const code = parseInt(body.slice(hex ? 2 : 1), hex ? 16 : 10);
     return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : entity;
