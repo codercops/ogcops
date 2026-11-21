@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
 import { getProvider } from '@/lib/ai/providers';
+import { httpUrlSchema } from '@/lib/api-validation';
 import { fetchMetaTags } from '@/lib/meta-fetcher';
 import { buildAutofillPrompt, parseAutofillResponse } from '@/lib/ai/autofill';
 import { getTemplate } from '@/templates/registry';
@@ -16,7 +17,7 @@ const autofillSchema = z.object({
   provider: z.enum(['openai', 'anthropic', 'google', 'groq', 'openrouter']),
   apiKey: z.string().min(1),
   model: z.string().min(1),
-  url: z.string().url('A valid URL is required'),
+  url: httpUrlSchema,
 });
 
 export const POST: APIRoute = async ({ request }) => {
