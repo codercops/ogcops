@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useId } from 'react';
 import type { AIProvider as AIProviderType } from '@/lib/ai/types';
 import { AI_PROVIDERS } from '@/lib/ai/types';
 import { getAllProviders, getModelsForProvider, getDefaultModel } from '@/lib/ai/providers';
@@ -30,6 +30,12 @@ export function AISettingsModal({ open, onClose }: AISettingsModalProps) {
   const [statusMessage, setStatusMessage] = useState('');
   const overlayRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+  const providerLabelId = useId();
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   // Load stored values when provider changes
   useEffect(() => {
@@ -45,19 +51,51 @@ export function AISettingsModal({ open, onClose }: AISettingsModalProps) {
   // Focus input on open
   useEffect(() => {
     if (open) {
-      setTimeout(() => inputRef.current?.focus(), 100);
+      const timer = setTimeout(() => inputRef.current?.focus(), 100);
+      return () => clearTimeout(timer);
     }
   }, [open]);
 
-  // ESC to close
+  // Trap focus and restore focus on close
   useEffect(() => {
     if (!open) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+
+    if (document.activeElement && !dialogRef.current?.contains(document.activeElement)) {
+      triggerRef.current = document.activeElement as HTMLElement;
+    }
+
+    const handleDialogKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      const focusableElements = dialogRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusableElements?.length) return;
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+
+      if (event.shiftKey && (document.activeElement === first || !dialogRef.current?.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !dialogRef.current?.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
     };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [open, onClose]);
+
+    document.addEventListener('keydown', handleDialogKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleDialogKeyDown);
+      triggerRef.current?.focus();
+    };
+  }, [open]);
 
   const handleProviderChange = useCallback((id: AIProviderType) => {
     setActiveProvider(id);
@@ -134,10 +172,16 @@ export function AISettingsModal({ open, onClose }: AISettingsModalProps) {
 
   return (
     <div className="ai-modal-overlay" ref={overlayRef} onClick={handleOverlayClick}>
-      <div className="ai-modal" role="dialog" aria-label="AI Settings">
+      <div
+        className="ai-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        ref={dialogRef}
+      >
         {/* Header */}
         <div className="ai-modal-header">
-          <h3 className="ai-modal-title">
+          <h3 className="ai-modal-title" id={titleId}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z" />
             </svg>
@@ -154,18 +198,26 @@ export function AISettingsModal({ open, onClose }: AISettingsModalProps) {
         <div className="ai-modal-body">
           {/* Provider Selection */}
           <div className="ai-field">
-            <label className="ai-field-label">Provider</label>
-            <div className="ai-provider-grid">
-              {PROVIDERS.map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  className={`ai-provider-btn ${activeProvider === p.id ? 'active' : ''}`}
-                  onClick={() => handleProviderChange(p.id)}
-                >
-                  {p.name}
-                </button>
-              ))}
+            <label className="ai-field-label" id={providerLabelId}>Provider</label>
+            <div
+              className="ai-provider-grid"
+              role="group"
+              aria-labelledby={providerLabelId}
+            >
+              {PROVIDERS.map((p) => {
+                const isSelected = activeProvider === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className={`ai-provider-btn ${isSelected ? 'active' : ''}`}
+                    onClick={() => handleProviderChange(p.id)}
+                    aria-pressed={isSelected ? 'true' : 'false'}
+                  >
+                    {p.name}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -263,21 +315,26 @@ export function AISettingsModal({ open, onClose }: AISettingsModalProps) {
           </div>
 
           {/* Status */}
-          {statusMessage && (
-            <div className={`ai-status ai-status-${status}`}>
-              {status === 'valid' && (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              )}
-              {(status === 'invalid' || status === 'error') && (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
-                </svg>
-              )}
-              {statusMessage}
-            </div>
-          )}
+          <div
+            role="status"
+            className={statusMessage ? `ai-status ai-status-${status}` : undefined}
+          >
+            {statusMessage && (
+              <>
+                {status === 'valid' && (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+                {(status === 'invalid' || status === 'error') && (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
+                  </svg>
+                )}
+                {statusMessage}
+              </>
+            )}
+          </div>
         </div>
 
         {/* Footer */}
