@@ -679,3 +679,123 @@ describe('OG API cleared fields', () => {
     }
   });
 });
+
+describe('OG API image load fallback', () => {
+  const defaultPng = new Uint8Array([137, 80, 78, 71]).buffer as ArrayBuffer;
+
+  function containsImg(node: any): boolean {
+    if (!node || typeof node !== 'object') return false;
+    if (node.type === 'img') return true;
+    const children = node.props?.children;
+    if (Array.isArray(children)) {
+      return children.some(containsImg);
+    }
+    if (children && typeof children === 'object') {
+      return containsImg(children);
+    }
+    return false;
+  }
+
+  afterEach(async () => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+    const { renderToPng } = await import('@/lib/og-engine');
+    vi.mocked(renderToPng).mockReset().mockResolvedValue(defaultPng);
+  });
+
+  it('retries without images on render failure and serves no-store without caching', async () => {
+    const { renderToPng } = await import('@/lib/og-engine');
+    vi.mocked(renderToPng).mockReset().mockImplementation(async (element: any) => {
+      if (containsImg(element)) {
+        throw new Error('Image size cannot be determined');
+      }
+      return defaultPng;
+    });
+
+    const cache = {
+      match: vi.fn().mockResolvedValue(undefined),
+      put: vi.fn().mockResolvedValue(undefined),
+    };
+    const waitUntil = vi.fn();
+    vi.stubEnv('DEV', false);
+    vi.stubGlobal('caches', { default: cache });
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const res = await GET(
+      makeContext(
+        `${BASE}?template=blog-photo-overlay&title=Hello&imageUrl=https://example.com/missing.png`,
+        { cfContext: { waitUntil } }
+      )
+    );
+
+    expect(renderToPng).toHaveBeenCalledTimes(2);
+    expect(containsImg(vi.mocked(renderToPng).mock.calls[0][0])).toBe(true);
+    expect(containsImg(vi.mocked(renderToPng).mock.calls[1][0])).toBe(false);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('cache-control')).toBe('no-store');
+    expect(cache.put).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledOnce();
+  });
+
+  it('serves working imageUrl with public cache-control and caches the response', async () => {
+    const { renderToPng } = await import('@/lib/og-engine');
+    vi.mocked(renderToPng).mockReset().mockResolvedValue(defaultPng);
+
+    const cache = {
+      match: vi.fn().mockResolvedValue(undefined),
+      put: vi.fn().mockResolvedValue(undefined),
+    };
+    const waitUntil = vi.fn();
+    vi.stubEnv('DEV', false);
+    vi.stubGlobal('caches', { default: cache });
+
+    const res = await GET(
+      makeContext(
+        `${BASE}?template=blog-photo-overlay&title=Hello&imageUrl=https://example.com/ok.png`,
+        { cfContext: { waitUntil } }
+      )
+    );
+
+    expect(renderToPng).toHaveBeenCalledOnce();
+    expect(res.status).toBe(200);
+    expect(res.headers.get('cache-control')).toBe('public, max-age=86400');
+    expect(cache.put).toHaveBeenCalledOnce();
+  });
+
+  it('returns 500 with no-store on render failure when no image value is present', async () => {
+    const { renderToPng } = await import('@/lib/og-engine');
+    vi.mocked(renderToPng).mockReset().mockRejectedValue(new Error('Render error'));
+
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const res = await GET(
+      makeContext(`${BASE}?template=blog-photo-overlay&title=Hello`)
+    );
+
+    expect(renderToPng).toHaveBeenCalledOnce();
+    expect(res.status).toBe(500);
+    expect(res.headers.get('cache-control')).toBe('no-store');
+    expect(errorSpy).toHaveBeenCalled();
+  });
+
+  it('returns 500 with no-store when retry also fails', async () => {
+    const { renderToPng } = await import('@/lib/og-engine');
+    vi.mocked(renderToPng).mockReset().mockRejectedValue(new Error('Fatal render error'));
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const res = await GET(
+      makeContext(
+        `${BASE}?template=blog-photo-overlay&title=Hello&imageUrl=https://example.com/missing.png`
+      )
+    );
+
+    expect(renderToPng).toHaveBeenCalledTimes(2);
+    expect(res.status).toBe(500);
+    expect(res.headers.get('cache-control')).toBe('no-store');
+    expect(warnSpy).toHaveBeenCalledOnce();
+    expect(errorSpy).toHaveBeenCalled();
+  });
+});
