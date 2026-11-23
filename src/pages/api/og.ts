@@ -79,22 +79,52 @@ export const GET: APIRoute = async ({ request, locals }) => {
     const mergedParams = mergeOgParams(params, template.defaults, url.searchParams, template.fields);
     const normalizedParams = normalizeColorFields(template, mergedParams);
 
-    const element = template.render(normalizedParams);
-    const png = await renderToPng(element, {
+    const renderOptions = {
       width: 1200,
       height: 630,
       scaleDown: dimensions.width !== 1200 ? dimensions.width : undefined,
-    });
+    };
+
+    let png: ArrayBuffer;
+    let isFallback = false;
+
+    try {
+      const element = template.render(normalizedParams);
+      png = await renderToPng(element, renderOptions);
+    } catch (firstErr) {
+      const hasImageWithValue = template.fields.some(
+        (field) =>
+          field.type === 'image' &&
+          normalizedParams[field.key] !== '' &&
+          normalizedParams[field.key] != null
+      );
+      if (!hasImageWithValue) {
+        throw firstErr;
+      }
+
+      console.warn('OG image render failed, retrying without image:', firstErr);
+
+      const fallbackParams = { ...normalizedParams };
+      for (const field of template.fields) {
+        if (field.type === 'image') {
+          fallbackParams[field.key] = '';
+        }
+      }
+
+      const fallbackElement = template.render(fallbackParams);
+      png = await renderToPng(fallbackElement, renderOptions);
+      isFallback = true;
+    }
 
     const response = new Response(png, {
       status: 200,
       headers: {
-        ...headers,
+        ...(isFallback ? errorHeaders : headers),
         'Content-Type': 'image/png',
         'Content-Length': String(png.byteLength),
       },
     });
-    if (cache) locals.cfContext?.waitUntil(cache.put(cacheKey, response.clone()));
+    if (!isFallback && cache) locals.cfContext?.waitUntil(cache.put(cacheKey, response.clone()));
     return response;
   } catch (err) {
     console.error('OG generation error:', err);
