@@ -103,8 +103,24 @@ export function resolveDimensions(
   };
 }
 
+// A page the API is asked to fetch: it has to parse as a URL, and only
+// http(s) schemes are fetchable — any other scheme is the caller's mistake.
+export const httpUrlSchema = z
+  .url({ error: 'A valid URL is required' })
+  .refine(
+    (value) => {
+      try {
+        return /^https?:$/i.test(new URL(value).protocol);
+      } catch {
+        // The URL check above already reported the unparseable value.
+        return true;
+      }
+    },
+    { message: 'Only http and https URLs are supported' }
+  );
+
 export const previewQuerySchema = z.object({
-  url: z.string().url('A valid URL is required'),
+  url: httpUrlSchema,
 });
 
 export type PreviewQueryParams = z.infer<typeof previewQuerySchema>;
