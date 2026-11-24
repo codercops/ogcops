@@ -188,7 +188,7 @@ with open("og-image.png", "wb") as f:
           </div>
           <div class="param-item">
             <div class="param-head"><code class="param-name">500</code></div>
-            <p class="param-desc">Image rendering failed</p>
+            <p class="param-desc">Image rendering failed (if an <code>imageUrl</code> fails to load, the card renders without the image and returns <code>200</code> with <code>Cache-Control: no-store</code> instead of <code>500</code>)</p>
           </div>
         </div>
       </div>
@@ -199,7 +199,7 @@ with open("og-image.png", "wb") as f:
           <span class="endpoint-method">GET</span>
           <code class="endpoint-path">/api/preview</code>
         </div>
-        <p class="endpoint-desc">Fetch and analyze meta tags from a URL. Returns JSON cached for 5 minutes (<code>Cache-Control: public, max-age=300</code>) with meta tags, analysis score, and per-platform preview data for 8 platforms.</p>
+        <p class="endpoint-desc">Fetch and analyze meta tags from a URL. Returns JSON cached for 5 minutes (<code>Cache-Control: public, max-age=300</code>) with meta tags, analysis score, and per-platform preview data for 8 platforms. Errors return JSON and are not cached (<code>Cache-Control: no-store</code>).</p>
 
         <h4>Parameters</h4>
         <div class="param-list">
@@ -248,11 +248,11 @@ with open("og-image.png", "wb") as f:
         </div>
 
         <h4>Error Codes</h4>
-        <p class="endpoint-desc">All error responses return JSON (<code>{`{ "error": "..." }`}</code>):</p>
+        <p class="endpoint-desc">All error responses return JSON (<code>{`{ "error": "..." }`}</code>) with <code>Cache-Control: no-store</code>:</p>
         <div class="param-list">
           <div class="param-item">
             <div class="param-head"><code class="param-name">400</code></div>
-            <p class="param-desc">Missing or invalid <code>url</code> parameter</p>
+            <p class="param-desc">Missing or invalid <code>url</code> parameter, or URL is not http/https (only <code>http</code> and <code>https</code> URLs are supported)</p>
           </div>
           <div class="param-item">
             <div class="param-head"><code class="param-name">502</code></div>
@@ -276,9 +276,9 @@ with open("og-image.png", "wb") as f:
             <button class="code-block-copy" data-copy type="button">Copy</button>
           </div>
           <pre class="code-block-body"><code>{`{
-  "count": 25,
+  "count": 180,
   "categories": [
-    { "id": "blog", "count": 6 },
+    { "id": "blog", "count": 17 },
     ...
   ],
   "templates": [
