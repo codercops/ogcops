@@ -42,7 +42,8 @@ const template: TemplateDefinition = {
       Intermediate: { color: '#F59E0B', bars: 2 },
       Advanced: { color: '#EF4444', bars: 3 },
     };
-    const config = difficultyConfig[difficulty] || difficultyConfig.Intermediate;
+    // Own-key check: inherited names like `constructor` must hit the fallback.
+    const config = Object.hasOwn(difficultyConfig, difficulty) ? difficultyConfig[difficulty] : difficultyConfig.Intermediate;
 
     return {
       type: 'div',

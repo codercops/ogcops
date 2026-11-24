@@ -54,7 +54,8 @@ const template: TemplateDefinition = {
       intermediate: '#FF9800',
       advanced: '#F44336',
     };
-    const levelColor = levelColors[skillLevel] || '#FF9800';
+    // Own-key check: inherited names like `constructor` must hit the fallback.
+    const levelColor = Object.hasOwn(levelColors, skillLevel) ? levelColors[skillLevel] : '#FF9800';
 
     return {
       type: 'div',

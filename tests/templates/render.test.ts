@@ -110,4 +110,23 @@ describe('template render', () => {
     expect(svg).toMatch(/^<svg/);
     expect(unresolved).toEqual([]);
   });
+
+  // Select fields take any string through the API. Names inherited from
+  // Object.prototype (`constructor`, `toString`, ...) must hit the template's
+  // fallback, not be looked up on the prototype chain — plain `colors[key]`
+  // returns a function satori cannot parse and the render 500s.
+  const inheritedNames = ['constructor', 'toString', '__proto__', 'hasOwnProperty'];
+
+  it.each(
+    getAllTemplates().flatMap((t) =>
+      t.fields
+        .filter((f) => f.type === 'select')
+        .map((f) => [`${t.id} field ${f.key}`, t, f] as const)
+    )
+  )('renders %s for inherited Object.prototype names', async (_label, template, field) => {
+    for (const value of inheritedNames) {
+      const svg = await render(template.render({ ...template.defaults, [field.key]: value }));
+      expect(svg).toMatch(/^<svg/);
+    }
+  });
 });
