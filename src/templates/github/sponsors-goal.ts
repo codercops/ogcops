@@ -42,7 +42,7 @@ const template: TemplateDefinition = {
       label: 'Goal',
       type: 'number' as const,
       defaultValue: 1000,
-      min: 0,
+      min: 1,
       max: 10000,
       group: 'Content' as const,
     },
