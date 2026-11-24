@@ -124,26 +124,30 @@ describe('product-you-asked', () => {
     const element = render({ version: longVersion, siteName: longSite });
     const content = textContent(element);
 
-    const pill = content.find((text) => text.startsWith('Shipped')) ?? '';
+    const pill = content.find((text) => text.startsWith('Shipped'));
+    expect(pill).toBeDefined();
     expect(pill).toMatch(/…$/);
-    const versionInPill = pill.replace(/^Shipped in /, '');
+    const versionInPill = pill!.replace(/^Shipped in /, '');
     expect(versionInPill.length).toBeLessThanOrEqual(24);
     expect(versionInPill).toMatch(/…$/);
 
-    const site = content.find((text) => text.includes('subdomain') || text.endsWith('…')) ?? '';
-    expect(site.length).toBeLessThanOrEqual(40);
+    const site = content.find((text) => text.includes('subdomain'));
+    expect(site).toBeDefined();
+    expect(site!.length).toBeLessThanOrEqual(40);
     expect(site).toMatch(/…$/);
 
     const pillSpan = elements(element).find(
       (el) => el.type === 'span' && typeof el.props.children === 'string' && el.props.children.startsWith('Shipped'),
     );
+    expect(pillSpan).toBeDefined();
     expect(pillSpan?.props.style?.whiteSpace).toBe('nowrap');
     expect(pillSpan?.props.style?.overflow).toBe('hidden');
     expect(pillSpan?.props.style?.textOverflow).toBe('ellipsis');
 
     const siteSpan = elements(element).find(
-      (el) => el.type === 'span' && typeof el.props.children === 'string' && el.props.children.endsWith('…'),
+      (el) => el.type === 'span' && typeof el.props.children === 'string' && el.props.children.includes('subdomain'),
     );
+    expect(siteSpan).toBeDefined();
     expect(siteSpan?.props.style?.whiteSpace).toBe('nowrap');
     expect(siteSpan?.props.style?.overflow).toBe('hidden');
     expect(siteSpan?.props.style?.textOverflow).toBe('ellipsis');
