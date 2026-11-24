@@ -117,6 +117,11 @@ describe('github-sponsors-goal', () => {
     );
   });
 
+  it('keeps the Goal slider from going below 1', () => {
+    expect(sponsorsGoal.fields.find((field) => field.key === 'goal')?.min).toBe(1);
+    expect(sponsorsGoal.fields.find((field) => field.key === 'raised')?.min).toBe(0);
+  });
+
   it('counts negative or non-numeric raised as 0', () => {
     expect(render({ raised: -5, goal: 1000 })).toEqual(
       expect.arrayContaining(['$0 of $1,000 a month', '0%'])
