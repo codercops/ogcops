@@ -97,6 +97,11 @@ describe('github-milestone', () => {
     );
   });
 
+  it('keeps the Total Issues slider from going below 1', () => {
+    expect(milestone.fields.find((field) => field.key === 'total')?.min).toBe(1);
+    expect(milestone.fields.find((field) => field.key === 'closed')?.min).toBe(0);
+  });
+
   it('clamps closed into 0..total', () => {
     expect(render({ closed: 99, total: 42 })).toEqual(
       expect.arrayContaining(['42 of 42 issues closed', '100%'])
