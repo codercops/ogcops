@@ -105,7 +105,7 @@ export function SliderControl({
           id={numberId}
           type="number"
           aria-label={label}
-          className="editor-field-input editor-slider-input"
+          className={`editor-field-input ${showSlider ? 'editor-slider-input' : ''}`}
           value={textValue}
           min={min}
           max={max}
