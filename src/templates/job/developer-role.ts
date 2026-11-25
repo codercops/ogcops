@@ -33,8 +33,8 @@ const template: TemplateDefinition = {
     const title = truncate(String(params.title || 'Senior Systems Engineer'), 50);
     const company = String(params.company || '');
     const langs = [
-      String(params.lang1 || ''),
-      String(params.lang2 || ''),
+      truncate(String(params.lang1 || ''), 20),
+      truncate(String(params.lang2 || ''), 20),
       String(params.lang3 || ''),
     ].filter(Boolean);
     const location = String(params.location || '');
