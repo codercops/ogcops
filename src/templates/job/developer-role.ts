@@ -35,7 +35,7 @@ const template: TemplateDefinition = {
     const langs = [
       truncate(String(params.lang1 || ''), 20),
       truncate(String(params.lang2 || ''), 20),
-      String(params.lang3 || ''),
+      truncate(String(params.lang3 || ''), 20),
     ].filter(Boolean);
     const location = String(params.location || '');
     const bgColor = String(params.bgColor || '#0d1117');
