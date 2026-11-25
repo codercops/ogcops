@@ -7,6 +7,7 @@ const normalValue = 'Short value';
 
 const affectedFields = [
   { templateId: 'github-repo-card', field: 'stars', maxLength: 20 },
+  { templateId: 'github-repo-card', field: 'forks', maxLength: 20 },
   { templateId: 'github-repo-card', field: 'language', maxLength: 20 },
   { templateId: 'event-conference', field: 'venue', maxLength: 28 },
   { templateId: 'event-hackathon', field: 'date', maxLength: 24 },
@@ -16,6 +17,7 @@ const affectedFields = [
   { templateId: 'ecommerce-price-drop', field: 'newPrice', maxLength: 12 },
   { templateId: 'job-developer-role', field: 'lang1', maxLength: 20 },
   { templateId: 'job-developer-role', field: 'lang2', maxLength: 20 },
+  { templateId: 'job-developer-role', field: 'lang3', maxLength: 20 },
 ] as const;
 
 function textContent(node: unknown): string[] {
