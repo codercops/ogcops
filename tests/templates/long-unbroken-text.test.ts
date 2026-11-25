@@ -51,7 +51,10 @@ describe('long unbroken text in templates', () => {
       });
       const expectedText = `${'x'.repeat(maxLength - 1)}…`;
 
-      expect(textContent(longTree)).toContain(expectedText);
+      const renderedText = textContent(longTree).find((text) => text === expectedText);
+      expect(renderedText).toBe(expectedText);
+      expect(renderedText).toMatch(/…$/);
+      expect(renderedText).toHaveLength(maxLength);
       expect(textContent(longTree)).not.toContain(longUnbrokenValue);
     }
   );
