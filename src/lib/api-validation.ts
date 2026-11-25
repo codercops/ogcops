@@ -166,13 +166,16 @@ export function mergeOgParams(
     }
   });
 
-  // An optional text field sent empty (`?subscriberCount=`) stays empty instead
-  // of falling back to its default. The editor sends that when someone clears
-  // a field, so the image matches the preview. Leaving the param out still
-  // gives the default, and every other empty value (the template, image URLs,
-  // required fields, colors, numbers) falls back like before.
+  // An optional text or empty-allowed numeric field sent empty (`?subscriberCount=`)
+  // stays empty instead of falling back to its default. The editor sends that when
+  // someone clears a field, so the image matches the preview. Leaving the param out
+  // still gives the default, and every other empty value (the template, image URLs,
+  // required fields, colors, numbers with non-empty default) falls back like before.
   for (const field of fields) {
-    if ((field.type === 'text' || field.type === 'textarea') && !field.required && searchParams.get(field.key) === '') {
+    if (
+      ((field.type === 'text' || field.type === 'textarea') && !field.required && searchParams.get(field.key) === '') ||
+      (field.type === 'number' && field.defaultValue === '' && searchParams.get(field.key) === '')
+    ) {
       merged[field.key] = '';
     }
   }

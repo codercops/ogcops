@@ -122,10 +122,11 @@ function renderField(
         <SliderControl
           key={field.key}
           label={field.label}
-          value={Number(value || 0)}
+          value={field.defaultValue === '' && (value === '' || value === undefined || value === null) ? '' : value === '' ? (field.defaultValue === '' ? '' : 0) : Number(value ?? 0)}
           onChange={(v) => onChange(field.key, v)}
           min={field.min}
           max={field.max}
+          allowEmpty={field.defaultValue === ''}
         />
       );
     case 'toggle':

@@ -348,11 +348,14 @@ describe('mergeOgParams', () => {
       ...defaults,
       title: 'Default title',
       imageUrl: 'https://example.com/cover.png',
+      rating: 5,
     };
     const fields: TemplateField[] = [
       { key: 'title', label: 'Title', type: 'text', defaultValue: 'Default title', required: true, group: 'Content' },
       { key: 'quote', label: 'Quote', type: 'textarea', defaultValue: 'Default quote', group: 'Content' },
       { key: 'author', label: 'Author', type: 'text', defaultValue: 'Default Author', group: 'Content' },
+      { key: 'value4', label: 'Value 4', type: 'number', defaultValue: '', group: 'Content' },
+      { key: 'rating', label: 'Rating', type: 'number', defaultValue: 5, group: 'Content' },
       { key: 'bgColor', label: 'Background', type: 'color', defaultValue: '#0a0a0a', group: 'Style' },
       { key: 'imageUrl', label: 'Image', type: 'image', defaultValue: 'https://example.com/cover.png', group: 'Style' },
     ];
@@ -376,11 +379,17 @@ describe('mergeOgParams', () => {
       expect(merged.author).toBe('Default Author');
     });
 
-    it('falls back to the default for empty required fields, colors and images', () => {
-      const merged = mergeWithFields('title=&bgColor=&imageUrl=');
+    it('falls back to the default for empty required fields, colors, images and numbers with non-empty defaults', () => {
+      const merged = mergeWithFields('title=&bgColor=&imageUrl=&rating=');
       expect(merged.title).toBe('Default title');
       expect(merged.bgColor).toBe('#0a0a0a');
       expect(merged.imageUrl).toBe('https://example.com/cover.png');
+      expect(merged.rating).toBe(5);
+    });
+
+    it('keeps an empty-allowed number field empty when sent empty', () => {
+      const merged = mergeWithFields('value4=');
+      expect(merged.value4).toBe('');
     });
   });
 });
