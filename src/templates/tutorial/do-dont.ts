@@ -1,10 +1,10 @@
 import type { SatoriElement, TemplateDefinition } from '../types';
 import { autoFontSize, commonFields, isLightColor, mixColors, truncate } from '../utils';
 
-const ITEM_FONT_SIZE = 25;
+const ITEM_FONT_SIZE = 30;
 const ITEM_LINE_HEIGHT = 1.3;
-const ITEM_MAX_HEIGHT = '65px';
-const ITEM_MAX_LENGTH = 70;
+const ITEM_MAX_HEIGHT = '78px';
+const ITEM_MAX_LENGTH = 58;
 
 const checkIcon = (size: number, color: string): SatoriElement => ({
   type: 'svg',
@@ -185,7 +185,7 @@ const template: TemplateDefinition = {
                 style: {
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '14px',
+                  gap: '24px',
                   flex: 1,
                   justifyContent: 'flex-start',
                 },

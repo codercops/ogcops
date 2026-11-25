@@ -178,8 +178,8 @@ describe('tutorial-do-dont', () => {
     const item = getAllElements(rendered).find(
       (element) =>
         element.type === 'div' &&
-        element.props.style?.fontSize === '25px' &&
-        element.props.style?.maxHeight === '65px' &&
+        element.props.style?.fontSize === '30px' &&
+        element.props.style?.maxHeight === '78px' &&
         element.props.style?.overflow === 'hidden',
     );
 
@@ -189,7 +189,7 @@ describe('tutorial-do-dont', () => {
     expect(item?.props.style?.display).toBe('flex');
 
     const content = String(item?.props.children);
-    expect(content.length).toBeLessThanOrEqual(70);
+    expect(content.length).toBeLessThanOrEqual(58);
     expect(content.endsWith('\u2026')).toBe(true);
     expect(content.codePointAt(content.length - 1)).toBe(0x2026);
   });
