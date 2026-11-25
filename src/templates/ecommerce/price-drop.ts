@@ -29,8 +29,8 @@ const template: TemplateDefinition = {
   },
   render: (params) => {
     const title = truncate(String(params.title || 'Premium Mechanical Keyboard'), 60);
-    const oldPrice = String(params.oldPrice || '$299.99');
-    const newPrice = String(params.newPrice || '$149.99');
+    const oldPrice = truncate(String(params.oldPrice || '$299.99'), 14);
+    const newPrice = truncate(String(params.newPrice || '$149.99'), 12);
     const savings = String(params.savings || '');
     const siteName = String(params.siteName || '');
     const bgColor = String(params.bgColor || '#0a0a0a');
