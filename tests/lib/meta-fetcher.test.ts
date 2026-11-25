@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { fetchMetaTags, parseMetaTags } from '@/lib/meta-fetcher';
 import { analyzeMeta } from '@/lib/meta-analyzer';
+import { resolvePlatformPreviews } from '@/lib/platform-specs';
 import { HTML_ENTITIES } from '@/lib/html-entities';
 
 describe('parseMetaTags', () => {
@@ -198,6 +199,98 @@ describe('parseMetaTags', () => {
   it('keeps > inside a single-quoted attribute value', () => {
     const tags = parseMetaTags(`<meta property='og:title' content='Tips > Tricks'>`, base);
     expect(tags.ogTitle).toBe('Tips > Tricks');
+  });
+});
+
+describe('parseMetaTags – twitter:* tags written with property (issue #439)', () => {
+  const base = 'https://example.com/posts/hello';
+
+  it('reads all six twitter:* tags from property when there is no name version', () => {
+    const tags = parseMetaTags(`
+      <meta property="twitter:card" content="summary">
+      <meta property="twitter:title" content="X title">
+      <meta property="twitter:description" content="X description">
+      <meta property="twitter:image" content="/x-card.png">
+      <meta property="twitter:site" content="@acme">
+      <meta property="twitter:creator" content="@jane">
+    `, base);
+
+    expect(tags.twitterCard).toBe('summary');
+    expect(tags.twitterTitle).toBe('X title');
+    expect(tags.twitterDescription).toBe('X description');
+    expect(tags.twitterImage).toBe('https://example.com/x-card.png');
+    expect(tags.twitterSite).toBe('@acme');
+    expect(tags.twitterCreator).toBe('@jane');
+  });
+
+  it('matches the property name case-insensitively, like the name version', () => {
+    const tags = parseMetaTags('<meta PROPERTY="Twitter:Card" content="summary">', base);
+    expect(tags.twitterCard).toBe('summary');
+  });
+
+  it('gives the small X card and no missing twitter:card warning for a property-only page', () => {
+    const tags = parseMetaTags(`
+      <meta property="twitter:card" content="summary">
+      <meta property="twitter:title" content="X title">
+      <meta property="og:title" content="OG title">
+      <meta property="og:description" content="OG description">
+      <meta property="og:image" content="https://example.com/og.png">
+    `, base);
+
+    expect(analyzeMeta(tags).issues.some((issue) => issue.tag === 'twitter:card')).toBe(false);
+    const x = resolvePlatformPreviews(tags, base).find((preview) => preview.platform === 'twitter');
+    expect(x?.cardType).toBe('summary');
+    expect(x?.title).toBe('X title');
+  });
+
+  it.each([
+    ['name first', `
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="Name title">
+      <meta name="twitter:image" content="/name.png">
+      <meta property="twitter:card" content="summary">
+      <meta property="twitter:title" content="Property title">
+      <meta property="twitter:image" content="/property.png">
+    `],
+    ['property first', `
+      <meta property="twitter:card" content="summary">
+      <meta property="twitter:title" content="Property title">
+      <meta property="twitter:image" content="/property.png">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="Name title">
+      <meta name="twitter:image" content="/name.png">
+    `],
+  ])('uses the name value when both attributes are present (%s)', (_order, html) => {
+    const tags = parseMetaTags(html, base);
+    expect(tags.twitterCard).toBe('summary_large_image');
+    expect(tags.twitterTitle).toBe('Name title');
+    expect(tags.twitterImage).toBe('https://example.com/name.png');
+  });
+
+  it('fills only the tags that have no name version', () => {
+    const tags = parseMetaTags(`
+      <meta name="twitter:title" content="Name title">
+      <meta property="twitter:title" content="Property title">
+      <meta property="twitter:site" content="@acme">
+    `, base);
+    expect(tags.twitterTitle).toBe('Name title');
+    expect(tags.twitterSite).toBe('@acme');
+  });
+
+  it.each(['', '   '])('treats a property tag with content %j as missing', (content) => {
+    const tags = parseMetaTags(`<meta property="twitter:card" content="${content}">`, base);
+    expect(tags.twitterCard).toBeUndefined();
+    expect(analyzeMeta(tags).issues).toEqual(expect.arrayContaining([
+      expect.objectContaining({ tag: 'twitter:card', message: expect.stringContaining('Missing twitter:card') }),
+    ]));
+  });
+
+  it('does not let an empty property tag clear a name value', () => {
+    const tags = parseMetaTags(`
+      <meta name="twitter:card" content="summary">
+      <meta property="twitter:card" content="">
+    `, base);
+    expect(tags.twitterCard).toBe('summary');
   });
 });
 
