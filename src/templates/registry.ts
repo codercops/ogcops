@@ -7,6 +7,10 @@ const templates = new Map<string, TemplateDefinition>();
 const byCategory = new Map<TemplateCategory, TemplateDefinition[]>();
 
 export function registerTemplate(template: TemplateDefinition) {
+  template.fields = template.fields.map((field) => ({
+    ...field,
+    defaultValue: template.defaults[field.key],
+  }));
   templates.set(template.id, template);
   const list = byCategory.get(template.category) || [];
   list.push(template);
