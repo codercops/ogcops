@@ -101,7 +101,8 @@ const template: TemplateDefinition = {
   render: (params) => {
     const serviceName = truncate(String(params.title || 'Cloud API Platform'), 50);
     const rawStatus = String(params.status || 'operational').toLowerCase();
-    const activeStatus = STATUS_CONFIG[rawStatus] || STATUS_CONFIG.operational;
+    // Own-key check: inherited names like `constructor` must hit the fallback.
+    const activeStatus = Object.hasOwn(STATUS_CONFIG, rawStatus) ? STATUS_CONFIG[rawStatus] : STATUS_CONFIG.operational;
     const statusColor = activeStatus.color;
     const statusMessage = params.statusMessage
       ? truncate(String(params.statusMessage), 60)

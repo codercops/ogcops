@@ -48,7 +48,8 @@ const template: TemplateDefinition = {
       Intermediate: '#F59E0B',
       Advanced: '#EF4444',
     };
-    const diffColor = difficultyColors[difficulty] || accentColor;
+    // Own-key check: inherited names like `constructor` must hit the fallback.
+    const diffColor = Object.hasOwn(difficultyColors, difficulty) ? difficultyColors[difficulty] : accentColor;
 
     return {
       type: 'div',

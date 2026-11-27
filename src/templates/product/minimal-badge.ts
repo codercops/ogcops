@@ -48,7 +48,9 @@ const template: TemplateDefinition = {
       alpha: '#ef4444',
       new: '#3b82f6',
     };
-    const statusColor = statusColors[status] || '#22c55e';
+    // Own-key check: inherited names like `constructor` must hit the fallback,
+    // not return a function satori can't parse.
+    const statusColor = Object.hasOwn(statusColors, status) ? statusColors[status] : '#22c55e';
 
     return {
       type: 'div',
