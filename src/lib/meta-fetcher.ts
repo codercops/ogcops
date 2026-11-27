@@ -53,6 +53,9 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
   html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
 
   const tags: MetaTags = {};
+  // twitter:* tags written with `property`. X reads them too, but a `name` tag
+  // for the same key wins whatever the order, so they're applied after the loop.
+  const twitterFromProperty: MetaTags = {};
   let inFirstImageGroup = false;
 
   // Extract <title>
@@ -75,15 +78,10 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
       const name = attrs.name.toLowerCase();
       if (name === 'description') tags.description = attrs.content;
       if (name === 'theme-color') tags.themeColor = attrs.content;
-      if (name === 'twitter:card') tags.twitterCard = attrs.content;
-      if (name === 'twitter:title') tags.twitterTitle = attrs.content;
-      if (name === 'twitter:description') tags.twitterDescription = attrs.content;
-      if (name === 'twitter:image') tags.twitterImage = resolveUrl(attrs.content, baseUrl);
-      if (name === 'twitter:site') tags.twitterSite = attrs.content;
-      if (name === 'twitter:creator') tags.twitterCreator = attrs.content;
+      readTwitterTag(tags, name, attrs.content, baseUrl);
     }
 
-    // Open Graph (property/content)
+    // Open Graph and the twitter:* fallback (property/content)
     if (attrs.property && attrs.content) {
       const prop = attrs.property.toLowerCase();
       if (prop === 'og:title') tags.ogTitle = attrs.content;
@@ -94,8 +92,11 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
       if (prop === 'og:url') tags.ogUrl = attrs.content;
       if (prop === 'og:type') tags.ogType = attrs.content;
       if (prop === 'og:site_name') tags.ogSiteName = attrs.content;
+      readTwitterTag(twitterFromProperty, prop, attrs.content, baseUrl);
     }
   }
+
+  for (const [key, value] of Object.entries(twitterFromProperty)) tags[key] ??= value;
 
   // Extract canonical and favicon. Attribute order varies (`rel` before or
   // after `href`), so match the tag first and read the attributes from it.
@@ -116,6 +117,15 @@ export function parseMetaTags(html: string, baseUrl: string): MetaTags {
   }
 
   return tags;
+}
+
+function readTwitterTag(target: MetaTags, key: string, content: string, baseUrl: string): void {
+  if (key === 'twitter:card') target.twitterCard = content;
+  if (key === 'twitter:title') target.twitterTitle = content;
+  if (key === 'twitter:description') target.twitterDescription = content;
+  if (key === 'twitter:image') target.twitterImage = resolveUrl(content, baseUrl);
+  if (key === 'twitter:site') target.twitterSite = content;
+  if (key === 'twitter:creator') target.twitterCreator = content;
 }
 
 function parseAttributes(str: string): Record<string, string> {
