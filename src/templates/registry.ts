@@ -193,6 +193,7 @@ import eventWinners from './event/winners';
 import eventCallForSpeakers from './event/call-for-speakers';
 import eventRescheduled from './event/rescheduled';
 import eventRecap from './event/recap';
+import eventTimeZones from './event/time-zones';
 
 [
   eventConference, eventMeetup, eventWebinar, eventWorkshop, eventHackathon,
@@ -201,6 +202,7 @@ import eventRecap from './event/recap';
   eventCallForSpeakers,
   eventRescheduled,
   eventRecap,
+  eventTimeZones,
 ].forEach(registerTemplate);
 
 // Podcast
