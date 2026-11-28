@@ -87,6 +87,7 @@ describe('Template Registry', () => {
   it('every field default matches the template default used for rendering', () => {
     for (const template of getAllTemplates()) {
       for (const field of template.fields) {
+        expect(Object.hasOwn(template.defaults, field.key), `${template.id}.${field.key}`).toBe(true);
         expect(field.defaultValue, `${template.id}.${field.key}`).toEqual(template.defaults[field.key]);
       }
     }
