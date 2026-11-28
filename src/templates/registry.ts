@@ -94,12 +94,13 @@ import productDarkPremium from './product/dark-premium';
 import productShortcutTip from './product/shortcut-tip';
 import productWaitlist from './product/waitlist';
 import productYouAsked from './product/you-asked';
+import productSpecSheet from './product/spec-sheet';
 
 [
   productCenteredHero, productSplitScreen, productGradientWave, productNeonGlow,
   productGlassmorphism, productAppShowcase, productFeatureGrid, productAnnouncement,
   productMinimalBadge, productDarkPremium,
-  productShortcutTip, productWaitlist, productYouAsked,
+  productShortcutTip, productWaitlist, productYouAsked, productSpecSheet,
 ].forEach(registerTemplate);
 
 // SaaS
