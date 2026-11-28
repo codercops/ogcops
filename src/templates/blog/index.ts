@@ -15,3 +15,4 @@ export { default as blogSummaryCard } from './summary-card';
 export { default as blogTableOfContents } from './table-of-contents';
 export { default as blogBenchmark } from './benchmark';
 export { default as blogUpdatedPost } from './updated-post';
+export { default as blogBookReview } from './book-review';
