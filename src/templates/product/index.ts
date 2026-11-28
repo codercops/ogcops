@@ -11,3 +11,4 @@ export { default as productDarkPremium } from './dark-premium';
 export { default as productShortcutTip } from './shortcut-tip';
 export { default as productWaitlist } from './waitlist';
 export { default as productYouAsked } from './you-asked';
+export { default as productSpecSheet } from './spec-sheet';
