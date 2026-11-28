@@ -63,6 +63,7 @@ import blogSummaryCard from './blog/summary-card';
 import blogTableOfContents from './blog/table-of-contents';
 import blogBenchmark from './blog/benchmark';
 import blogUpdatedPost from './blog/updated-post';
+import blogBookReview from './blog/book-review';
 
 [
   blogMinimalDark,
@@ -82,6 +83,7 @@ import blogUpdatedPost from './blog/updated-post';
   blogTableOfContents,
   blogBenchmark,
   blogUpdatedPost,
+  blogBookReview,
 ].forEach(registerTemplate);
 
 // Product
