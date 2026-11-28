@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { getAllTemplates, getTemplate, getTemplatesByCategory, getTemplateCount } from '@/templates/registry';
 import { ALL_CATEGORIES } from '@/templates/types';
+import { commonFields } from '@/templates/utils';
 
 describe('Template Registry', () => {
   it('should have templates registered', () => {
@@ -81,5 +82,20 @@ describe('Template Registry', () => {
     const ids = templates.map((t) => t.id);
     const uniqueIds = new Set(ids);
     expect(ids.length).toBe(uniqueIds.size);
+  });
+
+  it('every field default matches the template default used for rendering', () => {
+    for (const template of getAllTemplates()) {
+      for (const field of template.fields) {
+        expect(Object.hasOwn(template.defaults, field.key), `${template.id}.${field.key}`).toBe(true);
+        expect(field.defaultValue, `${template.id}.${field.key}`).toEqual(template.defaults[field.key]);
+      }
+    }
+  });
+
+  it('does not change shared common field definitions', () => {
+    expect(commonFields.title.defaultValue).toBe('Your Title Here');
+    expect(commonFields.description.defaultValue).toBe('');
+    expect(commonFields.bgColor.defaultValue).toBe('#0a0a0a');
   });
 });
