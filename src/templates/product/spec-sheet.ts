@@ -6,7 +6,7 @@ const template: TemplateDefinition = {
   name: 'Spec Sheet',
   category: 'product',
   description: 'Launch page for hardware products featuring technical specifications, pricing, and key features.',
-  tags: ['product', 'hardware', 'specs', 'launch', 'specifications'],
+  tags: ['product', 'hardware', 'specs', 'launch', 'devices'],
   fields: [
     commonFields.title,
     {
@@ -168,7 +168,7 @@ const template: TemplateDefinition = {
     const rows = rawRows
       .filter((r) => r.value.length > 0)
       .map((r) => ({
-        label: truncate(r.label, 20),
+        label: truncate(r.label, 14),
         value: truncate(r.value, 36),
       }));
 
@@ -374,6 +374,7 @@ const template: TemplateDefinition = {
                                           fontFamily: 'Inter, sans-serif',
                                           whiteSpace: 'nowrap',
                                           overflow: 'hidden',
+                                          textOverflow: 'ellipsis',
                                         },
                                         children: row.label,
                                       },
