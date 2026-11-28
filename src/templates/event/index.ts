@@ -14,3 +14,4 @@ export { default as eventWinners } from './winners';
 export { default as eventCallForSpeakers } from './call-for-speakers';
 export { default as eventRescheduled } from './rescheduled';
 export { default as eventRecap } from './recap';
+export { default as eventTimeZones } from './time-zones';
